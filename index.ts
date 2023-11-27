@@ -1,4 +1,5 @@
 import express from "express";
+import { checkChordsUrl } from "./src/chordsUrlsChecker";
 
 const PORT = process.env.PORT || 3000;
 
@@ -9,4 +10,12 @@ const testRoute = (req: express.Request, res: express.Response) => {
   res.send(o);
 };
 
-app.get("/", testRoute).listen(PORT, () => console.log(`Listening on ${PORT}`));
+const chordsCheckRoute = async (req: express.Request, res: express.Response) => {
+    const checkResults = await checkChordsUrl();
+    res.send(checkResults);
+};
+
+app
+    .get("/", testRoute)
+    .get("/checkChordsUrl", chordsCheckRoute)
+    .listen(PORT, () => console.log(`Listening on ${PORT}`));
