@@ -42,12 +42,14 @@ const getFailingUrls = async (chords: Chord[]) => {
         const nbSkipped = result.filter((r) => r.status === 'skipped').length;
         const fails = result.filter((r) => !['ok', 'skipped'].includes(r.status.toString()));
         const nbFails = fails.length;
+        const timestamp = Date.now();
 
         return {
             nbChecks,
             nbSkipped,
             fails,
-            nbFails
+            nbFails,
+            timestamp
         };
     });
 };
