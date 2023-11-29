@@ -15,6 +15,7 @@
         "heroku-login": "npx heroku login",
         "heroku-deploy": "git push heroku main",
         "postinstall": "tsc",
+        "dev": "npm run watch && npm run serve",
         "serve": "nodemon dist/index.js",
         "watch": "tsc -w"
     },
