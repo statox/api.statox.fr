@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { checkChordsUrl } from '../chordsUrlsChecker';
+import { checkChordsUrl } from '../services/chordsUrlsChecker';
 
 const chordsCheckRoute = async (_req: Request, res: Response) => {
     const checkResults = await checkChordsUrl();
