@@ -9,7 +9,7 @@ const app = express();
 app.use(
     cors({
         // TODO have a proper local setup to avoid localhost in prod
-        origin: ['https://statox.github.io', 'http://localhost:8080']
+        origin: ['https://apps.statox.fr', 'http://localhost:8080']
     })
 );
 
