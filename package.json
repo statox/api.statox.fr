@@ -15,18 +15,22 @@
         "heroku:login": "npx heroku login",
         "heroku:deploy": "git push heroku main",
         "postinstall": "tsc",
-        "dev": "npm run watch && npm run serve",
+        "env:start": "podman-compose -f src/tools/docker-compose.yml up -d",
+        "env:stop": "podman-compose -f src/tools/docker-compose.yml down",
+        "dev": "npm run env:start && npm run watch && npm run serve",
         "serve": "nodemon dist/index.js",
         "watch": "tsc -w"
     },
     "dependencies": {
         "cors": "^2.8.5",
         "ejs": "^3.1.5",
-        "express": "^4.15.2"
+        "express": "^4.15.2",
+        "mysql": "^2.18.1"
     },
     "devDependencies": {
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
+        "@types/mysql": "^2.15.24",
         "@typescript-eslint/eslint-plugin": "^6.10.0",
         "@typescript-eslint/parser": "^6.10.0",
         "eslint": "^8.54.0",

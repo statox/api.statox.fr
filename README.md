@@ -8,8 +8,20 @@ npm install
 
 # Working locally
 npm run watch # Typescript watcher
-npm run serve # Start the server locally
+npm run serve # Start the server locally on port 3000
 
 # Deploying
 npm run heroku-deploy
 ```
+
+## Database
+
+- Dev: The database is configured on docker with `src/tools/docker-compose.yml`
+- Prod: In prod we use the Heroku plugin [JawsDB Mysql](https://elements.heroku.com/addons/jawsdb)
+
+To create the tables:
+
+- Add a table in `./src/tools/tables/[new-table].sql`
+- Run `./src/tools/init-db.sh [--prod]`
+    - Without any arguments the script connects to docker
+    - With `--prod` connects to prod db (Requires `npm run heroku:login`
