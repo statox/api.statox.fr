@@ -13,8 +13,14 @@ app.use(
     })
 );
 
+app.use(express.json());
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 for (const route of routes) {
-    app.get(route.path, route.handler);
+    if (!route.method || route.method === 'get') {
+        app.get(route.path, route.handler);
+    } else if (route.method === 'post') {
+        app.post(route.path, route.handler);
+    }
 }
