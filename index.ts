@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { routes } from './src/routes';
 import { checkRequiredPermissions, validateAccessToken } from './src/middleware/auth0.middleware';
+import { errorHandler } from './src/middleware/errors.middleware';
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,8 +16,6 @@ app.use(
 );
 
 app.use(express.json());
-
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 for (const route of routes) {
     if (!route.method || route.method === 'get') {
@@ -33,3 +32,7 @@ app.get('/protected', validateAccessToken, checkRequiredPermissions(['author']),
 
     res.status(200).json(message);
 });
+
+app.use(errorHandler);
+
+app.listen(PORT, () => console.log(`Listening on ${PORT}`));
