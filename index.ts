@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { routes } from './src/routes';
+import { checkRequiredPermissions, validateAccessToken } from './src/middleware/auth0.middleware';
 
 const PORT = process.env.PORT || 3000;
 
@@ -24,3 +25,11 @@ for (const route of routes) {
         app.post(route.path, route.handler);
     }
 }
+
+app.get('/protected', validateAccessToken, checkRequiredPermissions(['author']), (req, res) => {
+    const message = {
+        status: 'ok'
+    };
+
+    res.status(200).json(message);
+});
