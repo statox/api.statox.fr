@@ -1,12 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
 
-const auth0Audience = 'http://localhost:3000';
-const auth0Domain = 'statox.eu.auth0.com';
+const localAuth0 = {
+    auth0Audience: 'http://localhost:3000',
+    auth0Domain: 'statox.eu.auth0.com'
+};
+
+const prodAuth0 = {
+    auth0Audience: 'https://api.statox.fr',
+    auth0Domain: 'statox.eu.auth0.com'
+};
+
+// process.env.ENV is set via the heroku cli
+const config = process.env.ENV === 'prod' ? prodAuth0 : localAuth0;
 
 export const validateAccessToken = auth({
-    issuerBaseURL: `https://${auth0Domain}`,
-    audience: auth0Audience
+    issuerBaseURL: `https://${config.auth0Domain}`,
+    audience: config.auth0Audience
 });
 
 export const checkRequiredPermissions = (requiredPermissions: string[]) => {
