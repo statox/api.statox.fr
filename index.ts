@@ -34,14 +34,6 @@ for (const route of routes) {
     }
 }
 
-app.get('/protected', validateAccessToken, checkRequiredPermissions(['author']), (req, res) => {
-    const message = {
-        status: 'ok'
-    };
-
-    res.status(200).json(message);
-});
-
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
