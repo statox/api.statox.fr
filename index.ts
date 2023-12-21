@@ -21,7 +21,16 @@ for (const route of routes) {
     if (!route.method || route.method === 'get') {
         app.get(route.path, route.handler);
     } else if (route.method === 'post') {
-        app.post(route.path, route.handler);
+        if (route.protected) {
+            app.post(
+                route.path,
+                validateAccessToken,
+                checkRequiredPermissions(['author']),
+                route.handler
+            );
+        } else {
+            app.post(route.path, route.handler);
+        }
     }
 }
 

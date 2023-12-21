@@ -25,5 +25,6 @@ const handler = async (req: Request, res: Response) => {
 export const route = {
     method: 'post',
     path: '/addChordLinkVisit',
-    handler
+    handler,
+    protected: true
 };
