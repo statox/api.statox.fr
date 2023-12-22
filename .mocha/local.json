@@ -1,0 +1,7 @@
+{
+    "spec": "dist/tests/**/*.test.js",
+    "exit": true,
+    "timeout": 300000,
+    "parallel": true,
+    "jobs": 1
+}
