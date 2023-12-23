@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+TESTS=0
 
 if [ "$#" -eq 0 ]; then
     MYSQL_CMD=$("$SCRIPTPATH/mysql-local")
 elif [ "$1" == '--prod' ]; then
     MYSQL_CMD=$("$SCRIPTPATH/mysql-prod")
+elif [ "$1" == '--tests' ]; then
+    MYSQL_CMD=$("$SCRIPTPATH/mysql-tests")
+    TESTS=1
 else
-    echo 'Usage init-sh.sh [--prod]'
+    echo 'Usage init-sh.sh [--prod | --tests]'
 fi
 
 echo "$MYSQL_CMD"
@@ -25,6 +29,14 @@ done
 echo 'connected'
 
 echo "" > "$SCRIPTPATH/tmp.sql"
+
+if [ $TESTS -eq 1 ]; then
+    echo 'Drop test db'
+    echo 'DROP DATABASE IF EXISTS tests;' >> "$SCRIPTPATH/tmp.sql"
+    echo 'CREATE DATABASE tests;' >> "$SCRIPTPATH/tmp.sql"
+    echo 'USE tests;' >> "$SCRIPTPATH/tmp.sql"
+fi
+
 # Merge all sql files into one big sql file
 for f in $(find "$SCRIPTPATH/tables" -type f -name "*.sql" | sort); do
     cat "$f" >> "$SCRIPTPATH/tmp.sql"

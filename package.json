@@ -20,7 +20,7 @@
         "dev": "npm run env:start && npm run watch && npm run serve",
         "serve": "nodemon dist/index.js",
         "watch": "tsc -w",
-        "test": "PORT=3001 mocha --unhandled-rejections=strict --config .mocha/local.json"
+        "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/local.json"
     },
     "dependencies": {
         "cors": "^2.8.5",
