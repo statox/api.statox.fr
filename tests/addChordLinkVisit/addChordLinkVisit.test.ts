@@ -16,7 +16,11 @@ describe('addChordLinkVisit', () => {
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
-                    count: 1
+                    count: 1,
+                    lastAccessDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    }
                 }
             ]
         });
@@ -27,6 +31,11 @@ describe('addChordLinkVisit', () => {
                 {
                     url: 'https://bar.com',
                     count: 2,
+                    lastAccessDateUnix: 1
+                },
+                {
+                    url: 'https://foo.com',
+                    count: 1,
                     lastAccessDateUnix: 1
                 }
             ]
@@ -44,7 +53,16 @@ describe('addChordLinkVisit', () => {
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
-                    count: 3
+                    count: 3,
+                    lastAccessDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    }
+                },
+                {
+                    url: 'https://foo.com',
+                    count: 1,
+                    lastAccessDateUnix: 1
                 }
             ]
         });

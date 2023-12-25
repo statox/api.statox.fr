@@ -31,7 +31,7 @@ export const clearMysqlTables = async () => {
 };
 
 type MysqlFixture = {
-    [table: string]: { [column: string]: unknown }[];
+    [table: string]: { [column: string]: string | number }[];
 };
 
 export const mysqlFixture = (fixture: MysqlFixture) => {
@@ -106,7 +106,12 @@ export const mysqlDumpTables = (tables: string[] | string) => {
     return Promise.all(fixturePromises);
 };
 
-export const mysqlCheckContains = (data: MysqlFixture) => {
+type MysqlCheckData = {
+    [table: string]: {
+        [column: string]: string | number | { aroundTimestamp: string; precision: string };
+    }[];
+};
+export const mysqlCheckContains = (data: MysqlCheckData) => {
     const checkPromises: Promise<void>[] = [];
 
     for (const table of Object.keys(data)) {
@@ -120,8 +125,22 @@ export const mysqlCheckContains = (data: MysqlFixture) => {
             const conditions = [];
             const values: unknown[] = [];
             for (const column in row) {
-                conditions.push(`${column} = ?`);
-                values.push(row[column]);
+                const value = row[column];
+
+                if (typeof value === 'object') {
+                    if (value?.aroundTimestamp && value?.precision) {
+                        const condition = `${column} BETWEEN
+UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} - INTERVAL ${value.precision} AS DATETIME))
+AND
+UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} + INTERVAL ${value.precision} AS DATETIME))`;
+                        conditions.push(condition);
+                    } else {
+                        throw new Error('Invalid mysql value');
+                    }
+                } else {
+                    conditions.push(`${column} = ?`);
+                    values.push(row[column]);
+                }
             }
             const conditionQuery = conditions.join(' AND ');
             const query = `SELECT * FROM ${table} WHERE ${conditionQuery};`;
