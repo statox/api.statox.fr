@@ -1,5 +1,7 @@
 import type { Request, Response } from 'express';
 import { db } from '../services/db';
+import { AllowedSchema } from 'express-json-validator-middleware';
+import { PostRoute } from './types';
 
 // curl http://localhost:3000/addChordLinkVisit -XPOST -H Content-Type:application/json --data '{"url": "http://foo.bar"}'
 
@@ -22,9 +24,20 @@ const handler = async (req: Request, res: Response) => {
     );
 };
 
-export const route = {
+const inputSchema: AllowedSchema = {
+    type: 'object',
+    required: ['url'],
+    properties: {
+        url: {
+            type: 'string'
+        }
+    }
+};
+
+export const route: PostRoute = {
     method: 'post',
     path: '/addChordLinkVisit',
+    inputSchema,
     handler,
     protected: true
 };

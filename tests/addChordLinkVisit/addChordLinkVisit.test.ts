@@ -3,6 +3,16 @@ import { app } from '../..';
 import { mysqlCheckContains, mysqlFixture } from '../helpers';
 
 describe('addChordLinkVisit', () => {
+    it('should check input schema', async () => {
+        await request(app)
+            .post('/addChordLinkVisit')
+            .set('Accept', 'application/json')
+            .send({
+                foo: 'bar'
+            })
+            .expect(400);
+    });
+
     it('should create new entry with count 1', async () => {
         await request(app)
             .post('/addChordLinkVisit')

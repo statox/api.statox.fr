@@ -1,11 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import { Validator } from 'express-json-validator-middleware';
 import { routes } from './src/routes';
 import { checkRequiredPermissions, validateAccessToken } from './src/middleware/auth0.middleware';
 import { errorHandler } from './src/middleware/errors.middleware';
 
 const PORT = process.env.PORT || 3000;
 
+const { validate } = new Validator({});
 export const app = express();
 
 app.use(
@@ -18,18 +20,21 @@ app.use(
 app.use(express.json());
 
 for (const route of routes) {
-    if (!route.method || route.method === 'get') {
+    if (route.method === 'get') {
         app.get(route.path, route.handler);
-    } else if (route.method === 'post') {
+    }
+
+    if (route.method === 'post') {
         if (route.protected) {
             app.post(
                 route.path,
                 validateAccessToken,
                 checkRequiredPermissions(['author']),
+                validate({ body: route.inputSchema }),
                 route.handler
             );
         } else {
-            app.post(route.path, route.handler);
+            app.post(route.path, validate({ body: route.inputSchema }), route.handler);
         }
     }
 }
