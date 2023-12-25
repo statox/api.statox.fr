@@ -14,6 +14,11 @@ npm run serve # Start the server locally on port 3000
 npm run heroku-deploy
 ```
 
+## TODO
+
+-   [ ] Tests don't check for tokens. Find a way to test this part
+-   [ ] Replace Auth0 with passport.js?
+
 ## Database
 
 - Dev: The database is configured on docker with `src/tools/docker-compose.yml`
