@@ -8,11 +8,13 @@ For now everything is done locally
 npm install
 
 # Working locally
+npm run env:start # Start the docker environement
 npm run watch # Typescript watcher
 npm run serve # Start the server locally on port 3000
 
 # Deploying
-npm run heroku-deploy
+npm run heroku:login
+npm run heroku:deploy
 ```
 
 ## TODO
