@@ -3,7 +3,9 @@ import { AllowedSchema } from 'express-json-validator-middleware';
 
 type BaseRoute = {
     path: string;
-    handler: (req: express.Request, res: express.Response, next?: express.NextFunction) => void;
+    handler:
+        | ((req: express.Request, res: express.Response) => void)
+        | ((req: express.Request, res: express.Response, next: express.NextFunction) => void);
     protected?: true;
 };
 
