@@ -13,7 +13,7 @@
         "lint:fix": "npm run lint --quiet --fix",
         "format": "prettier --write .",
         "heroku:login": "npx heroku login",
-        "heroku:deploy": "git push heroku main",
+        "heroku:deploy": "npm run tests && git push heroku main",
         "postinstall": "tsc",
         "env:start": "podman-compose -f src/tools/docker-compose.yml up -d",
         "env:stop": "podman-compose -f src/tools/docker-compose.yml down",
