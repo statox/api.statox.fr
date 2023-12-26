@@ -31,7 +31,7 @@ export const clearMysqlTables = async () => {
 };
 
 type MysqlFixture = {
-    [table: string]: { [column: string]: string | number }[];
+    [table: string]: { [column: string]: string | number | boolean }[];
 };
 
 export const mysqlFixture = (fixture: MysqlFixture) => {
@@ -108,7 +108,11 @@ export const mysqlDumpTables = (tables: string[] | string) => {
 
 type MysqlCheckData = {
     [table: string]: {
-        [column: string]: string | number | { aroundTimestamp: string; precision: string };
+        [column: string]:
+            | string
+            | number
+            | boolean
+            | { aroundTimestamp: string; precision: string };
     }[];
 };
 export const mysqlCheckContains = (data: MysqlCheckData) => {

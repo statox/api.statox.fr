@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { mysqlCheckContains, mysqlDumpTables, mysqlFixture } from '../../../helpers';
+import { mysqlCheckContains, mysqlFixture } from '../../../helpers';
 import { app } from '../../../..';
 import { expect } from 'chai';
 
