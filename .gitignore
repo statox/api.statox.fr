@@ -7,4 +7,5 @@ npm-debug.log
 *.dev
 .DS_Store
 
+chords_check_results.json
 src/tools/tmp.sql
