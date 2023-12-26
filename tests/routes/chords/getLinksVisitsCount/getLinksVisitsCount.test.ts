@@ -1,9 +1,9 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import { app } from '../..';
-import { mysqlFixture } from '../helpers';
+import { mysqlFixture } from '../../../helpers';
+import { app } from '../../../..';
 
-describe('getChordLinksVisitCount', () => {
+describe('getLinksVisitsCount', () => {
     it('should return the visit counts ordered by descending order', async () => {
         const data = [
             {
@@ -28,7 +28,7 @@ describe('getChordLinksVisitCount', () => {
         });
 
         request(app)
-            .get('/getChordLinksVisitCount')
+            .get('/chords/getLinksVisitsCount')
             .expect(200)
             .then((response) => {
                 const sortedData = data.sort((a, b) => b.count - a.count);

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
-import { db } from '../services/db';
 import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from './types';
+import { db } from '../../services/db';
+import { PostRoute } from '../types';
 
 // curl http://localhost:3000/addChordLinkVisit -XPOST -H Content-Type:application/json --data '{"url": "http://foo.bar"}'
 
@@ -36,7 +36,7 @@ const inputSchema: AllowedSchema = {
 
 export const route: PostRoute = {
     method: 'post',
-    path: '/addChordLinkVisit',
+    path: '/chords/addLinkVisit',
     inputSchema,
     handler,
     protected: true

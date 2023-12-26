@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-import { db } from '../services/db';
-import { GetRoute } from './types';
+import { db } from '../../services/db';
+import { GetRoute } from '../types';
 
 const handler = async (_req: Request, res: Response) => {
     db.query('SELECT * FROM ChordFrequency ORDER BY count DESC', (err, rows) => {
@@ -14,6 +14,6 @@ const handler = async (_req: Request, res: Response) => {
 
 export const route: GetRoute = {
     method: 'get',
-    path: '/getChordLinksVisitCount',
+    path: '/chords/getLinksVisitsCount',
     handler
 };

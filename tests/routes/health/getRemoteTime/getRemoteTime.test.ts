@@ -1,12 +1,12 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import { app } from '../..';
+import { app } from '../../../..';
 
 describe('getRemoteTime', () => {
     it('should return a timestamp close to now', () => {
         const now = Date.now();
         request(app)
-            .get('/')
+            .get('/health/getRemoteTime')
             .expect(200)
             .then((response) => {
                 expect(response.body.time).greaterThan(now - 1000);

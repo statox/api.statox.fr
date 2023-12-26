@@ -1,11 +1,11 @@
 import request from 'supertest';
-import { app } from '../..';
-import { mysqlCheckContains, mysqlFixture } from '../helpers';
+import { mysqlCheckContains, mysqlFixture } from '../../../helpers';
+import { app } from '../../../..';
 
-describe('addChordLinkVisit', () => {
+describe('addLinkVisit', () => {
     it('should check input schema', async () => {
         await request(app)
-            .post('/addChordLinkVisit')
+            .post('/chords/addLinkVisit')
             .set('Accept', 'application/json')
             .send({
                 foo: 'bar'
@@ -15,7 +15,7 @@ describe('addChordLinkVisit', () => {
 
     it('should create new entry with count 1', async () => {
         await request(app)
-            .post('/addChordLinkVisit')
+            .post('/chords/addLinkVisit')
             .set('Accept', 'application/json')
             .send({
                 url: 'https://bar.com'
@@ -52,7 +52,7 @@ describe('addChordLinkVisit', () => {
         });
 
         await request(app)
-            .post('/addChordLinkVisit')
+            .post('/chords/addLinkVisit')
             .set('Accept', 'application/json')
             .send({
                 url: 'https://bar.com'

@@ -1,12 +1,7 @@
 import { Route } from './types';
-import { route as addChordLinkVisit } from './addChordLinkVisit';
-import { route as getChordLinksVisitCount } from './getChordLinksVisitCount';
-import { route as getRemoteTime } from './getRemoteTime';
-import { route as checkChordsUrl } from './chordsCheckRoute';
+import { route as addLinkVisit } from './chords/addLinkVisit';
+import { route as getLinksVisitsCount } from './chords/getLinksVisitsCount';
+import { route as getRemoteTime } from './health/getRemoteTime';
+import { route as checkLinks } from './chords/checkLinks';
 
-export const routes: Route[] = [
-    addChordLinkVisit,
-    getChordLinksVisitCount,
-    getRemoteTime,
-    checkChordsUrl
-];
+export const routes: Route[] = [addLinkVisit, getLinksVisitsCount, getRemoteTime, checkLinks];
