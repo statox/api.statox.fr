@@ -27,6 +27,7 @@ const handler = async (req: Request, res: Response) => {
 const inputSchema: AllowedSchema = {
     type: 'object',
     required: ['url'],
+    additionalProperties: false,
     properties: {
         url: {
             type: 'string'
