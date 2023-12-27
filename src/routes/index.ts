@@ -6,11 +6,13 @@ import { route as addEntry } from './clipboard/addEntry';
 import { route as deleteClipboardEntry } from './clipboard/deleteEntry';
 import { route as getClipboardPublicEntries } from './clipboard/getPublicEntries';
 import { route as getClipboardAllEntries } from './clipboard/getAllEntries';
+import { route as clipboardStaticView } from './clipboard/staticView';
 import { route as getRemoteTime } from './health/getRemoteTime';
 
 export const routes: Route[] = [
     addEntry,
     addLinkVisit,
+    clipboardStaticView,
     deleteClipboardEntry,
     getClipboardAllEntries,
     getClipboardPublicEntries,

@@ -4,6 +4,7 @@ import { Validator } from 'express-json-validator-middleware';
 import { routes } from './src/routes';
 import { checkRequiredPermissions, validateAccessToken } from './src/middleware/auth0.middleware';
 import { errorHandler } from './src/middleware/errors.middleware';
+import mustacheExpress from 'mustache-express';
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,10 @@ app.use(
 );
 
 app.use(express.json());
+
+app.set('views', './src/views');
+app.set('view engine', 'mustache');
+app.engine('mustache', mustacheExpress());
 
 for (const route of routes) {
     if (route.method === 'get') {
