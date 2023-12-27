@@ -1,33 +1,21 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
-import { db } from '../../services/db';
 import { PostRoute } from '../types';
-import { generate4BytesHex } from '../../services/random';
-
-const DEFAULT_TTL = 60 * 5; // 5 MINUTES
+import { addEntry } from '../../services/clipboard';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, content, ttlSeconds = DEFAULT_TTL, isPublic = false } = req.body;
+    const { name, content, ttlSeconds, isPublic } = req.body;
 
-    const linkId = generate4BytesHex();
-
-    db.query(
-        `
-        INSERT INTO Clipboard (name, content, ttl, isPublic, linkId, creationDateUnix)
-        VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP())
-    `,
-        [name, content, ttlSeconds, isPublic, linkId],
-        (err) => {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(400).send(err.code);
-                }
-                return next(err);
+    addEntry({ name, content, ttlSeconds, isPublic }, (error) => {
+        if (error) {
+            if (error.message === 'ER_DUP_ENTRY') {
+                return res.status(400).send(error.message);
             }
-
-            res.send();
+            return next(error);
         }
-    );
+
+        res.send();
+    });
 };
 
 const inputSchema: AllowedSchema = {

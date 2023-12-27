@@ -1,13 +1,13 @@
 import type { NextFunction, Request, Response } from 'express';
-import { db } from '../../services/db';
 import { GetRoute } from '../types';
+import { getAllEntries } from '../../services/clipboard';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    db.query(`SELECT * FROM Clipboard`, (err, rows) => {
-        if (err) {
-            return next(err);
+    getAllEntries((error, entries) => {
+        if (error) {
+            return next(error);
         }
-        res.json(rows);
+        res.json(entries);
     });
 };
 

@@ -1,21 +1,14 @@
 import type { NextFunction, Request, Response } from 'express';
-import { db } from '../../services/db';
 import { GetRoute } from '../types';
+import { getPublicEntries } from '../../services/clipboard';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    db.query(
-        `
-        SELECT * FROM Clipboard
-        WHERE isPublic = 1
-        AND creationDateUnix + ttl > UNIX_TIMESTAMP()
-    `,
-        (err, entries) => {
-            if (err) {
-                return next(err);
-            }
-            res.render('clipboard', { entries });
+    getPublicEntries((err, entries) => {
+        if (err) {
+            return next(err);
         }
-    );
+        res.render('clipboard', { entries });
+    });
 };
 
 export const route: GetRoute = {

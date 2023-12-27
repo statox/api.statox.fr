@@ -1,14 +1,14 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
-import { db } from '../../services/db';
 import { PostRoute } from '../types';
+import { deleteEntry } from '../../services/clipboard';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
 
-    db.query(`DELETE FROM Clipboard WHERE name = ?`, [name], (err) => {
-        if (err) {
-            return next(err);
+    deleteEntry({ name }, (error) => {
+        if (error) {
+            return next(error);
         }
 
         res.send();
