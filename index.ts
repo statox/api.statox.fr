@@ -26,7 +26,16 @@ app.engine('mustache', mustacheExpress());
 
 for (const route of routes) {
     if (route.method === 'get') {
-        app.get(route.path, route.handler);
+        if (route.protected) {
+            app.get(
+                route.path,
+                validateAccessToken,
+                checkRequiredPermissions(['author']),
+                route.handler
+            );
+        } else {
+            app.get(route.path, route.handler);
+        }
     }
 
     if (route.method === 'post') {
