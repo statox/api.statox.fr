@@ -168,3 +168,58 @@ UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} + INTERVAL ${value.precision} AS DA
 
     return Promise.all(checkPromises);
 };
+
+// TODO Refactor to have common logic with mysqlCheckContains
+export const mysqlCheckDoesNotContain = (data: MysqlCheckData) => {
+    const checkPromises: Promise<void>[] = [];
+
+    for (const table of Object.keys(data)) {
+        const rows = data[table];
+
+        if (!rows.length) {
+            continue;
+        }
+
+        for (const row of rows) {
+            const conditions = [];
+            const values: unknown[] = [];
+            for (const column in row) {
+                const value = row[column];
+
+                if (typeof value === 'object') {
+                    if (value?.aroundTimestamp && value?.precision) {
+                        const condition = `${column} BETWEEN
+UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} - INTERVAL ${value.precision} AS DATETIME))
+AND
+UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} + INTERVAL ${value.precision} AS DATETIME))`;
+                        conditions.push(condition);
+                    } else {
+                        throw new Error('Invalid mysql value');
+                    }
+                } else {
+                    conditions.push(`${column} = ?`);
+                    values.push(row[column]);
+                }
+            }
+            const conditionQuery = conditions.join(' AND ');
+            const query = `SELECT * FROM ${table} WHERE ${conditionQuery};`;
+
+            const promise = new Promise<void>((resolve, reject) => {
+                db.query(query, values, (err, rows) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    if ((rows as unknown[]).length) {
+                        return reject(
+                            new Error(`${JSON.stringify(row, null, 2)} found in ${table}`)
+                        );
+                    }
+                    resolve();
+                });
+            });
+            checkPromises.push(promise);
+        }
+    }
+
+    return Promise.all(checkPromises);
+};
