@@ -1,14 +1,14 @@
-import type { Request, Response } from 'express';
-import { db } from '../../services/db';
+import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
+import { getLinksVisitsCount } from '../../services/chords';
 
-const handler = async (_req: Request, res: Response) => {
-    db.query('SELECT * FROM ChordFrequency ORDER BY count DESC', (err, rows) => {
-        if (err) {
-            throw err;
+const handler = async (_req: Request, res: Response, next: NextFunction) => {
+    getLinksVisitsCount((error, result) => {
+        if (error) {
+            return next(error);
         }
 
-        res.send(rows);
+        res.json(result);
     });
 };
 
