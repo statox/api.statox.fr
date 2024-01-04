@@ -8,6 +8,8 @@ import { route as getClipboardPublicEntries } from './clipboard/getPublicEntries
 import { route as getClipboardAllEntries } from './clipboard/getAllEntries';
 import { route as clipboardStaticView } from './clipboard/staticView';
 import { route as getRemoteTime } from './health/getRemoteTime';
+import { route as soundTest } from './test/sound';
+import { route as soundTest2 } from './test/sound2';
 
 export const routes: Route[] = [
     addEntry,
@@ -18,5 +20,7 @@ export const routes: Route[] = [
     getClipboardPublicEntries,
     getLinksVisitsCount,
     getRemoteTime,
-    checkLinks
+    checkLinks,
+    soundTest,
+    soundTest2
 ];
