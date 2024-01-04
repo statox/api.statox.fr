@@ -31,6 +31,7 @@ export const errorHandler = (
     }
 
     if (error instanceof ValidationError) {
+        console.log(JSON.stringify(error));
         response.status(400).send(error.validationErrors);
         return next();
     }

@@ -94,4 +94,16 @@ describe('clipboard/addEntry', () => {
             ]
         });
     });
+
+    it('WIP - should create new with a file', async () => {
+        const buffer = Buffer.from('some data');
+
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'entry name')
+            .field('content', 'entry content')
+            .attach('file', buffer)
+            .expect(200);
+    });
 });
