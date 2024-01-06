@@ -36,7 +36,33 @@ describe('clipboard/getAllEntries', () => {
             isPublic: 1,
             s3Key: null
         };
-        const allEntries = [publicEntry, privateEntry, expiredTTL];
+        const publicEntryWithS3 = {
+            id: 4,
+            name: 'public entry with s3',
+            content: 'foo',
+            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            ttl: 60,
+            linkId: 'd',
+            isPublic: 1,
+            s3Key: 'foo'
+        };
+        const privateEntryWithS3 = {
+            id: 5,
+            name: 'private entry with s3',
+            content: 'foo',
+            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            ttl: 60,
+            linkId: 'e',
+            isPublic: 1,
+            s3Key: 'bar'
+        };
+        const allEntries = [
+            publicEntry,
+            publicEntryWithS3,
+            privateEntry,
+            expiredTTL,
+            privateEntryWithS3
+        ];
         await mysqlFixture({
             Clipboard: allEntries
         });
@@ -46,7 +72,22 @@ describe('clipboard/getAllEntries', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                expect(response.body).to.have.same.deep.members(allEntries);
+                expect(response.body).to.be.length(5);
+                expect(response.body).to.include.deep.members([
+                    publicEntry,
+                    privateEntry,
+                    expiredTTL
+                ]);
+
+                const publicEntryWithS3Response = response.body.find(
+                    (e: { id: number }) => e.id === 4
+                );
+                expect(publicEntryWithS3Response.s3PresignedUrl).to.exist;
+
+                const privateEntryWithS3Response = response.body.find(
+                    (e: { id: number }) => e.id === 4
+                );
+                expect(privateEntryWithS3Response.s3PresignedUrl).to.exist;
             });
     });
 });

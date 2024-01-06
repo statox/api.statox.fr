@@ -4,13 +4,14 @@ import { db } from './db';
 import { generate4BytesHex } from './random';
 import {
     GetObjectCommand,
+    GetObjectCommandOutput,
     ListBucketsCommand,
     PutObjectCommand,
     PutObjectCommandInput
 } from '@aws-sdk/client-s3';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
-import { S3 } from './s3';
+import { S3, getPresignedUrl } from './s3';
 
 type ClipboardEntry = {
     id: number;
@@ -20,19 +21,48 @@ type ClipboardEntry = {
     ttl: number;
     isPublic: boolean;
     linkId: string;
+    s3Key?: string;
+    s3PresignedUrl?: string;
 };
 
-export const getPublicEntries = (cb: Callback<ClipboardEntry>) => {
+export const getPublicEntries = (cb: Callback<ClipboardEntry[]>) => {
     db.query(
         `SELECT * FROM Clipboard
 WHERE isPublic = 1
 AND creationDateUnix + ttl > UNIX_TIMESTAMP() `,
-        cb
+        async (error, result) => {
+            if (error) {
+                return cb(error);
+            }
+            return cb(null, await enrichEntries(result));
+        }
     );
 };
 
-export const getAllEntries = (cb: Callback<ClipboardEntry>) => {
-    db.query(`SELECT * FROM Clipboard`, cb);
+export const getAllEntries = (cb: Callback<ClipboardEntry[]>) => {
+    db.query(`SELECT * FROM Clipboard`, async (error, result) => {
+        if (error) {
+            return cb(error);
+        }
+        return cb(null, await enrichEntries(result));
+    });
+};
+
+const enrichEntries = async (entries: ClipboardEntry[]) => {
+    for (const entry of entries) {
+        if (entry.s3Key) {
+            entry.s3PresignedUrl = await getEntryFilePresignedURL(entry);
+        }
+    }
+    return entries;
+};
+
+export const getEntryFilePresignedURL = async (entry: ClipboardEntry) => {
+    if (!entry.s3Key) {
+        return;
+    }
+
+    return await getPresignedUrl({ bucket: 'clipboard', key: entry.s3Key });
 };
 
 export const deleteEntry = (params: { name: string }, cb: CallbackErrorOnly) => {

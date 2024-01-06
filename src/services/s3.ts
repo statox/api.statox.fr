@@ -1,4 +1,10 @@
-import { CreateBucketCommand, ListBucketsCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+    CreateBucketCommand,
+    GetObjectCommand,
+    ListBucketsCommand,
+    S3Client
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const isProd = process.env.ENV === 'prod';
 const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
@@ -17,6 +23,12 @@ export const S3 = new S3Client({
         secretAccessKey: R2_SECRET_KEY
     }
 });
+
+export const getPresignedUrl = async (params: { bucket: string; key: string }) => {
+    const cmd = new GetObjectCommand({ Bucket: params.bucket, Key: params.key });
+    const url = await getSignedUrl(S3, cmd, { expiresIn: 3600 });
+    return url;
+};
 
 const requiredBuckets = ['clipboard'];
 export const initLocalStackS3 = async () => {

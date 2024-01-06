@@ -39,6 +39,31 @@ describe('clipboard/getPublicEntries', () => {
             });
     });
 
+    it('Should get s3PresignedUrl for entry with s3Key', async () => {
+        const entry = {
+            id: 1,
+            name: 'public entry',
+            content: 'foo',
+            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            ttl: 60,
+            linkId: 'aaaaaaaa',
+            isPublic: 1,
+            s3Key: 'foo'
+        };
+        await mysqlFixture({
+            Clipboard: [entry]
+        });
+
+        await request(app)
+            .get('/clipboard/getPublicEntries')
+            .set('Accept', 'application/json')
+            .expect(200)
+            .then((response) => {
+                const entry = response.body.pop();
+                expect(entry.s3PresignedUrl).to.exist;
+            });
+    });
+
     it('Should retieve only entries with valid ttl', async () => {
         const ttlOk = {
             id: 1,
