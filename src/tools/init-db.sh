@@ -37,10 +37,14 @@ if [ $TESTS -eq 1 ]; then
     echo 'USE tests;' >> "$SCRIPTPATH/tmp.sql"
 fi
 
+echo 'Make queries'
 # Merge all sql files into one big sql file
 for f in $(find "$SCRIPTPATH/tables" -type f -name "*.sql" | sort); do
     cat "$f" >> "$SCRIPTPATH/tmp.sql"
     echo $'\n' >> "$SCRIPTPATH/tmp.sql"
 done;
 
+echo 'Run queries'
 cat "$SCRIPTPATH/tmp.sql" | eval "$MYSQL_CMD"
+
+echo 'DONE init-db'
