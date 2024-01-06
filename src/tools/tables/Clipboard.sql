@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `Clipboard` (
     `ttl` int(11) NOT NULL,
     `isPublic` tinyint NOT NULL DEFAULT 0,
     `linkId` varchar(16) NOT NULL,
+    `s3Key` varchar(400),
     PRIMARY KEY (`id`),
     UNIQUE KEY `name_uniq` (`name`),
     UNIQUE KEY `linkId_uniq` (`linkId`)

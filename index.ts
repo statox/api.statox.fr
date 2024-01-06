@@ -6,10 +6,13 @@ import { checkRequiredPermissions, validateAccessToken } from './src/middleware/
 import { errorHandler } from './src/middleware/errors.middleware';
 import mustacheExpress from 'mustache-express';
 import { multipartHandler } from './src/middleware/multipart.middleware';
+import { initLocalStackS3 } from './src/services/s3';
 
 const PORT = process.env.PORT || 3000;
 
-const { validate } = new Validator({});
+initLocalStackS3();
+
+const { validate } = new Validator({ allowUnionTypes: true });
 export const app = express();
 
 app.use(

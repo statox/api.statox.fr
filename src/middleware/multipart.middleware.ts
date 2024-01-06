@@ -16,7 +16,7 @@ export const multipartHandler = (req: Request, res: Response, next: NextFunction
 
     form.parse(req, (error, fields, files) => {
         if (error) {
-            return next(new Error('parse_error'));
+            return next(error);
         }
 
         // See https://www.npmjs.com/package/formidable#firstvalues

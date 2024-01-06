@@ -13,7 +13,8 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1
+            isPublic: 1,
+            s3Key: null
         };
         const privateEntry = {
             id: 2,
@@ -22,7 +23,8 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()),
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0
+            isPublic: 0,
+            s3Key: null
         };
         await mysqlFixture({
             Clipboard: [publicEntry, privateEntry]
@@ -45,7 +47,8 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1
+            isPublic: 1,
+            s3Key: null
         };
         const ttlOver = {
             id: 2,
@@ -54,7 +57,8 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120,
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0
+            isPublic: 0,
+            s3Key: null
         };
         await mysqlFixture({
             Clipboard: [ttlOk, ttlOver]

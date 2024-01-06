@@ -23,6 +23,7 @@
         "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/local.json"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.485.0",
         "cors": "^2.8.5",
         "ejs": "^3.1.5",
         "express": "^4.15.2",

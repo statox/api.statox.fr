@@ -5,16 +5,17 @@ import { PostRoute } from '../types';
 import { addEntry } from '../../services/clipboard';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, content, ttlSeconds, isPublic } = req.body;
+    const { name, content, ttlSeconds: ttlSecondsInput, isPublic: isPublicInput } = req.body;
+
+    // We allow multiple types because when uploading a file with multipart/formdata
+    // the fields are not casted by Formidable
+    // TODO: Fix that
+    const ttlSeconds = isNaN(ttlSecondsInput) ? undefined : Number(ttlSecondsInput);
+    const isPublic = typeof isPublicInput === 'string' ? isPublicInput === 'true' : isPublicInput;
 
     const file: File = req.body.file?.pop();
 
-    if (file) {
-        console.log({ file });
-        console.log(file.toString());
-    }
-
-    addEntry({ name, content, ttlSeconds, isPublic }, (error) => {
+    addEntry({ name, content, ttlSeconds, isPublic, file }, (error) => {
         if (error) {
             if (error.message === 'ER_DUP_ENTRY') {
                 return res.status(400).send(error.message);
@@ -41,11 +42,11 @@ const inputSchema: AllowedSchema = {
             type: 'array'
         },
         ttlSeconds: {
-            type: 'number',
+            type: ['number', 'string'],
             minimum: 0
         },
         isPublic: {
-            type: 'boolean'
+            type: ['boolean', 'string']
         }
     }
 };

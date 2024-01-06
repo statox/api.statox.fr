@@ -27,7 +27,7 @@ describe('clipboard/addEntry', () => {
             })
             .expect(400)
             .then((response) => {
-                expect(response.body === 'ER_DUP_ENTRY');
+                expect(response.text).to.equal('ER_DUP_ENTRY');
             });
 
         await mysqlCheckContains({
@@ -58,6 +58,7 @@ describe('clipboard/addEntry', () => {
                     content: 'Look at that content',
                     ttl: 60 * 5,
                     isPublic: 0,
+                    s3Key: null,
                     creationDateUnix: {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
@@ -86,6 +87,7 @@ describe('clipboard/addEntry', () => {
                     content: 'Look at that content',
                     ttl: 60,
                     isPublic: 1,
+                    s3Key: null,
                     creationDateUnix: {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
@@ -95,7 +97,7 @@ describe('clipboard/addEntry', () => {
         });
     });
 
-    it('WIP - should create new with a file', async () => {
+    it('When a file is provided should create new entry and upload the file to R2', async () => {
         const buffer = Buffer.from('some data');
 
         await request(app)
@@ -105,5 +107,14 @@ describe('clipboard/addEntry', () => {
             .field('content', 'entry content')
             .attach('file', buffer)
             .expect(200);
+
+        await mysqlCheckContains({
+            Clipboard: [
+                {
+                    name: 'entry name',
+                    s3Key: (value: string) => value.match(/.*entry name/) !== null
+                }
+            ]
+        });
     });
 });

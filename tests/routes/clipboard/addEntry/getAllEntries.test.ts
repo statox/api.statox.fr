@@ -13,7 +13,8 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1
+            isPublic: 1,
+            s3Key: null
         };
         const privateEntry = {
             id: 2,
@@ -22,7 +23,8 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()),
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0
+            isPublic: 0,
+            s3Key: null
         };
         const expiredTTL = {
             id: 3,
@@ -31,7 +33,8 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120,
             ttl: 60,
             linkId: 'cccccccc',
-            isPublic: 1
+            isPublic: 1,
+            s3Key: null
         };
         const allEntries = [publicEntry, privateEntry, expiredTTL];
         await mysqlFixture({

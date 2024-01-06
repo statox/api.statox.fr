@@ -17,3 +17,15 @@ services:
             - '127.0.0.1:13306:3306'
         expose:
             - '3306'
+
+    localstack:
+        container_name: localstack
+        image: docker.io/localstack/localstack
+        ports:
+            - '127.0.0.1:4566:4566'
+            - '127.0.0.1:4571:4571'
+        environment:
+            - SERVICES=s3
+            - DEFAULT_REGION=eu
+        tmpfs:
+            - /tmp/localstack:exec,mode=600
