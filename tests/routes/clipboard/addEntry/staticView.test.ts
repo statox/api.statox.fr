@@ -53,8 +53,8 @@ describe('clipboard/view', () => {
 </head>
 <body>
  <ul>
-     <li>public entry - foo</li>
-     <li>public entry 2 - foo foo</li>
+            <li>public entry - <a href=foo>foo</a></li>
+            <li>public entry 2 - <a href=foo foo>foo foo</a></li>
  </ul>
 </body>
 </html>\n`;
