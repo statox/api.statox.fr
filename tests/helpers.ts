@@ -31,7 +31,7 @@ export const clearMysqlTables = async () => {
 };
 
 type MysqlFixture = {
-    [table: string]: { [column: string]: string | number | boolean }[];
+    [table: string]: { [column: string]: string | number | boolean | null }[];
 };
 
 export const mysqlFixture = (fixture: MysqlFixture) => {
@@ -112,7 +112,10 @@ type MysqlCheckData = {
             | string
             | number
             | boolean
-            | { aroundTimestamp: string; precision: string };
+            | null
+            | { aroundTimestamp: string; precision: string }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            | ((value: any) => boolean);
     }[];
 };
 export const mysqlCheckContains = (data: MysqlCheckData) => {
@@ -128,6 +131,9 @@ export const mysqlCheckContains = (data: MysqlCheckData) => {
         for (const row of rows) {
             const conditions = [];
             const values: unknown[] = [];
+
+            const columnMatchingFunctions: { [column: string]: (val: unknown) => boolean } = {};
+
             for (const column in row) {
                 const value = row[column];
 
@@ -138,9 +144,14 @@ UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} - INTERVAL ${value.precision} AS DA
 AND
 UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} + INTERVAL ${value.precision} AS DATETIME))`;
                         conditions.push(condition);
+                    } else if (value === null) {
+                        const condition = `${column} IS NULL`;
+                        conditions.push(condition);
                     } else {
                         throw new Error('Invalid mysql value');
                     }
+                } else if (typeof value === 'function') {
+                    columnMatchingFunctions[column] = value;
                 } else {
                     conditions.push(`${column} = ?`);
                     values.push(row[column]);
@@ -158,6 +169,21 @@ UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} + INTERVAL ${value.precision} AS DA
                         return reject(
                             new Error(`${JSON.stringify(row, null, 2)} not found in ${table}`)
                         );
+                    } else {
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        const found = rows.filter((resultRow: any) => {
+                            return Object.entries(columnMatchingFunctions).every(
+                                ([column, checkFunction]) => {
+                                    return checkFunction(resultRow[column]);
+                                }
+                            );
+                        });
+
+                        if (!found.length) {
+                            return reject(
+                                new Error(`${JSON.stringify(row, null, 2)} not found in ${table}`)
+                            );
+                        }
                     }
                     resolve();
                 });
