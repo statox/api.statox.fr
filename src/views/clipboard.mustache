@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Clipboard</title>
+<title>Clipboard</title>
 </head>
 <body>
- <ul>
+<ul>
    {{#entries}}
-            <li>{{name}} - <a href={{content}}>{{content}}</a></li>
-   {{/entries}}
- </ul>
+    <li>
+        {{name}}
+        {{#contentIsLink}}
+        - <a href="{{{content}}}">{{{content}}}</a>
+        {{/contentIsLink}}
+        {{^contentIsLink}}
+        - {{content}}
+        {{/contentIsLink}}
+        {{#s3PresignedUrl}}
+        - <a href="{{s3PresignedUrl}}">Download</a>
+        {{/s3PresignedUrl}}
+    </li>
+    {{/entries}}
+</ul>
 </body>
 </html>

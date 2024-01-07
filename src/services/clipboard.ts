@@ -2,13 +2,7 @@ import { Callback, CallbackErrorOnly } from '../tsUtils';
 import { File } from 'formidable';
 import { db } from './db';
 import { generate4BytesHex } from './random';
-import {
-    GetObjectCommand,
-    GetObjectCommandOutput,
-    ListBucketsCommand,
-    PutObjectCommand,
-    PutObjectCommandInput
-} from '@aws-sdk/client-s3';
+import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import { S3, getPresignedUrl } from './s3';
@@ -55,6 +49,35 @@ const enrichEntries = async (entries: ClipboardEntry[]) => {
         }
     }
     return entries;
+};
+
+type ClipboardEntryForStaticView = ClipboardEntry & {
+    contentIsLink: boolean;
+};
+
+export const getEntriesForStaticView = (cb: Callback<ClipboardEntryForStaticView[]>) => {
+    getPublicEntries((error, entries) => {
+        if (error) {
+            return cb(error);
+        }
+        if (!entries) {
+            return [];
+        }
+
+        const entriesWithS3Link = entries
+            .map((e) => {
+                let contentIsLink = false;
+                try {
+                    new URL(e.content);
+                    contentIsLink = true;
+                } catch (_e) {
+                    contentIsLink = false;
+                }
+                return { ...e, contentIsLink };
+            })
+            .filter((e) => e.s3PresignedUrl || e.contentIsLink);
+        return cb(null, entriesWithS3Link);
+    });
 };
 
 export const getEntryFilePresignedURL = async (entry: ClipboardEntry) => {
