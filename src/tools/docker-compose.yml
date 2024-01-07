@@ -26,6 +26,6 @@ services:
             - '127.0.0.1:4571:4571'
         environment:
             - SERVICES=s3
-            - DEFAULT_REGION=eu
+            - DEFAULT_REGION=eu-west-1
         tmpfs:
             - /tmp/localstack:exec,mode=600
