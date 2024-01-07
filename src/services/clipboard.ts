@@ -112,10 +112,10 @@ export const addEntry = async (newEntry: NewEntryParams, cb: CallbackErrorOnly) 
 
     let s3Key: string | undefined = undefined;
     if (file) {
-        const uuid = crypto.randomUUID();
+        // const uuid = crypto.randomUUID();
         const fileStream = fs.createReadStream(file.filepath);
 
-        s3Key = `${uuid}_${name}`;
+        s3Key = `${linkId}_${name}`;
         const params: PutObjectCommandInput = {
             Bucket: 'clipboard',
             Key: s3Key,
