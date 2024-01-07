@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as formidable from 'formidable';
-// import { firstValues } from 'formidable/src/helpers/firstValues.js';
-const { firstValues } = require('formidable/src/helpers/firstValues.js');
+// @ts-expect-error the formidable package doesn't properly export the firstValues helper
+import { firstValues } from 'formidable/src/helpers/firstValues.js';
 
 // Middleware to parse multipart content and put it in the request body
 export const multipartHandler = (req: Request, res: Response, next: NextFunction) => {

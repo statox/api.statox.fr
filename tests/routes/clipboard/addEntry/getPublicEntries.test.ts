@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { DateTime } from 'luxon';
 import { mysqlFixture } from '../../../helpers';
-import { app } from '../../../..';
 import { expect } from 'chai';
+import { app } from '../../../../src/app';
 
 describe('clipboard/getPublicEntries', () => {
     it('Should retieve only public entries', async () => {

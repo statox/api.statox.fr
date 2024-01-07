@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { mysqlCheckContains, mysqlCheckDoesNotContain, mysqlFixture } from '../../../helpers';
-import { app } from '../../../..';
+import { app } from '../../../../src/app';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {

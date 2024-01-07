@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import { app } from '../../../..';
+import { app } from '../../../../src/app';
 
 describe('getRemoteTime', () => {
     it('should return a timestamp close to now', () => {
