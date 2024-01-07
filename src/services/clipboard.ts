@@ -3,7 +3,7 @@ import { File } from 'formidable';
 import { db } from './db';
 import { generate4BytesHex } from './random';
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
-import * as crypto from 'crypto';
+import mime from 'mime-types';
 import * as fs from 'fs';
 import { S3, getPresignedUrl } from './s3';
 
@@ -112,10 +112,15 @@ export const addEntry = async (newEntry: NewEntryParams, cb: CallbackErrorOnly) 
 
     let s3Key: string | undefined = undefined;
     if (file) {
-        // const uuid = crypto.randomUUID();
         const fileStream = fs.createReadStream(file.filepath);
+        const extension = mime.extension(file.mimetype ?? '');
 
         s3Key = `${linkId}_${name}`;
+
+        if (extension) {
+            s3Key += `.${extension}`;
+        }
+
         const params: PutObjectCommandInput = {
             Bucket: 'clipboard',
             Key: s3Key,

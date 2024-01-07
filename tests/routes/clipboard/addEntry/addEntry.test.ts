@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { mysqlCheckContains, mysqlFixture } from '../../../helpers';
+import { mysqlCheckContains, mysqlDumpTables, mysqlFixture } from '../../../helpers';
 import { app } from '../../../..';
 import { expect } from 'chai';
 
@@ -113,6 +113,37 @@ describe('clipboard/addEntry', () => {
                 {
                     name: 'entry name',
                     s3Key: (value: string) => value.match(/.*entry name/) !== null
+                }
+            ]
+        });
+    });
+
+    it('When uploading a file should set an extension based on the file type', async () => {
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'image')
+            .field('content', 'image')
+            .attach('file', 'tests/assets/glider.png')
+            .expect(200);
+
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'animated_image')
+            .field('content', 'animated_image')
+            .attach('file', 'tests/assets/burns.gif')
+            .expect(200);
+
+        await mysqlCheckContains({
+            Clipboard: [
+                {
+                    name: 'image',
+                    s3Key: (value: string) => value.match(/.*image.png/) !== null
+                },
+                {
+                    name: 'animated_image',
+                    s3Key: (value: string) => value.match(/.*animated_image.gif/) !== null
                 }
             ]
         });

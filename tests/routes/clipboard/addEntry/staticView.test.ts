@@ -100,7 +100,6 @@ describe('clipboard/view', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                console.log(response.text);
                 expect(response.text).to.match(expectedRE);
             });
     });
