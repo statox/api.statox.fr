@@ -6,13 +6,12 @@ import { deleteEntry } from '../../services/clipboard';
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;
 
-    deleteEntry({ name }, (error) => {
-        if (error) {
-            return next(error);
-        }
-
+    try {
+        await deleteEntry({ name });
         res.send();
-    });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const inputSchema: AllowedSchema = {

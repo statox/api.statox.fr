@@ -4,6 +4,8 @@ import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addEntry } from '../../services/clipboard';
 
+import type { QueryError } from 'mysql2';
+
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name, content, ttlSeconds: ttlSecondsInput, isPublic: isPublicInput } = req.body;
 
@@ -15,16 +17,15 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
     const file: File = req.body.file?.pop();
 
-    addEntry({ name, content, ttlSeconds, isPublic, file }, (error) => {
-        if (error) {
-            if (error.message === 'ER_DUP_ENTRY') {
-                return res.status(400).send(error.message);
-            }
-            return next(error);
-        }
-
+    try {
+        await addEntry({ name, content, ttlSeconds, isPublic, file });
         res.send();
-    });
+    } catch (error) {
+        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
+            return res.status(400).send('ER_DUP_ENTRY');
+        }
+        next(error);
+    }
 };
 
 const inputSchema: AllowedSchema = {

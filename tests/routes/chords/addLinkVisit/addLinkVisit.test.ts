@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { mysqlCheckContains, mysqlFixture } from '../../../helpers';
 import { app } from '../../../../src/app';
+import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 
 describe('addLinkVisit', () => {
     it('should check input schema', async () => {

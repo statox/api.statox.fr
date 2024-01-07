@@ -37,7 +37,7 @@ export const initLocalStackS3 = async () => {
         return;
     }
 
-    console.log('init local s3');
+    console.log('init localstack s3');
     const listResponse = await S3.send(new ListBucketsCommand({}));
     const existingBuckets = listResponse.Buckets || [];
 
@@ -49,5 +49,8 @@ export const initLocalStackS3 = async () => {
         throw new Error('Some buckets are missing');
     }
 
-    bucketsNotCreated.forEach((bucket) => S3.send(new CreateBucketCommand({ Bucket: bucket })));
+    for (const bucket of bucketsNotCreated) {
+        console.log('Create bucket', bucket);
+        await S3.send(new CreateBucketCommand({ Bucket: bucket }));
+    }
 };

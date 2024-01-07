@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import { mysqlFixture } from '../../../helpers';
 import { app } from '../../../../src/app';
+import { mysqlFixture } from '../../../helpers/mysql';
 
 describe('getLinksVisitsCount', () => {
     it('should return the visit counts ordered by descending order', async () => {

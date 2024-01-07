@@ -3,12 +3,12 @@ import { GetRoute } from '../types';
 import { getEntriesForStaticView } from '../../services/clipboard';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    getEntriesForStaticView((err, entries) => {
-        if (err) {
-            return next(err);
-        }
+    try {
+        const entries = await getEntriesForStaticView();
         res.render('clipboard', { entries });
-    });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const route: GetRoute = {

@@ -1,19 +1,14 @@
-import { Callback, CallbackErrorOnly } from '../../tsUtils';
+import { RowDataPacket } from 'mysql2';
 import { db } from '../db';
 
-export const addLinkVisit = (params: { url: string }, cb: CallbackErrorOnly) => {
+export const addLinkVisit = async (params: { url: string }) => {
     db.query(
-        `INSERT INTO ChordFrequency (url, count, lastAccessDateUnix)
+        `
+INSERT INTO ChordFrequency (url, count, lastAccessDateUnix)
 VALUES (?, 1, UNIX_TIMESTAMP())
 ON DUPLICATE KEY UPDATE count = count+1, lastAccessDateUnix = UNIX_TIMESTAMP()
 `,
-        [params.url],
-        (error) => {
-            if (error) {
-                return cb(new Error(error.code));
-            }
-            cb();
-        }
+        [params.url]
     );
 };
 
@@ -22,11 +17,9 @@ type ChordVisitItem = {
     count: number;
     lastAccessDateUnix: number;
 };
-export const getLinksVisitsCount = (cb: Callback<ChordVisitItem>) => {
-    db.query('SELECT * FROM ChordFrequency ORDER BY count DESC', (error, rows) => {
-        if (error) {
-            return cb(new Error(error.code));
-        }
-        return cb(null, rows);
-    });
+export const getLinksVisitsCount = async () => {
+    const [rows] = await db.query<RowDataPacket[]>(
+        'SELECT * FROM ChordFrequency ORDER BY count DESC'
+    );
+    return rows as ChordVisitItem[];
 };

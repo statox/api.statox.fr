@@ -7,13 +7,12 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { url } = req.body;
     console.log('Adding visit to', url);
 
-    addLinkVisit({ url }, (error) => {
-        if (error) {
-            return next(error);
-        }
-
+    try {
+        await addLinkVisit({ url });
         res.send();
-    });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const inputSchema: AllowedSchema = {

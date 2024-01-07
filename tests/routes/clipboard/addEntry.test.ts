@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { mysqlCheckContains, mysqlFixture } from '../../../helpers';
 import { expect } from 'chai';
-import { app } from '../../../../src/app';
+import { app } from '../../../src/app';
+import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 
 describe('clipboard/addEntry', () => {
     it('should not create duplicate entry', async () => {

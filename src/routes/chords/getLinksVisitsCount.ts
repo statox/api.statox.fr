@@ -3,13 +3,12 @@ import { GetRoute } from '../types';
 import { getLinksVisitsCount } from '../../services/chords';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    getLinksVisitsCount((error, result) => {
-        if (error) {
-            return next(error);
-        }
-
+    try {
+        const result = await getLinksVisitsCount();
         res.json(result);
-    });
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const route: GetRoute = {

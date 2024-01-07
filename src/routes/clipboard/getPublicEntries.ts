@@ -3,12 +3,12 @@ import { GetRoute } from '../types';
 import { getPublicEntries } from '../../services/clipboard';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    getPublicEntries((err, entries) => {
-        if (err) {
-            return next(err);
-        }
-        res.json(entries);
-    });
+    try {
+        const result = await getPublicEntries();
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const route: GetRoute = {
