@@ -6,6 +6,7 @@ import { checkRequiredPermissions, validateAccessToken } from './middleware/auth
 import { errorHandler } from './middleware/errors.middleware';
 import mustacheExpress from 'mustache-express';
 import { multipartHandler } from './middleware/multipart.middleware';
+import { goatCounterHandler } from './middleware/goatcounter.middleware';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export const app = express();
@@ -23,6 +24,7 @@ app.set('views', './src/views');
 app.set('view engine', 'mustache');
 app.engine('mustache', mustacheExpress());
 
+app.use(goatCounterHandler);
 app.use(multipartHandler);
 
 for (const route of routes) {
