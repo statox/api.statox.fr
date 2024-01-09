@@ -2,15 +2,9 @@ import request from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../../src/app';
 import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import sinon from 'sinon';
-import { S3 } from '../../../src/services/s3';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { s3CheckCall } from '../../helpers/s3';
 
-let s3Send: sinon.SinonSpy;
 describe('clipboard/addEntry', () => {
-    beforeEach(() => (s3Send = sinon.spy(S3, 'send')));
-    afterEach(() => s3Send.restore());
-
     it('should not create duplicate entry', async () => {
         await mysqlFixture({
             Clipboard: [
@@ -46,6 +40,8 @@ describe('clipboard/addEntry', () => {
                 }
             ]
         });
+
+        s3CheckCall({ nbCalls: 0 });
     });
 
     it('should create new private entry with default ttl to 5 minutes', async () => {
@@ -73,6 +69,8 @@ describe('clipboard/addEntry', () => {
                 }
             ]
         });
+
+        s3CheckCall({ nbCalls: 0 });
     });
 
     it('should create new public entry with custom ttl', async () => {
@@ -102,6 +100,8 @@ describe('clipboard/addEntry', () => {
                 }
             ]
         });
+
+        s3CheckCall({ nbCalls: 0 });
     });
 
     it('When a file is provided should create new entry and upload the file to R2', async () => {
@@ -115,16 +115,11 @@ describe('clipboard/addEntry', () => {
             .attach('file', buffer)
             .expect(200);
 
-        sinon.assert.calledOnce(s3Send);
-        sinon.assert.calledWithMatch(s3Send, sinon.match.instanceOf(PutObjectCommand));
-        sinon.assert.calledWithMatch(
-            s3Send,
-            sinon.match.has('input', sinon.match.has('Bucket', 'clipboard'))
-        );
-        sinon.assert.calledWithMatch(
-            s3Send,
-            sinon.match.has('input', sinon.match.has('ContentType', 'application/octet-stream'))
-        );
+        s3CheckCall({
+            nbCalls: 1,
+            commandType: 'PutObject',
+            input: { Bucket: 'clipboard', ContentType: 'application/octet-stream' }
+        });
 
         await mysqlCheckContains({
             Clipboard: [
@@ -146,10 +141,12 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/glider.png')
                 .expect(200);
 
-            sinon.assert.calledWithMatch(
-                s3Send,
-                sinon.match.has('input', sinon.match.has('ContentType', 'image/png'))
-            );
+            s3CheckCall({
+                nbCalls: 1,
+                commandType: 'PutObject',
+                input: { Bucket: 'clipboard', ContentType: 'image/png' }
+            });
+
             await mysqlCheckContains({
                 Clipboard: [
                     {
@@ -169,10 +166,12 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/burns.gif')
                 .expect(200);
 
-            sinon.assert.calledWithMatch(
-                s3Send,
-                sinon.match.has('input', sinon.match.has('ContentType', 'image/gif'))
-            );
+            s3CheckCall({
+                nbCalls: 1,
+                commandType: 'PutObject',
+                input: { Bucket: 'clipboard', ContentType: 'image/gif' }
+            });
+
             await mysqlCheckContains({
                 Clipboard: [
                     {

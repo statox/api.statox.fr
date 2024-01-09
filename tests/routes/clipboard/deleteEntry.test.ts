@@ -1,9 +1,7 @@
 import request from 'supertest';
-import sinon from 'sinon';
-import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { app } from '../../../src/app';
 import { mysqlCheckContains, mysqlCheckDoesNotContain, mysqlFixture } from '../../helpers/mysql';
-import { S3 } from '../../../src/services/s3';
+import { s3CheckCall } from '../../helpers/s3';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {
@@ -51,10 +49,11 @@ describe('clipboard/deleteEntry', () => {
                 }
             ]
         });
+
+        s3CheckCall({ nbCalls: 0 });
     });
 
     it('should delete associated S3 file if it exists', async () => {
-        const s3Send = sinon.spy(S3, 'send');
         await mysqlFixture({
             Clipboard: [
                 {
@@ -77,17 +76,11 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
-        s3Send.restore();
-        sinon.assert.calledOnce(s3Send);
-        sinon.assert.calledWithMatch(s3Send, sinon.match.instanceOf(DeleteObjectCommand));
-        sinon.assert.calledWithMatch(
-            s3Send,
-            sinon.match.has('input', sinon.match.has('Bucket', 'clipboard'))
-        );
-        sinon.assert.calledWithMatch(
-            s3Send,
-            sinon.match.has('input', sinon.match.has('Key', 'foo.png'))
-        );
+        s3CheckCall({
+            nbCalls: 1,
+            commandType: 'DeleteObject',
+            input: { Bucket: 'clipboard', Key: 'foo.png' }
+        });
 
         await mysqlCheckDoesNotContain({
             Clipboard: [
