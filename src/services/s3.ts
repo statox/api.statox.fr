@@ -5,8 +5,8 @@ import {
     S3Client
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { isProd } from './env';
 
-const isProd = process.env.ENV === 'prod';
 const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
 const R2_SECRET_KEY = isProd ? process.env.R2_SECRET_KEY : 'test';
 const R2_ENDPOINT = isProd ? process.env.R2_ENDPOINT : 'http://127.0.0.1:4566';

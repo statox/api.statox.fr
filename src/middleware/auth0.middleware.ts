@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
+import { isProd, isTests } from '../services/env';
 
 const localAuth0 = {
     auth0Audience: 'http://localhost:3000',
@@ -11,16 +12,12 @@ const prodAuth0 = {
     auth0Domain: 'statox.eu.auth0.com'
 };
 
-// process.env.ENV is set via the heroku cli
-const config = process.env.ENV === 'prod' ? prodAuth0 : localAuth0;
-
-// proces.env.ENV tests is set by the "tests" script in package.json
-const isTestEnv = process.env.ENV === 'tests';
+const config = isProd ? prodAuth0 : localAuth0;
 
 // TODO Find a way to validate test tokens
 const skipValidateTokenForTests = (_req: Request, _res: Response, next: NextFunction) => next();
 
-export const validateAccessToken = isTestEnv
+export const validateAccessToken = isTests
     ? skipValidateTokenForTests
     : auth({
           issuerBaseURL: `https://${config.auth0Domain}`,
@@ -29,7 +26,7 @@ export const validateAccessToken = isTestEnv
 
 export const checkRequiredPermissions = (requiredPermissions: string[]) => {
     // TODO: Find a way to have test tokens with permissions
-    if (isTestEnv) {
+    if (isTests) {
         return skipValidateTokenForTests;
     }
 

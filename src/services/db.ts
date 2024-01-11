@@ -1,18 +1,19 @@
 import mysql, { Connection, ConnectionOptions } from 'mysql2/promise';
 import url from 'url';
+import { isProd, isTests } from './env';
 
 const PROD_URL = process.env.JAWSDB_URL;
 const DEV_URL = 'mysql://root:example@127.0.0.1:13306/db';
 const TESTS_URL = 'mysql://root:example@127.0.0.1:13306/tests';
 
 let dbUrl: string;
-if (process.env.ENV === 'prod') {
+if (isProd) {
     if (PROD_URL) {
         dbUrl = PROD_URL;
     } else {
         throw Error('db PROD_URL is not defined');
     }
-} else if (process.env.ENV === 'tests') {
+} else if (isTests) {
     dbUrl = TESTS_URL;
 } else {
     dbUrl = DEV_URL;
