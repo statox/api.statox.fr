@@ -28,31 +28,21 @@ app.use(goatCounterHandler);
 app.use(multipartHandler);
 
 for (const route of routes) {
-    if (route.method === 'get') {
-        if (route.protected) {
-            app.get(
-                route.path,
-                validateAccessToken,
-                checkRequiredPermissions(['author']),
-                route.handler
-            );
-        } else {
-            app.get(route.path, route.handler);
-        }
-    }
+    const pipeline = [];
 
+    if (route.protected) {
+        pipeline.push(validateAccessToken);
+        pipeline.push(checkRequiredPermissions(['author']));
+    }
     if (route.method === 'post') {
-        if (route.protected) {
-            app.post(
-                route.path,
-                validateAccessToken,
-                checkRequiredPermissions(['author']),
-                validate({ body: route.inputSchema }),
-                route.handler
-            );
-        } else {
-            app.post(route.path, validate({ body: route.inputSchema }), route.handler);
-        }
+        pipeline.push(validate({ body: route.inputSchema }));
+    }
+    pipeline.push(route.handler);
+
+    if (route.method === 'get') {
+        app.get(route.path, pipeline);
+    } else if (route.method === 'post') {
+        app.post(route.path, pipeline);
     }
 }
 
