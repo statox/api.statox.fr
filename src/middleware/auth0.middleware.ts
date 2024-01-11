@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
-import { isProd, isTests } from '../services/env';
+import { isProd } from '../services/env';
 
 const localAuth0 = {
     auth0Audience: 'http://localhost:3000',
@@ -14,22 +14,12 @@ const prodAuth0 = {
 
 const config = isProd ? prodAuth0 : localAuth0;
 
-// TODO Find a way to validate test tokens
-const skipValidateTokenForTests = (_req: Request, _res: Response, next: NextFunction) => next();
-
-export const validateAccessToken = isTests
-    ? skipValidateTokenForTests
-    : auth({
-          issuerBaseURL: `https://${config.auth0Domain}`,
-          audience: config.auth0Audience
-      });
+export const validateAccessToken = auth({
+    issuerBaseURL: `https://${config.auth0Domain}`,
+    audience: config.auth0Audience
+});
 
 export const checkRequiredPermissions = (requiredPermissions: string[]) => {
-    // TODO: Find a way to have test tokens with permissions
-    if (isTests) {
-        return skipValidateTokenForTests;
-    }
-
     return (req: Request, res: Response, next: NextFunction) => {
         const permissionCheck = claimCheck((payload) => {
             const permissions = payload.permissions as string[];

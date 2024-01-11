@@ -9,41 +9,48 @@ import { multipartHandler } from './middleware/multipart.middleware';
 import { goatCounterHandler } from './middleware/goatcounter.middleware';
 
 const { validate } = new Validator({ allowUnionTypes: true });
-export const app = express();
+export let app: express.Express;
 
-app.use(
-    cors({
-        // TODO have a proper local setup to avoid localhost in prod
-        origin: ['https://apps.statox.fr', 'http://localhost:8080']
-    })
-);
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+export const initApp = () => {
+    console.log('init app');
+    app = express();
+    app.use(
+        cors({
+            // TODO have a proper local setup to avoid localhost in prod
+            origin: ['https://apps.statox.fr', 'http://localhost:8080']
+        })
+    );
 
-app.set('views', './src/views');
-app.set('view engine', 'mustache');
-app.engine('mustache', mustacheExpress());
+    app.use(express.json());
 
-app.use(goatCounterHandler);
-app.use(multipartHandler);
+    app.set('views', './src/views');
+    app.set('view engine', 'mustache');
+    app.engine('mustache', mustacheExpress());
 
-for (const route of routes) {
-    const pipeline = [];
+    app.use(goatCounterHandler);
+    app.use(multipartHandler);
 
-    if (route.protected) {
-        pipeline.push(validateAccessToken);
-        pipeline.push(checkRequiredPermissions(['author']));
+    for (const route of routes) {
+        const pipeline = [];
+
+        if (route.protected) {
+            pipeline.push(validateAccessToken);
+            pipeline.push(checkRequiredPermissions(['author']));
+        }
+        if (route.method === 'post') {
+            pipeline.push(validate({ body: route.inputSchema }));
+        }
+        pipeline.push(route.handler);
+
+        if (route.method === 'get') {
+            app.get(route.path, pipeline);
+        } else if (route.method === 'post') {
+            app.post(route.path, pipeline);
+        }
     }
-    if (route.method === 'post') {
-        pipeline.push(validate({ body: route.inputSchema }));
-    }
-    pipeline.push(route.handler);
 
-    if (route.method === 'get') {
-        app.get(route.path, pipeline);
-    } else if (route.method === 'post') {
-        app.post(route.path, pipeline);
-    }
-}
-
-app.use(errorHandler);
+    app.use(errorHandler);
+    app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+};
