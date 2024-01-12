@@ -7,7 +7,6 @@ const goatCounterUrl = 'https://api-statox-fr.goatcounter.com/api/v0/count';
 
 export const goatCounterHandler = async (req: Request, _res: Response, next: NextFunction) => {
     if (!isProd) {
-        console.log(req.path);
         return next();
     }
 
