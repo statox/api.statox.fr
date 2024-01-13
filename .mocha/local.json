@@ -1,8 +1,0 @@
-{
-    "spec": "dist/tests/**/*.test.js",
-    "require": "dist/tests/globalMochaWrapper.js",
-    "exit": true,
-    "timeout": 300000,
-    "parallel": true,
-    "jobs": 1
-}

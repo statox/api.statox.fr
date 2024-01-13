@@ -1,0 +1,8 @@
+{
+    "spec": "dist/tests/routes/**/*.test.js",
+    "require": "dist/tests/helpers/mocha/routesMochaWrapper.js",
+    "exit": true,
+    "timeout": 300000,
+    "parallel": true,
+    "jobs": 1
+}

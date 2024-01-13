@@ -13,14 +13,16 @@
         "lint:fix": "npm run lint --quiet --fix",
         "format": "prettier --write .",
         "heroku:login": "npx heroku login",
-        "heroku:deploy": "npm run tests && git push heroku main",
+        "heroku:deploy": "npm run tests:all && git push heroku main",
         "postinstall": "tsc",
         "env:start": "podman-compose -f src/tools/docker-compose.yml up -d",
         "env:stop": "podman-compose -f src/tools/docker-compose.yml down",
         "dev": "npm run env:start && npm run watch && npm run serve",
         "serve": "nodemon dist/index.js",
         "watch": "rm -fr dist/ && tsc -w",
-        "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/local.json"
+        "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/routes.json",
+        "tests:all": "npm run tests:framework && npm run tests",
+        "tests:framework": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.485.0",

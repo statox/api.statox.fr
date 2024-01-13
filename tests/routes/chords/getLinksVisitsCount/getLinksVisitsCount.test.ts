@@ -27,7 +27,7 @@ describe('getLinksVisitsCount', () => {
             ChordFrequency: data
         });
 
-        request(app)
+        await request(app)
             .get('/chords/getLinksVisitsCount')
             .expect(200)
             .then((response) => {
