@@ -43,3 +43,34 @@ export const logErrorToSlack = async (error: Error) => {
         console.log(error);
     }
 };
+
+export const logMessageToSlack = async (message: string) => {
+    if (!isProd) {
+        return;
+    }
+
+    try {
+        await webhook.send({
+            text: 'An event occurred',
+            blocks: [
+                {
+                    type: 'header',
+                    text: {
+                        type: 'plain_text',
+                        text: 'event'
+                    }
+                },
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: message
+                    }
+                }
+            ]
+        });
+    } catch (error) {
+        console.log('Couldnt log error to slack');
+        console.log(error);
+    }
+};
