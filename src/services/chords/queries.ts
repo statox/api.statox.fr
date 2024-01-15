@@ -2,7 +2,7 @@ import { RowDataPacket } from 'mysql2';
 import { db } from '../db';
 
 export const addLinkVisit = async (params: { url: string }) => {
-    db.query(
+    return db.query(
         `
 INSERT INTO ChordFrequency (url, count, lastAccessDateUnix)
 VALUES (?, 1, UNIX_TIMESTAMP())

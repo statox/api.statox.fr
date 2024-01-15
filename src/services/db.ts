@@ -1,4 +1,4 @@
-import mysql, { Connection, ConnectionOptions } from 'mysql2/promise';
+import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { isProd, isTests } from './env';
 
@@ -19,7 +19,7 @@ if (isProd) {
     dbUrl = DEV_URL;
 }
 
-export let db: Connection;
+export let db: Pool;
 export const initDb = async () => {
     console.log('init db');
     const parsedUrl = url.parse(dbUrl);
@@ -35,14 +35,16 @@ export const initDb = async () => {
         }
     }
 
-    const connectionOptions: ConnectionOptions = {
+    const connectionOptions: PoolOptions = {
         host: parsedUrl.hostname!,
         port: Number(parsedUrl.port!),
         user: parsedUrl.auth!.split(':')[0],
         password: parsedUrl.auth!.split(':')[1],
-        database: parsedUrl.path!.slice(1)
+        database: parsedUrl.path!.slice(1),
+        waitForConnections: true,
+        connectionLimit: 5,
+        queueLimit: 10
     };
 
-    db = await mysql.createConnection(connectionOptions);
-    await db.connect();
+    db = mysql.createPool(connectionOptions);
 };
