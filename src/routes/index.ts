@@ -1,5 +1,6 @@
 import { Route } from './types';
 import { route as addLinkVisit } from './chords/addLinkVisit';
+import { route as getAllChords } from './chords/getAll';
 import { route as getLinksVisitsCount } from './chords/getLinksVisitsCount';
 import { route as checkLinks } from './chords/checkLinks';
 import { route as addEntry } from './clipboard/addEntry';
@@ -16,6 +17,7 @@ export const routes: Route[] = [
     addLinkVisit,
     clipboardStaticView,
     deleteClipboardEntry,
+    getAllChords,
     getClipboardAllEntries,
     getClipboardPublicEntries,
     getLinksVisitsCount,

@@ -1,4 +1,4 @@
 import { checkChordsUrl } from './urlsChecker';
-import { addLinkVisit, getLinksVisitsCount } from './queries';
+import { addLinkVisit, getAllChords, getLinksVisitsCount } from './queries';
 
-export { addLinkVisit, checkChordsUrl, getLinksVisitsCount };
+export { addLinkVisit, checkChordsUrl, getAllChords, getLinksVisitsCount };

@@ -1,27 +1,9 @@
 import fs from 'node:fs';
-
-type Chord = {
-    artist: string;
-    title: string;
-    url: string;
-    creationDate: number;
-    tags: string[];
-};
+import { Chord } from './types';
+import { getAllChords } from './queries';
 
 const RESULTS_FILE_PATH = './chords_check_results.json';
 const RESULTS_FILE_TTL = 1000 * 60 * 15; // 15 minutes
-const CHORDS_URL = 'https://raw.githubusercontent.com/statox/blog/master/src/_data/chords.json';
-
-export const loadChordsList = async (): Promise<Chord[]> => {
-    const chords = await fetch(CHORDS_URL).then((response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        return response.json();
-    });
-    return chords;
-};
 
 const checkChordUrl = async (chord: Chord) => {
     if (chord.url.match('s3.eu-west-3')) {
@@ -71,7 +53,7 @@ export const checkChordsUrl = async () => {
         }
     }
 
-    const chords = await loadChordsList();
+    const chords = await getAllChords();
     const results = await getFailingUrls(chords);
     fs.writeFileSync(RESULTS_FILE_PATH, JSON.stringify(results));
 

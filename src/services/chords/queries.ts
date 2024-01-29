@@ -1,5 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { db } from '../db';
+import { Chord } from './types';
 
 export const addLinkVisit = async (params: { url: string }) => {
     return db.query(
@@ -22,4 +23,16 @@ export const getLinksVisitsCount = async () => {
         'SELECT * FROM ChordFrequency ORDER BY count DESC'
     );
     return rows as ChordVisitItem[];
+};
+
+const CHORDS_URL = 'https://raw.githubusercontent.com/statox/blog/master/src/_data/chords.json';
+export const getAllChords = async (): Promise<Chord[]> => {
+    const chords = await fetch(CHORDS_URL).then((response) => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        return response.json();
+    });
+    return chords;
 };
