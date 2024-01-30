@@ -8,7 +8,7 @@ For now everything is done locally
 npm install
 
 # Working locally
-npm run env:start # Start the docker environement
+npm run env # Start the docker environement
 ./src/tools/init-db.sh
 npm run watch # Typescript watcher
 npm run serve # Start the server locally on port 3000
