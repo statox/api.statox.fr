@@ -1,39 +1,47 @@
 import sinon from 'sinon';
-import { S3 } from '../../../src/services/s3';
-import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-
-let s3Spy: sinon.SinonSpy;
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { assert } from 'chai';
+import { s3Mock } from '../../../src/services/s3';
+import 'aws-sdk-client-mock-jest';
 
 export const setupS3Spy = () => {
-    s3Spy = sinon.spy(S3, 'send');
+    s3Mock.reset();
 };
 
-export const restoreS3Spy = () => {
-    s3Spy.restore();
+type S3CheckNbCallsParams = { nbCalls: number };
+type S3CheckCallArsParams = {
+    commandType: 'DeleteObject' | 'PutObject';
+    input: { [key: string]: string };
 };
+type S3CheckCallParams = S3CheckNbCallsParams | S3CheckCallArsParams;
 
-type S3CheckCallParams = {
-    nbCalls: number;
-    commandType?: 'DeleteObject' | 'PutObject';
-    input?: { [key: string]: string };
-};
+function isNbCallsCheck(check: S3CheckCallParams): check is S3CheckNbCallsParams {
+    return (check as S3CheckNbCallsParams).nbCalls !== undefined;
+}
+
 export const s3CheckCall = (params: S3CheckCallParams) => {
-    sinon.assert.callCount(s3Spy, params.nbCalls);
+    if (isNbCallsCheck(params)) {
+        assert.equal(s3Mock.calls().length, params.nbCalls);
+        return;
+    }
 
     if (params.commandType === 'DeleteObject') {
-        sinon.assert.calledWithMatch(s3Spy, sinon.match.instanceOf(DeleteObjectCommand));
+        assert.exists(s3Mock.commandCalls(DeleteObjectCommand));
     } else if (params.commandType === 'PutObject') {
-        sinon.assert.calledWithMatch(s3Spy, sinon.match.instanceOf(PutObjectCommand));
+        assert.exists(s3Mock.commandCalls(PutObjectCommand));
+    } else if (params.commandType === 'GetObject') {
+        assert.exists(s3Mock.commandCalls(GetObjectCommand));
     }
 
     if (params.input) {
+        const c = s3Mock.calls().pop();
+        if (!c) {
+            return sinon.assert.fail();
+        }
+
         for (const key of Object.keys(params.input)) {
             const value = params.input[key];
-
-            sinon.assert.calledWithMatch(
-                s3Spy,
-                sinon.match.has('input', sinon.match.has(key, value))
-            );
+            sinon.assert.calledWithMatch(c, sinon.match.has('input', sinon.match.has(key, value)));
         }
     }
 };

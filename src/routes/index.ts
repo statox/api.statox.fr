@@ -1,4 +1,5 @@
 import { Route } from './types';
+import { route as addChord } from './chords/addEntry';
 import { route as addLinkVisit } from './chords/addLinkVisit';
 import { route as getAllChords } from './chords/getAll';
 import { route as getLinksVisitsCount } from './chords/getLinksVisitsCount';
@@ -13,6 +14,7 @@ import { route as soundTest } from './test/sound';
 import { route as soundTest2 } from './test/sound2';
 
 export const routes: Route[] = [
+    addChord,
     addEntry,
     addLinkVisit,
     clipboardStaticView,

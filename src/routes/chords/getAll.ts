@@ -3,8 +3,8 @@ import { getAllChords } from '../../services/chords';
 import { GetRoute } from '../types';
 
 const handler = async (_req: Request, res: Response) => {
-    const checkResults = await getAllChords();
-    res.json(checkResults);
+    const chords = await getAllChords();
+    res.json(chords);
 };
 
 export const route: GetRoute = {

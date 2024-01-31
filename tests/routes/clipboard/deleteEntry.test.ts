@@ -76,8 +76,8 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
+        s3CheckCall({ nbCalls: 1 });
         s3CheckCall({
-            nbCalls: 1,
             commandType: 'DeleteObject',
             input: { Bucket: 'clipboard', Key: 'foo.png' }
         });

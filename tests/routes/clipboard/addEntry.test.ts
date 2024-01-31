@@ -115,10 +115,13 @@ describe('clipboard/addEntry', () => {
             .attach('file', buffer)
             .expect(200);
 
+        s3CheckCall({ nbCalls: 1 });
         s3CheckCall({
-            nbCalls: 1,
             commandType: 'PutObject',
-            input: { Bucket: 'clipboard', ContentType: 'application/octet-stream' }
+            input: {
+                Bucket: 'clipboard',
+                ContentType: 'application/octet-stream'
+            }
         });
 
         await mysqlCheckContains({
@@ -141,8 +144,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/glider.png')
                 .expect(200);
 
+            s3CheckCall({ nbCalls: 1 });
             s3CheckCall({
-                nbCalls: 1,
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/png' }
             });
@@ -166,8 +169,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/burns.gif')
                 .expect(200);
 
+            s3CheckCall({ nbCalls: 1 });
             s3CheckCall({
-                nbCalls: 1,
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/gif' }
             });

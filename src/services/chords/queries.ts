@@ -1,6 +1,9 @@
 import { RowDataPacket } from 'mysql2';
 import { db } from '../db';
 import { Chord } from './types';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3 } from '../s3';
+import { logErrorToSlack, logMessageToSlack } from '../logging/slack';
 
 export const addLinkVisit = async (params: { url: string }) => {
     return db.query(
@@ -25,14 +28,19 @@ export const getLinksVisitsCount = async () => {
     return rows as ChordVisitItem[];
 };
 
-const CHORDS_URL = 'https://raw.githubusercontent.com/statox/blog/master/src/_data/chords.json';
 export const getAllChords = async (): Promise<Chord[]> => {
-    const chords = await fetch(CHORDS_URL).then((response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+    const cmd = new GetObjectCommand({ Bucket: 'songbook', Key: 'index.json' });
+    try {
+        const res = await S3.send(cmd);
+        const str = await res.Body?.transformToString();
+        if (!str) {
+            throw new Error('Empty chords file');
         }
 
-        return response.json();
-    });
-    return chords;
+        return JSON.parse(str);
+    } catch (error) {
+        logMessageToSlack('Error in get chords');
+        logErrorToSlack(error as Error);
+        throw error;
+    }
 };
