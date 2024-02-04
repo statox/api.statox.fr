@@ -41,6 +41,7 @@ export const s3CheckCall = (params: S3CheckCallParams) => {
 
         for (const key of Object.keys(params.input)) {
             const value = params.input[key];
+            // TODO allow better matching to test actual content of Body
             sinon.assert.calledWithMatch(c, sinon.match.has('input', sinon.match.has(key, value)));
         }
     }

@@ -1,8 +1,8 @@
 import { Route } from './types';
-import { route as addChord } from './chords/addEntry';
 import { route as addLinkVisit } from './chords/addLinkVisit';
 import { route as getAllChords } from './chords/getAll';
 import { route as getLinksVisitsCount } from './chords/getLinksVisitsCount';
+import { route as updateAllChords } from './chords/updateAll';
 import { route as checkLinks } from './chords/checkLinks';
 import { route as addEntry } from './clipboard/addEntry';
 import { route as deleteClipboardEntry } from './clipboard/deleteEntry';
@@ -14,7 +14,6 @@ import { route as soundTest } from './test/sound';
 import { route as soundTest2 } from './test/sound2';
 
 export const routes: Route[] = [
-    addChord,
     addEntry,
     addLinkVisit,
     clipboardStaticView,
@@ -24,6 +23,7 @@ export const routes: Route[] = [
     getClipboardPublicEntries,
     getLinksVisitsCount,
     getRemoteTime,
+    updateAllChords,
     checkLinks,
     soundTest,
     soundTest2
