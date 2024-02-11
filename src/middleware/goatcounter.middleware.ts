@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../services/env';
+import { isProd } from '../services/env-helpers/env';
 
 // Token is from https://api-statox-fr.goatcounter.com/user/api
 const token = isProd ? process.env.GOATCOUNTER_TOKEN : '';

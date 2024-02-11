@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { assert } from 'chai';
-import { s3Mock } from '../../../src/services/s3';
+import { s3Mock } from '../../../src/services/env-helpers/s3';
 import 'aws-sdk-client-mock-jest';
 
 export const setupS3Spy = () => {

@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2';
-import { db } from '../../../src/services/db';
+import { db } from '../../../src/services/env-helpers/db';
 
 const listAllTables = async () => {
     const [rows] = await db.query<RowDataPacket[]>('SHOW TABLES');

@@ -1,8 +1,8 @@
-import { RowDataPacket } from 'mysql2';
-import { db } from '../db';
-import { Chord } from './types';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
-import { S3 } from '../s3';
+import { RowDataPacket } from 'mysql2';
+import { Chord } from './types';
+import { db } from '../env-helpers/db';
+import { S3 } from '../env-helpers/s3';
 import { logErrorToSlack, logMessageToSlack } from '../logging/slack';
 
 export const addLinkVisit = async (params: { url: string }) => {

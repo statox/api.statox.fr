@@ -1,5 +1,5 @@
 import { raw } from 'mysql2';
-import { db } from '../../../src/services/db';
+import { db } from '../../../src/services/env-helpers/db';
 
 type MysqlFixture = {
     [table: string]: { [column: string]: string | number | boolean | null }[];

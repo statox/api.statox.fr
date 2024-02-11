@@ -1,5 +1,5 @@
-import { db } from '../db';
-import { getPresignedUrl } from '../s3';
+import { db } from '../env-helpers/db';
+import { getPresignedUrl } from '../env-helpers/s3';
 
 type ClipboardEntry = {
     id: number;

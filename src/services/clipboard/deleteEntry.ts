@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2';
 import { DeleteObjectCommand, DeleteObjectCommandInput } from '@aws-sdk/client-s3';
-import { db } from '../db';
-import { S3 } from '../s3';
+import { db } from '../env-helpers/db';
+import { S3 } from '../env-helpers/s3';
 
 export const deleteEntry = async (params: { name: string }) => {
     const [rows] = await db.query<RowDataPacket[]>('SELECT s3Key FROM Clipboard WHERE name = ?', [

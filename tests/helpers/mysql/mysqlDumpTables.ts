@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2';
-import { db } from '../../../src/services/db';
+import { db } from '../../../src/services/env-helpers/db';
 
 export const mysqlDumpTables = async (tables: string[] | string) => {
     if (!Array.isArray(tables)) {

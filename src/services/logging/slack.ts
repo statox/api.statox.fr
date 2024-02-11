@@ -1,5 +1,5 @@
 import { IncomingWebhook } from '@slack/webhook';
-import { isProd } from '../env';
+import { isProd } from '../env-helpers/env';
 
 const url = isProd ? process.env.LOGS_SLACK_WEBHOOK_URL : '';
 

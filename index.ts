@@ -1,7 +1,7 @@
 import { initApp } from './src/app';
-import { initDb } from './src/services/db';
+import { initDb } from './src/services/env-helpers/db';
 import { logMessageToSlack } from './src/services/logging/slack';
-import { initLocalStackS3 } from './src/services/s3';
+import { initLocalStackS3 } from './src/services/env-helpers/s3';
 
 const start = async () => {
     await initLocalStackS3();
