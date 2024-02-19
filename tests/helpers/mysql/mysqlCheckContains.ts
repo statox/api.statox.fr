@@ -1,13 +1,13 @@
 import { RowDataPacket } from 'mysql2/promise';
 import { db } from '../../../src/services/env-helpers/db';
-import { MysqlCheckData, TableCheck } from './types';
+import { ColumnCheckFunction, MysqlCheckData, TableCheck } from './types';
 
 const checkTableContains = async (table: string, checks: TableCheck[]) => {
     for (const row of checks) {
         const conditions = [];
         const values: unknown[] = [];
 
-        const columnMatchingFunctions: { [column: string]: (val: unknown) => boolean } = {};
+        const columnMatchingFunctions: { [column: string]: ColumnCheckFunction } = {};
 
         for (const column in row) {
             const value = row[column];
