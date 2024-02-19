@@ -14,6 +14,7 @@
         "format": "prettier --write .",
         "heroku:login": "npx heroku login",
         "heroku:deploy": "npm run tests:all && git push heroku main",
+        "heroku:force-deploy": "git push -f heroku main",
         "postinstall": "tsc",
         "env": "podman-compose -f src/tools/docker-compose.yml up -d",
         "env:stop": "podman-compose -f src/tools/docker-compose.yml down",
