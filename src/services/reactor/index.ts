@@ -1,3 +1,4 @@
 import { addEntry } from './addEntry';
+import { getEntriesForPublic } from './getEntries';
 
-export { addEntry };
+export { addEntry, getEntriesForPublic };
