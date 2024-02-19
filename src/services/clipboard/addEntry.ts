@@ -22,7 +22,6 @@ export const addEntry = async (newEntry: NewEntryParams) => {
 
     let s3Key: string | undefined = undefined;
     if (file) {
-        const fileStream = fs.createReadStream(file.filepath);
         const extension = mime.extension(file.mimetype ?? '');
 
         s3Key = `${linkId}_${name}`;
@@ -30,27 +29,35 @@ export const addEntry = async (newEntry: NewEntryParams) => {
         if (extension) {
             s3Key += `.${extension}`;
         }
-
-        const params: PutObjectCommandInput = {
-            Bucket: 'clipboard',
-            Key: s3Key,
-            Body: fileStream,
-            ContentType: file.mimetype ?? undefined
-        };
-
-        try {
-            await S3.send(new PutObjectCommand(params));
-        } catch (error) {
-            console.log('Error while uploading file to s3', error);
-            return error;
-        }
     }
 
-    return db.query(
-        `
+    const conn = await db.getConnection();
+    try {
+        await conn.query(
+            `
 INSERT INTO Clipboard (name, content, ttl, isPublic, linkId, s3Key, creationDateUnix)
 VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
 `,
-        [name, content, ttlSeconds, isPublic, linkId, s3Key]
-    );
+            [name, content, ttlSeconds, isPublic, linkId, s3Key]
+        );
+
+        if (file) {
+            const fileStream = fs.createReadStream(file.filepath);
+            const params: PutObjectCommandInput = {
+                Bucket: 'clipboard',
+                Key: s3Key,
+                Body: fileStream,
+                ContentType: file.mimetype ?? undefined
+            };
+
+            await S3.send(new PutObjectCommand(params));
+        }
+
+        return conn.commit();
+    } catch (error) {
+        await conn.rollback();
+        throw error;
+    } finally {
+        conn.release();
+    }
 };

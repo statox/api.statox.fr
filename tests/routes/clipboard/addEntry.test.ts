@@ -44,6 +44,45 @@ describe('clipboard/addEntry', () => {
         s3CheckCall({ nbCalls: 0 });
     });
 
+    it('should not call s3 when avoiding creating a duplicate entry', async () => {
+        const buffer = Buffer.from('some data');
+        await mysqlFixture({
+            Clipboard: [
+                {
+                    id: 1,
+                    name: 'A cool entry',
+                    content: 'Look at that content',
+                    creationDateUnix: 10,
+                    ttl: 100,
+                    linkId: 'aabbccdd'
+                }
+            ]
+        });
+
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'A cool entry')
+            .field('content', 'entry content')
+            .attach('file', buffer)
+            .expect(400)
+            .then((response) => {
+                expect(response.text).to.equal('ER_DUP_ENTRY');
+            });
+
+        await mysqlCheckContains({
+            Clipboard: [
+                {
+                    name: 'A cool entry',
+                    content: 'Look at that content',
+                    creationDateUnix: 10
+                }
+            ]
+        });
+
+        s3CheckCall({ nbCalls: 0 });
+    });
+
     it('should create new private entry with default ttl to 5 minutes', async () => {
         await request(app)
             .post('/clipboard/addEntry')
