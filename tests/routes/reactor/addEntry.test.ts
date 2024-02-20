@@ -77,4 +77,36 @@ describe('reactor/addEntry', () => {
             ]
         });
     });
+
+    it('Should create entry with empty tags array if no tags are provided', async () => {
+        await request(app)
+            .post('/reactor/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'entry name')
+            .field('commaSeparatedTags', '')
+            .attach('file', 'tests/assets/glider.png')
+            .expect(200);
+
+        s3CheckCall({ nbCalls: 1 });
+        s3CheckCall({
+            commandType: 'PutObject',
+            input: {
+                Bucket: 'reactor',
+                ContentType: 'image/png'
+            }
+        });
+
+        await mysqlCheckContains({
+            Reactor: [
+                {
+                    name: 'entry name',
+                    s3Key: (value: string) => value.match(/.*entry name/) !== null,
+                    tags: (value: string) => {
+                        assert.equal(value, '[]');
+                        return true;
+                    }
+                }
+            ]
+        });
+    });
 });

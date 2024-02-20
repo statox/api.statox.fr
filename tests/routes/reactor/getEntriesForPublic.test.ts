@@ -8,7 +8,7 @@ describe('reactor/getEntriesForPublic', () => {
         const entry1 = {
             id: 1,
             name: 'entry 1',
-            tags: 'tags1,tags2',
+            tags: '["tag1","tag2"]',
             creationDateUnix: 10,
             linkId: 'aaaaaaaa',
             s3Key: 'foo'
@@ -16,7 +16,7 @@ describe('reactor/getEntriesForPublic', () => {
         const entry2 = {
             id: 2,
             name: 'entry 2',
-            tags: '',
+            tags: '[]',
             creationDateUnix: 50,
             linkId: 'bbbbbbbb',
             s3Key: 'bar'
@@ -34,7 +34,7 @@ describe('reactor/getEntriesForPublic', () => {
                 const r1 = response.body[0];
                 assert.propertyVal(r1, 'name', 'entry 1');
                 assert.propertyVal(r1, 'creationDateUnix', 10);
-                assert.deepEqual(r1.tags, ['tags1', 'tags2']);
+                assert.deepEqual(r1.tags, ['tag1', 'tag2']);
                 try {
                     new URL(r1.s3PresignedUrl);
                 } catch {

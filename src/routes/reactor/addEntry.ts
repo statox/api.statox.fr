@@ -9,7 +9,7 @@ import type { QueryError } from 'mysql2';
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name, commaSeparatedTags } = req.body;
 
-    const tags = commaSeparatedTags.split(',');
+    const tags = commaSeparatedTags.split(',').filter((tag: string) => tag.length);
 
     const file: File = req.body.file.pop();
 
