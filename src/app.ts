@@ -8,6 +8,7 @@ import mustacheExpress from 'mustache-express';
 import { multipartHandler } from './middleware/multipart.middleware';
 import { goatCounterHandler } from './middleware/goatcounter.middleware';
 import { loggingHandler } from './middleware/logging.middleware';
+import { logMessageToSlack } from './services/logging/slack';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -15,7 +16,7 @@ export let app: express.Express;
 const PORT = process.env.PORT || 3000;
 
 export const initApp = () => {
-    console.log('init app');
+    logMessageToSlack('init app');
     app = express();
     app.use(
         cors({
@@ -54,5 +55,5 @@ export const initApp = () => {
     }
 
     app.use(errorHandler);
-    app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    app.listen(PORT, () => logMessageToSlack(`Listening on ${PORT}`));
 };

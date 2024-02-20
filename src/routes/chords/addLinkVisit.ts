@@ -2,10 +2,11 @@ import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addLinkVisit } from '../../services/chords';
+import { logMessageToSlack } from '../../services/logging/slack';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { url } = req.body;
-    console.log('Adding visit to', url);
+    logMessageToSlack('Adding visit to ' + url);
 
     try {
         await addLinkVisit({ url });
