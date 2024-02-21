@@ -7,7 +7,6 @@ import { logMessageToSlack } from '../../services/logging/slack';
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { chords } = req.body;
     logMessageToSlack('Updating chords. New number of chords:' + chords.length);
-    logMessageToSlack(JSON.stringify(chords, null, 2));
 
     try {
         await updateChords(chords);
