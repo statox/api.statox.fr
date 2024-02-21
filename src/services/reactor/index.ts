@@ -1,4 +1,4 @@
 import { addEntry } from './addEntry';
-import { getEntriesForPublic } from './getEntries';
+import { getEntriesForPublic, getEntryPresignedUrl } from './getEntries';
 
-export { addEntry, getEntriesForPublic };
+export { addEntry, getEntriesForPublic, getEntryPresignedUrl };
