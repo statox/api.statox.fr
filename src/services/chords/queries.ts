@@ -23,7 +23,7 @@ type ChordVisitItem = {
 };
 export const getLinksVisitsCount = async () => {
     const [rows] = await db.query<RowDataPacket[]>(
-        'SELECT * FROM ChordFrequency ORDER BY count DESC'
+        'SELECT url, count, lastAccessDateUnix FROM ChordFrequency ORDER BY count DESC'
     );
     return rows as ChordVisitItem[];
 };
