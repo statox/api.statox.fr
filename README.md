@@ -22,6 +22,7 @@ npm run heroku:deploy
 
 -   [ ] Tests don't check for tokens. Find a way to test this part
 -   [ ] Replace Auth0 with passport.js?
+-   [ ] Enfore routes to return at least `{}` instead of nothiing (otherwise it breaks apps.statox.fr on iOS only)
 
 ## Database
 

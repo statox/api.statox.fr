@@ -8,7 +8,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         await deleteEntry({ name });
-        res.send();
+        res.send({});
     } catch (error) {
         next(error);
     }

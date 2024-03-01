@@ -19,7 +19,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         await addEntry({ name, content, ttlSeconds, isPublic, file });
-        res.send();
+        res.send({});
     } catch (error) {
         if ((error as QueryError).code === 'ER_DUP_ENTRY') {
             return res.status(400).send('ER_DUP_ENTRY');
