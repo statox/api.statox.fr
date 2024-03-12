@@ -44,7 +44,7 @@ export const initDb = async () => {
         database: parsedUrl.path!.slice(1),
         waitForConnections: true,
         connectionLimit: 5,
-        queueLimit: 10
+        queueLimit: 1000
     };
 
     db = mysql.createPool(connectionOptions);
