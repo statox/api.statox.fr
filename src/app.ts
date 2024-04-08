@@ -9,6 +9,7 @@ import { multipartHandler } from './middleware/multipart.middleware';
 import { goatCounterHandler } from './middleware/goatcounter.middleware';
 import { loggingHandler } from './middleware/logging.middleware';
 import { logMessageToSlack } from './services/logging/slack';
+import { startPeriodicTasks } from './PeriodicTasks';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -56,4 +57,6 @@ export const initApp = () => {
 
     app.use(errorHandler);
     app.listen(PORT, () => logMessageToSlack(`Listening on ${PORT}`));
+
+    startPeriodicTasks();
 };
