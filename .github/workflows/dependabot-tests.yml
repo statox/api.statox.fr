@@ -15,6 +15,7 @@ on:
 
 permissions:
   pull-requests: write
+  contents: write # https://github.com/cli/cli/issues/6695#issuecomment-1348430969
 
 jobs:
  test:
