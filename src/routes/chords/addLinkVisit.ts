@@ -10,7 +10,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         await addLinkVisit({ url });
-        res.send();
+        res.send({});
     } catch (error) {
         next(error);
     }

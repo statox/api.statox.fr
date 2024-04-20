@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
 import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
+import { assert } from 'chai';
 
 describe('addLinkVisit', () => {
     it('should check input schema', async () => {
@@ -20,7 +21,10 @@ describe('addLinkVisit', () => {
             .send({
                 url: 'https://bar.com'
             })
-            .expect(200);
+            .expect(200)
+            .then((response) => {
+                assert.deepEqual(response.body, {});
+            });
 
         await mysqlCheckContains({
             ChordFrequency: [
@@ -57,7 +61,10 @@ describe('addLinkVisit', () => {
             .send({
                 url: 'https://bar.com'
             })
-            .expect(200);
+            .expect(200)
+            .then((response) => {
+                assert.deepEqual(response.body, {});
+            });
 
         await mysqlCheckContains({
             ChordFrequency: [
