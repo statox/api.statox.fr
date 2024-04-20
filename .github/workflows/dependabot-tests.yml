@@ -1,0 +1,52 @@
+# This workflow is used to run the tests when dependabot creates a PR
+#
+# The goal is to use the tests as a Github state check to enable dependabot
+# PR automerge
+#
+# TODO:
+# - Trigger only for dependabot PR (for now all MR trigger)
+# - Maybe restrict the types for the pull_request event
+
+name: Run tests on PRs
+on:
+ pull_request:
+    types: [opened, synchronize, edited]
+    branches: [main]
+    # branches: '*'
+
+jobs:
+ test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install podman
+        uses: gacts/install-podman@v1
+
+      - name: Install podman-compose
+        run: pip3 install podman-compose
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start environement
+        run: npm run env
+
+      - name: Init db
+        run: ./src/tools/init-db.sh
+
+      - name: Run tests
+        run: npm run tests:all
