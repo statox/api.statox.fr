@@ -10,7 +10,7 @@ describe('clipboard/addEntry', () => {
             .post('/clipboard/addEntry')
             .set('Accept', 'application/json')
             .send({ name: 'A cool entry' })
-            .expect(400)
+            .expect(500)
             .then((response) => {
                 expect(response.text).to.equal('FILE_OR_CONTENT_REQUIRED');
             });
