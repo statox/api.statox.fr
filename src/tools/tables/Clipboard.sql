@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `Clipboard` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(400) NOT NULL,
-    `content`varchar(400) NOT NULL,
+    `content`varchar(400),
     `creationDateUnix` int(11) unsigned NOT NULL,
     `ttl` int(11) NOT NULL,
     `isPublic` tinyint NOT NULL DEFAULT 0,

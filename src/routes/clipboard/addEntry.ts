@@ -17,6 +17,10 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
     const file: File = req.body.file?.pop();
 
+    if (!content && !file) {
+        return res.status(400).send('FILE_OR_CONTENT_REQUIRED');
+    }
+
     try {
         await addEntry({ name, content, ttlSeconds, isPublic, file });
         res.send({});
@@ -30,7 +34,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 
 const inputSchema: AllowedSchema = {
     type: 'object',
-    required: ['name', 'content'],
+    required: ['name'],
     additionalProperties: false,
     properties: {
         name: {

@@ -5,6 +5,26 @@ import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { s3CheckCall } from '../../helpers/s3';
 
 describe('clipboard/addEntry', () => {
+    it('should reject a query if no file and no content are provided', async () => {
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('Accept', 'application/json')
+            .send({ name: 'A cool entry' })
+            .expect(400)
+            .then((response) => {
+                expect(response.text).to.equal('FILE_OR_CONTENT_REQUIRED');
+            });
+
+        // Allow file without a comment
+        const buffer = Buffer.from('some data');
+        await request(app)
+            .post('/clipboard/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'entry name')
+            .attach('file', buffer)
+            .expect(200);
+    });
+
     it('should not create duplicate entry', async () => {
         await mysqlFixture({
             Clipboard: [
