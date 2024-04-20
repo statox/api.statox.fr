@@ -1,0 +1,77 @@
+# This workflow is used to run the tests when dependabot creates a PR and automatically
+# merge the PR.
+#
+# The tests are used as State Checks for the PR
+# And the steps trigger the approval of the PR and the setup of the auto-merge setting
+#
+# TODO:
+# - Maybe restrict the types for the pull_request event
+
+name: Test and AutoMerge PRs
+
+on:
+ pull_request:
+    types: [opened, synchronize, edited]
+    branches: [main]
+
+permissions:
+  # This is needed to approve the PR
+  pull-requests: write
+  # This is needed to merge the PR https://github.com/cli/cli/issues/6695#issuecomment-1348430969
+  contents: write
+
+jobs:
+ test-and-auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install podman
+        uses: gacts/install-podman@v1
+
+      - name: Install podman-compose
+        run: pip3 install podman-compose
+
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start podman environment
+        run: npm run env
+
+      - name: Init db
+        run: ./src/tools/init-db.sh
+
+      - name: Run tests
+        run: npm run tests:all
+
+      - name: Get dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{secrets.GITHUB_TOKEN}}"
+
+      - name: Approve the PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Auto merge the PR
+        run: gh pr merge --rebase --auto "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
