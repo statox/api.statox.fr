@@ -14,11 +14,14 @@ on:
     branches: [main]
 
 permissions:
+  # This is needed to approve the PR
   pull-requests: write
-  contents: write # https://github.com/cli/cli/issues/6695#issuecomment-1348430969
+  # This is needed to merge the PR https://github.com/cli/cli/issues/6695#issuecomment-1348430969
+  contents: write
 
 jobs:
  test:
+    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python
