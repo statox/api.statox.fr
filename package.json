@@ -7,6 +7,7 @@
     },
     "main": "index.js",
     "scripts": {
+        "setup-githooks": "./githooks/setup.sh",
         "prettier": "prettier --check --cache '*.json' 'src/**/*.ts'",
         "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts'",
         "lint": "eslint  \"src/**/*.[jt]s\"",

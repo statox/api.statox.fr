@@ -1,0 +1,22 @@
+# Inspired from https://gist.github.com/sindresorhus/7996717
+# Warn on changes to package.json to npm install
+
+# MIT © Sindre Sorhus - sindresorhus.com
+
+# git hook to run a command after `git pull` if a specified file was changed
+changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+
+check_run() {
+    echo "$changed_files" | grep --quiet -E "$1" && $2
+}
+
+install_action() {
+    tput setaf 3
+    echo 'package.json or package-lock.yaml changed, packages probably need updating.'
+    echo 'running "npm install"'
+    tput sgr0
+
+    npm install
+}
+
+check_run 'package.json|package-lock.json' install_action

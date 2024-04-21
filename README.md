@@ -2,10 +2,10 @@
 
 ## Usage
 
-For now everything is done locally
-
 ```bash
+# At clone time
 npm install
+npm run setup-githooks # Setup a post-merge githook to be alerted when dependabot merged a PR
 
 # Working locally
 npm run env # Start the docker environement
@@ -13,7 +13,7 @@ npm run env # Start the docker environement
 npm run watch # Typescript watcher
 npm run serve # Start the server locally on port 3000
 
-# Deploying
+# Deploying (Done from dev machine for now)
 npm run heroku:login
 npm run heroku:deploy
 ```
@@ -35,3 +35,7 @@ To create the tables:
 -   Run `./src/tools/init-db.sh [--prod]`
     -   Without any arguments the script connects to docker
     -   With `--prod` connects to prod db (Requires `npm run heroku:login`
+
+## CI
+
+Dependabot is enabled on this repo and [a workflow](./.github/workflow/dependabot-auto-merge.yml) merges its PRs when they don't break anything. I took notes about this [in this blogpost](https://www.statox.fr/posts/2024/04/github_dependabot_auto_merge/)
