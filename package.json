@@ -18,6 +18,8 @@
         "postinstall": "tsc",
         "env": "podman-compose -f src/tools/docker-compose.yml up -d",
         "env:stop": "podman-compose -f src/tools/docker-compose.yml down",
+        "env:ci": "docker-compose -f src/tools/docker-compose.yml up -d",
+        "env:ci:stop": "docker-compose -f src/tools/docker-compose.yml down",
         "serve": "nodemon dist/index.js",
         "watch": "rm -fr dist/ && tsc -w",
         "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/routes.json",

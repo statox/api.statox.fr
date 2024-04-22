@@ -70,17 +70,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Install python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install podman
-        uses: gacts/install-podman@v1
-
-      - name: Install podman-compose
-        run: pip3 install podman-compose
-
       - name: Install node.js
         uses: actions/setup-node@v4
         with:
@@ -105,17 +94,21 @@ jobs:
         if: steps.cache-nodemodules.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Start docker environment
+        run: npm run env:ci
+
       - name: Build app
         run: npm run postinstall
-
-      - name: Start podman environment
-        run: npm run env
 
       - name: Init db
         run: ./src/tools/init-db.sh
 
       - name: Run tests
         run: npm run tests:all
+
+      - name: Stop containers
+        if: always()
+        run: npm run env:ci:stop
 
  auto-merge-dependabot:
     needs: [lint-and-format, tests]
