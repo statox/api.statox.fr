@@ -60,12 +60,6 @@ jobs:
       - name: Run tests
         run: npm run tests:all
 
-      - name: Get dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: "${{secrets.GITHUB_TOKEN}}"
-
       - name: Approve the PR
         run: gh pr review --approve "$PR_URL"
         env:
