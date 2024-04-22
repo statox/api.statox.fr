@@ -1,7 +1,7 @@
 {
     "name": "api.statox.fr",
     "version": "1",
-    "description": "The code for my perosnnal API",
+    "description": "The code for my personal API",
     "engines": {
         "node": "18.x"
     },

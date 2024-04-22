@@ -1,7 +1,7 @@
 {
-    "name": "statox-backend",
-    "description": "My own API",
-    "repository": "https://github.com/statox/statox-backend",
-    "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/main/public/node.svg",
+    "name": "api.statox.fr",
+    "description": "My personal API",
+    "repository": "https://github.com/statox/api.statox.fr",
+    "logo": "https://www.statox.fr/favicon/favicon-32x32.png",
     "image": "heroku/nodejs"
 }
