@@ -12,7 +12,6 @@
         "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts'",
         "lint": "eslint  \"src/**/*.[jt]s\"",
         "lint:fix": "npm run lint --quiet --fix",
-        "format": "prettier --write .",
         "heroku:login": "npx heroku login",
         "heroku:deploy": "npm run tests:all && git push heroku main",
         "heroku:force-deploy": "git push -f heroku main",

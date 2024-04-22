@@ -23,10 +23,36 @@ permissions:
   contents: write
 
 jobs:
- test-and-auto-merge:
-    if: github.actor == 'dependabot[bot]'
+ lint-and-format:
     runs-on: ubuntu-latest
     steps:
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install dependencies
+        run: npm run lint
+
+      - name: Start podman environment
+        run: npm run prettier
+
+ tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
       - name: Install python 3
         uses: actions/setup-python@v5
         with:
@@ -37,11 +63,6 @@ jobs:
 
       - name: Install podman-compose
         run: pip3 install podman-compose
-
-      - name: Install node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'latest'
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -60,6 +81,11 @@ jobs:
       - name: Run tests
         run: npm run tests:all
 
+ auto-merge-dependabot:
+    needs: [lint-and-format, tests]
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
       - name: Approve the PR
         run: gh pr review --approve "$PR_URL"
         env:
