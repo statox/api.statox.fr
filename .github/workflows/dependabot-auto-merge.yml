@@ -1,6 +1,8 @@
 # This workflow is used to run the tests when dependabot creates a PR and automatically
 # merge the PR.
 #
+# See https://www.statox.fr/posts/2024/04/github_dependabot_auto_merge/ for companion article
+#
 # The tests are used as State Checks for the PR
 # And the steps trigger the approval of the PR and the setup of the auto-merge setting
 #
