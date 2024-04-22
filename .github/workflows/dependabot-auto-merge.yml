@@ -95,7 +95,7 @@ jobs:
         run: npm ci
 
       - name: Start docker environment
-        run: npm run env:ci
+        run: npm run env
 
       - name: Build app
         run: npm run postinstall
@@ -108,7 +108,7 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: npm run env:ci:stop
+        run: npm run env:stop
 
  auto-merge-dependabot:
     needs: [lint-and-format, tests]
