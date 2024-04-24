@@ -15,7 +15,7 @@
         "lint:fix": "npm run lint --fix",
         "heroku:login": "npx heroku login",
         "heroku:deploy": "npm run check && npm run tests:all && git push heroku main",
-        "heroku:force-deploy": "git push -f heroku main",
+        "heroku:force-deploy": "npm run check && npm run tests:all && git push -f heroku main",
         "postinstall": "tsc",
         "env": "./src/tools/containers-env.sh up",
         "env:stop": "./src/tools/containers-env.sh down",

@@ -8,12 +8,12 @@ import {
 import { slog } from '../services/logging';
 
 export const errorHandler = async (
-    error: unknown,
+    error: Error,
     _request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    slog.log({ error: error as Error, logToSlack: true });
+    slog.log({ error, logToSlack: true });
 
     if (error instanceof InsufficientScopeError) {
         const message = 'Permission denied';

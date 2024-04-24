@@ -2,17 +2,33 @@ import { isDebug, isProd, isTests } from '../env-helpers/env';
 import { logToELK } from './elk';
 import { logErrorToSlack, logMessageToSlack } from './slack';
 
+type CloudflareGeoInfo = {
+    'cf-ipcity'?: string;
+    'cf-ipcontinent'?: string;
+    'cf-ipcountry'?: string;
+    'cf-iplatitude'?: string;
+    'cf-iplongitude'?: string;
+    'cf-region-code'?: string;
+};
+type xRequestInfo = {
+    'x-request-id'?: string;
+    'x-request-start'?: number;
+};
 // Should not contain a timestamp as it is added by logToELK (Maybe TODO refactor)
 type LoggableProperties = {
+    cfGeoInfo?: CloudflareGeoInfo;
     entryName?: string;
     error?: Error;
+    extRequestId?: string;
     linkId?: string;
     message?: string;
-    port?: number;
     nbChords?: number;
     path?: string;
+    port?: number;
+    ray?: string;
     remoteIp?: string;
     visitedUrl?: string;
+    xRequestInfo?: xRequestInfo;
 };
 
 type LogConfig = {
