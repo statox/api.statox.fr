@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
 import { isProd } from '../services/env-helpers/env';
+import { slog } from '../services/logging';
 
 const localAuth0 = {
     auth0Audience: 'http://localhost:3000',
@@ -29,6 +30,7 @@ export const checkRequiredPermissions = (requiredPermissions: string[]) => {
             );
 
             if (!hasPermissions) {
+                slog.log({ message: 'Failed authentication' });
                 throw new InsufficientScopeError();
             }
 

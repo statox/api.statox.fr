@@ -56,7 +56,9 @@ export const initApp = () => {
     }
 
     app.use(errorHandler);
-    app.listen(PORT, () => slog.log({ message: `Listening on ${PORT}`, logToSlack: true }));
+    app.listen(PORT, () =>
+        slog.log({ message: 'App listening', port: Number(PORT), logToSlack: true })
+    );
 
     startPeriodicTasks();
 };

@@ -11,7 +11,7 @@ export const logToELK = async (data: LogObject) => {
         console.log('Logging to ELK');
         console.log(body);
 
-        const ingestURL = ELK_DOMAIN_ENDPOINT + '/api.statox.fr-1/_doc';
+        const ingestURL = ELK_DOMAIN_ENDPOINT + '/api.statox.fr/_doc';
         const response = await fetch(ingestURL, {
             method: 'POST',
             headers: {

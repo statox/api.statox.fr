@@ -8,8 +8,9 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
         const s3PresignedUrl = await getEntryPresignedUrl({ linkId });
         res.redirect(s3PresignedUrl);
     } catch (error) {
-        if ((error as Error).message === 'ENTRY_NOT_FOUND') {
-            return res.status(404).send(error);
+        const errorMessage = (error as Error).message;
+        if (errorMessage === 'ENTRY_NOT_FOUND') {
+            return res.status(404).json({ message: errorMessage });
         }
         next(error);
     }
