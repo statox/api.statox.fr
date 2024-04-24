@@ -7,7 +7,6 @@ export const startPeriodicTasks = () => {
     setInterval(logHealth, oneHour);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const logHealth = async () => {
     slog.log({ message: 'Health check' });
 };
