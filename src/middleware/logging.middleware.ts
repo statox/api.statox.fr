@@ -20,6 +20,5 @@ export const loggingHandler = async (req: Request, _res: Response, next: NextFun
     };
 
     slog.log({ path, remoteIp, cfGeoInfo, ray, xRequestInfo });
-    slog.log({ message: JSON.stringify(req.headers) });
     next();
 };
