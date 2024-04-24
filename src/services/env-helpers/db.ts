@@ -1,7 +1,7 @@
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { isProd, isTests } from './env';
-import { logMessageToSlack } from '../logging/slack';
+import { slog } from '../logging';
 
 const PROD_URL = process.env.JAWSDB_URL;
 const DEV_URL = 'mysql://root:example@127.0.0.1:13306/db';
@@ -22,7 +22,7 @@ if (isProd) {
 
 export let db: Pool;
 export const initDb = async () => {
-    logMessageToSlack('init db');
+    slog.log({ message: 'init db', logToSlack: true });
     const parsedUrl = url.parse(dbUrl);
 
     if (!parsedUrl) {

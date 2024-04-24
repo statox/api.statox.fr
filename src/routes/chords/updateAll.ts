@@ -2,11 +2,11 @@ import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { updateChords } from '../../services/chords/commands';
-import { logMessageToSlack } from '../../services/logging/slack';
+import { slog } from '../../services/logging';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { chords } = req.body;
-    logMessageToSlack('Updating chords. New number of chords:' + chords.length);
+    slog.log({ message: 'Updating chords. New number of chords:' + chords.length });
 
     try {
         await updateChords(chords);

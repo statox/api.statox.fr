@@ -5,7 +5,7 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { logErrorToSlack } from '../services/logging/slack';
+import { slog } from '../services/logging';
 
 export const errorHandler = async (
     error: unknown,
@@ -13,7 +13,7 @@ export const errorHandler = async (
     response: Response,
     next: NextFunction
 ) => {
-    await logErrorToSlack(error as Error);
+    slog.log({ error: error as Error, logToSlack: true });
 
     if (error instanceof InsufficientScopeError) {
         const message = 'Permission denied';

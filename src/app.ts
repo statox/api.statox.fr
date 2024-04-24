@@ -8,8 +8,8 @@ import mustacheExpress from 'mustache-express';
 import { multipartHandler } from './middleware/multipart.middleware';
 import { goatCounterHandler } from './middleware/goatcounter.middleware';
 import { loggingHandler } from './middleware/logging.middleware';
-import { logMessageToSlack } from './services/logging/slack';
 import { startPeriodicTasks } from './PeriodicTasks';
+import { slog } from './services/logging';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -17,7 +17,7 @@ export let app: express.Express;
 const PORT = process.env.PORT || 3000;
 
 export const initApp = () => {
-    logMessageToSlack('init app');
+    slog.log({ message: 'init app', logToSlack: true });
     app = express();
     app.use(
         cors({
@@ -56,7 +56,7 @@ export const initApp = () => {
     }
 
     app.use(errorHandler);
-    app.listen(PORT, () => logMessageToSlack(`Listening on ${PORT}`));
+    app.listen(PORT, () => slog.log({ message: `Listening on ${PORT}`, logToSlack: true }));
 
     startPeriodicTasks();
 };

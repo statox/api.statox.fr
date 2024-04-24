@@ -1,7 +1,7 @@
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import { Chord } from './types';
 import { S3 } from '../env-helpers/s3';
-import { logErrorToSlack, logMessageToSlack } from '../logging/slack';
+import { slog } from '../logging';
 
 export const updateChords = async (chords: Chord[]) => {
     try {
@@ -14,8 +14,7 @@ export const updateChords = async (chords: Chord[]) => {
 
         await S3.send(new PutObjectCommand(params));
     } catch (error) {
-        logMessageToSlack('Error while uploading file to s3');
-        logErrorToSlack(error as Error);
+        slog.log({ message: 'Error while uploading file to s3', error: error as Error });
         return error;
     }
 };

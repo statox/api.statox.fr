@@ -3,7 +3,7 @@ import { RowDataPacket } from 'mysql2';
 import { Chord } from './types';
 import { db } from '../env-helpers/db';
 import { S3 } from '../env-helpers/s3';
-import { logErrorToSlack, logMessageToSlack } from '../logging/slack';
+import { slog } from '../logging';
 
 export const addLinkVisit = async (params: { url: string }) => {
     return db.query(
@@ -39,8 +39,7 @@ export const getAllChords = async (): Promise<Chord[]> => {
 
         return JSON.parse(str);
     } catch (error) {
-        logMessageToSlack('Error in get chords');
-        logErrorToSlack(error as Error);
+        slog.log({ message: 'Error in get chords', error: error as Error });
         throw error;
     }
 };

@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2/promise';
 import { db } from '../env-helpers/db';
 import { getPresignedUrl } from '../env-helpers/s3';
-import { logErrorToSlack, logMessageToSlack } from '../logging/slack';
+import { slog } from '../logging';
 
 interface DBReactorEntryForPublic extends RowDataPacket {
     name: string;
@@ -25,11 +25,11 @@ export const getEntryPresignedUrl = async (params: { linkId: string }) => {
         params.linkId
     ]);
     if (!results.length) {
-        logMessageToSlack('Error: Reactor entry with linkId not found: ' + params.linkId);
+        slog.log({ message: 'Error: Reactor entry with linkId not found: ' + params.linkId });
         throw new Error('ENTRY_NOT_FOUND');
     }
     if (results.length > 1) {
-        logMessageToSlack('Error: Reactor multiple entries with linkId: ' + params.linkId);
+        slog.log({ message: 'Error: Reactor multiple entries with linkId: ' + params.linkId });
         throw new Error('TOO_MANY_ENTRIES');
     }
 
@@ -56,8 +56,10 @@ const enrichEntries = async (entries: DBReactorEntryForPublic[]) => {
                 uri: `/r/${entry.linkId}`
             });
         } catch (error) {
-            logMessageToSlack('Error while enriching reactor entry ' + entry.name);
-            logErrorToSlack(error as Error);
+            slog.log({
+                message: 'Error while enriching reactor entry ' + entry.name,
+                error: error as Error
+            });
         }
     }
     return result;

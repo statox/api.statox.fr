@@ -1,11 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { isTests } from '../services/env-helpers/env';
+import { slog } from '../services/logging';
 
 export const loggingHandler = async (req: Request, _res: Response, next: NextFunction) => {
-    if (isTests) {
-        return next();
-    }
-
-    console.log(req.path);
+    slog.log({ path: req.path });
     next();
 };
