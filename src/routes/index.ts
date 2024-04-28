@@ -13,8 +13,6 @@ import { route as getRemoteTime } from './health/getRemoteTime';
 import { route as reactorAddEntry } from './reactor/addEntry';
 import { route as reactorGetEntry } from './reactor/getEntry';
 import { route as reactorGetForPublic } from './reactor/getEntriesForPublic';
-import { route as soundTest } from './test/sound';
-import { route as soundTest2 } from './test/sound2';
 
 export const routes: Route[] = [
     addEntry,
@@ -30,7 +28,5 @@ export const routes: Route[] = [
     reactorGetEntry,
     reactorGetForPublic,
     updateAllChords,
-    checkLinks,
-    soundTest,
-    soundTest2
+    checkLinks
 ];
