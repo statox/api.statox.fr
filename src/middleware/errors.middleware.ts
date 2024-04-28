@@ -34,12 +34,10 @@ export const errorHandler = async (
     }
 
     if (error instanceof ValidationError) {
-        console.log(JSON.stringify(error));
         response.status(400).send(error.validationErrors);
         return next();
     }
 
-    console.log(error);
     const status = 500;
     const message = 'Internal Server Error';
     response.status(status).json({ message });

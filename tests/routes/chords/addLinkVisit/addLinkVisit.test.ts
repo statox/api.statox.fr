@@ -1,7 +1,9 @@
+import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../../../src/app';
 import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 import { assert } from 'chai';
+import { slogCheckLog } from '../../../helpers/slog';
 
 describe('addLinkVisit', () => {
     it('should check input schema', async () => {
@@ -12,6 +14,16 @@ describe('addLinkVisit', () => {
                 foo: 'bar'
             })
             .expect(400);
+
+        slogCheckLog({
+            error: sinon.match((error) => {
+                const bodyError = error?.validationErrors?.body[0];
+                const isCorrectMessage = bodyError?.message === "must have required property 'url'";
+
+                return isCorrectMessage;
+            }),
+            logToSlack: true
+        });
     });
 
     it('should create new entry with count 1', async () => {
