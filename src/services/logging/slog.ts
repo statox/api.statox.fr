@@ -6,8 +6,10 @@ type CloudflareGeoInfo = {
     'cf-ipcity'?: string;
     'cf-ipcontinent'?: string;
     'cf-ipcountry'?: string;
-    'cf-iplatitude'?: string;
-    'cf-iplongitude'?: string;
+    'cf-ipGeoPoint'?: {
+        lat: number;
+        lon: number;
+    };
     'cf-region-code'?: string;
 };
 type xRequestInfo = {

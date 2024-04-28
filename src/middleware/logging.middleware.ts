@@ -13,12 +13,15 @@ export const loggingHandler = async (req: Request, res: Response, next: NextFunc
         'x-request-id': req.get('x-request-id') ?? 'N/A',
         'x-request-start': Number(req.get('x-request-start'))
     };
+    const lat = Number(req.get('cf-iplatitude'));
+    const lon = Number(req.get('cf-iplongitude'));
+
     const cfGeoInfo = {
         'cf-ipcity': req.get('cf-ipcity') ?? 'N/A',
         'cf-ipcontinent': req.get('cf-ipcontinent') ?? 'N/A',
         'cf-ipcountry': req.get('cf-ipcountry') ?? 'N/A',
-        'cf-iplatitude': req.get('cf-iplatitude') ?? 'N/A',
-        'cf-iplongitude': req.get('cf-iplongitude') ?? 'N/A',
+        'cf-ipGeoPoint':
+            req.get('cf-iplatitude') && req.get('cf-iplongitude') ? { lat, lon } : undefined,
         'cf-region-code': req.get('cf-region-code') ?? 'N/A'
     };
 
