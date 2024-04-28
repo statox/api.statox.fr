@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
+import { randomUUID } from 'crypto';
+import { hrtime } from 'node:process';
 import { slog } from '../services/logging';
+import { isTests } from '../services/env-helpers/env';
 
-export const loggingHandler = async (req: Request, _res: Response, next: NextFunction) => {
+export const loggingHandler = async (req: Request, res: Response, next: NextFunction) => {
     const path = req.path;
     const remoteIp = req.socket.remoteAddress ?? 'N/A';
-    const ray = req.get('cf-ray') ?? 'N/A';
+    const cfRay = req.get('cf-ray') ?? 'N/A';
 
     const xRequestInfo = {
         'x-request-id': req.get('x-request-id') ?? 'N/A',
@@ -19,6 +22,37 @@ export const loggingHandler = async (req: Request, _res: Response, next: NextFun
         'cf-region-code': req.get('cf-region-code') ?? 'N/A'
     };
 
-    slog.log({ path, remoteIp, cfGeoInfo, ray, xRequestInfo });
+    res.locals.startTimeNs = hrtime.bigint();
+    res.locals.requestId = isTests ? '00000000-0000-0000-0000-000000000001' : randomUUID();
+
+    const createAccessLog = (params: { requestInterrupted?: boolean }) => {
+        const { requestInterrupted } = params;
+        const executionTimeMs = Number(hrtime.bigint() - res.locals.startTimeNs) / 1e6;
+        const code = res.statusCode;
+
+        slog.log({
+            cfGeoInfo,
+            cfRay,
+            code,
+            executionTimeMs,
+            message: 'access-log',
+            path,
+            remoteIp,
+            requestId: res.locals.requestId,
+            requestInterrupted,
+            xRequestInfo
+        });
+    };
+
+    res.on('finish', () => {
+        res.locals.finished = true;
+    });
+
+    // Also listen for the close event to handle cases where the client closes the connection
+    // https://nodejs.org/api/http.html#event-close_2
+    res.on('close', () => {
+        createAccessLog({ requestInterrupted: res.locals.finished !== true });
+    });
+
     next();
 };

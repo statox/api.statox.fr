@@ -17,16 +17,20 @@ type xRequestInfo = {
 // Should not contain a timestamp as it is added by logToELK (Maybe TODO refactor)
 type LoggableProperties = {
     cfGeoInfo?: CloudflareGeoInfo;
+    cfRay?: string;
+    code?: number;
     entryName?: string;
     error?: Error;
+    executionTimeMs?: number;
     extRequestId?: string;
     linkId?: string;
     message?: string;
     nbChords?: number;
     path?: string;
     port?: number;
-    ray?: string;
     remoteIp?: string;
+    requestId?: string;
+    requestInterrupted?: boolean;
     visitedUrl?: string;
     xRequestInfo?: xRequestInfo;
 };
