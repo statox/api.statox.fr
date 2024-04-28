@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
 import { s3CheckCall } from '../../../helpers/s3';
+import { slogCheckLog } from '../../../helpers/slog';
 
 describe('chords/updateAll', () => {
     it('should work', async () => {
@@ -20,6 +21,7 @@ describe('chords/updateAll', () => {
             })
             .expect(200);
 
+        slogCheckLog({ message: 'Updating chords', nbChords: 1 });
         s3CheckCall({ nbCalls: 1 });
         s3CheckCall({
             commandType: 'PutObject',

@@ -3,6 +3,7 @@ import { initDb } from '../../../src/services/env-helpers/db';
 import { restoreFakeAuth, setupFakeAuth } from '../auth';
 import { mysqlClearAllTables } from '../mysql';
 import { setupS3Spy } from '../s3';
+import { restoreSlogSpy, setupSlogSpy } from '../slog';
 
 // Used for tests of the routes
 export const mochaHooks = () => {
@@ -15,6 +16,10 @@ export const mochaHooks = () => {
         beforeEach: async () => {
             setupS3Spy();
             await mysqlClearAllTables();
+            setupSlogSpy();
+        },
+        afterEach: () => {
+            restoreSlogSpy();
         },
         afterAll: () => {
             restoreFakeAuth();
