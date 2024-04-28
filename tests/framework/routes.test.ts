@@ -1,54 +1,9 @@
 import sinon from 'sinon';
-import { Request, Response } from 'express';
 import request from 'supertest';
-import { app, initApp } from '../../src/app';
-import { GetRoute, PostRoute } from '../../src/routes/types';
-import * as routes from '../../src/routes';
+import { app } from '../../src/app';
 import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
 
-const getRoute: GetRoute = {
-    method: 'get',
-    path: '/getroute',
-    handler: (_req: Request, res: Response) => res.end()
-};
-
-const protectedGetRoute: GetRoute = {
-    method: 'get',
-    protected: true,
-    path: '/protectedGetRoute',
-    handler: (_req: Request, res: Response) => res.end()
-};
-
-const postRoute: PostRoute = {
-    method: 'post',
-    path: '/postroute',
-    inputSchema: {
-        type: 'object',
-        required: ['param1'],
-        additionalProperties: false,
-        properties: {
-            param1: {
-                type: 'string'
-            }
-        }
-    },
-    handler: (_req: Request, res: Response) => res.end()
-};
-
-const testRoutes = [getRoute, postRoute, protectedGetRoute];
-
 describe('routes', () => {
-    let routesStub: sinon.SinonStub;
-
-    before(() => {
-        routesStub = sinon.stub(routes, 'routes').value(testRoutes);
-        initApp();
-    });
-
-    after(() => {
-        routesStub.restore();
-    });
-
     it('should use the correct verbs', async () => {
         await request(app).get('/getRoute').expect(200);
         await request(app).post('/getRoute').expect(404);
