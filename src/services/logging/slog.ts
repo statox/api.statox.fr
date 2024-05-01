@@ -33,6 +33,7 @@ type LoggableProperties = {
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;
+    status?: string;
     visitedUrl?: string;
     xRequestInfo?: xRequestInfo;
 };
