@@ -58,7 +58,7 @@
         "@typescript-eslint/eslint-plugin": "^7.8.0",
         "@typescript-eslint/parser": "^7.8.0",
         "aws-sdk-client-mock-jest": "^4.0.0",
-        "chai": "^4.3.10",
+        "chai": "^5.1.0",
         "eslint": "^8.54.0",
         "eslint-config-prettier": "^9.0.0",
         "mocha": "^10.2.0",
