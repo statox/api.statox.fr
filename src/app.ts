@@ -1,15 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import { Validator } from 'express-json-validator-middleware';
-import { routes } from './routes';
-import { checkRequiredPermissions, validateAccessToken } from './middleware/auth0.middleware';
-import { errorHandler } from './middleware/errors.middleware';
+import { routes } from './routes/index.js';
+import { checkRequiredPermissions, validateAccessToken } from './middleware/auth0.middleware.js';
+import { errorHandler } from './middleware/errors.middleware.js';
 import mustacheExpress from 'mustache-express';
-import { multipartHandler } from './middleware/multipart.middleware';
-import { goatCounterHandler } from './middleware/goatcounter.middleware';
-import { loggingHandler } from './middleware/logging.middleware';
-import { startPeriodicTasks } from './PeriodicTasks';
-import { slog } from './services/logging';
+import { multipartHandler } from './middleware/multipart.middleware.js';
+import { goatCounterHandler } from './middleware/goatcounter.middleware.js';
+import { loggingHandler } from './middleware/logging.middleware.js';
+import { startPeriodicTasks } from './PeriodicTasks/index.js';
+import { slog } from './services/logging/index.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;

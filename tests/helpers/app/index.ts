@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { Request, Response } from 'express';
-import * as routes from '../../../src/routes';
-import { GetRoute, PostRoute } from '../../../src/routes/types';
-import { initApp } from '../../../src/app';
+import * as routes from '../../../src/routes/index.js';
+import { GetRoute, PostRoute } from '../../../src/routes/types.js';
+import { initApp } from '../../../src/app.js';
 
 const getRoute: GetRoute = {
     method: 'get',

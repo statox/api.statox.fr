@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { expect } from 'chai';
-import { app } from '../../../src/app';
-import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { app } from '../../../src/app.js';
+import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql/index.js';
+import { s3CheckCall } from '../../helpers/s3/index.js';
 
 describe('clipboard/addEntry', () => {
     it('should reject a query if no file and no content are provided', async () => {

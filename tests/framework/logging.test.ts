@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import request from 'supertest';
-import { app } from '../../src/app';
-import { slogCheckLog } from '../helpers/slog';
+import { app } from '../../src/app.js';
+import { slogCheckLog } from '../helpers/slog/index.js';
 
 describe('logging middleware', () => {
     it('should emit an access-log when the request finishes', async () => {

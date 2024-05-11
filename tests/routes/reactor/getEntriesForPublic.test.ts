@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
-import { app } from '../../../src/app';
+import { mysqlFixture } from '../../helpers/mysql/index.js';
+import { app } from '../../../src/app.js';
 
 describe('reactor/getEntriesForPublic', () => {
     it('Should retrieve all entries and format the tags and s3key properly', async () => {

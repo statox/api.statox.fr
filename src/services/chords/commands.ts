@@ -1,7 +1,7 @@
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
-import { Chord } from './types';
-import { S3 } from '../env-helpers/s3';
-import { slog } from '../logging';
+import { Chord } from './types.js';
+import { S3 } from '../env-helpers/s3.js';
+import { slog } from '../logging/index.js';
 
 export const updateChords = async (chords: Chord[]) => {
     try {

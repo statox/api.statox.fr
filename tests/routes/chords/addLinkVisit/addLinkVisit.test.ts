@@ -1,9 +1,9 @@
 import sinon from 'sinon';
 import request from 'supertest';
-import { app } from '../../../../src/app';
-import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
+import { app } from '../../../../src/app.js';
+import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql/index.js';
 import { assert } from 'chai';
-import { slogCheckLog } from '../../../helpers/slog';
+import { slogCheckLog } from '../../../helpers/slog/index.js';
 
 describe('addLinkVisit', () => {
     it('should check input schema', async () => {

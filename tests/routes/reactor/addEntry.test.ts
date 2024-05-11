@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { app } from '../../../src/app';
-import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { app } from '../../../src/app.js';
+import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql/index.js';
+import { s3CheckCall } from '../../helpers/s3/index.js';
 
 describe('reactor/addEntry', () => {
     it('should fail on duplicate entry', async () => {

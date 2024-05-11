@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import { Chord } from './types';
-import { getAllChords } from './queries';
+import { Chord } from './types.js';
+import { getAllChords } from './queries.js';
 
 const RESULTS_FILE_PATH = './chords_check_results.json';
 const RESULTS_FILE_TTL = 1000 * 60 * 15; // 15 minutes

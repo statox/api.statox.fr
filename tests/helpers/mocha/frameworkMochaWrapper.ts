@@ -1,9 +1,9 @@
-import { initDb } from '../../../src/services/env-helpers/db';
-import { restoreAppStub, setupAppStub } from '../app';
-import { restoreFakeAuth, setupFakeAuth } from '../auth';
-import { mysqlClearAllTables } from '../mysql';
-import { setupS3Spy } from '../s3';
-import { restoreSlogSpy, setupSlogSpy } from '../slog';
+import { initDb } from '../../../src/services/env-helpers/db.js';
+import { restoreAppStub, setupAppStub } from '../app/index.js';
+import { restoreFakeAuth, setupFakeAuth } from '../auth/index.js';
+import { mysqlClearAllTables } from '../mysql/index.js';
+import { setupS3Spy } from '../s3/index.js';
+import { restoreSlogSpy, setupSlogSpy } from '../slog/index.js';
 
 // Used for test of the framework (don't init the app as some mocking is done directly in the test suite)
 export const mochaHooks = () => {

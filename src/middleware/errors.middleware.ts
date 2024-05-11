@@ -5,7 +5,7 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { slog } from '../services/logging';
+import { slog } from '../services/logging/index.js';
 
 export const errorHandler = async (
     error: Error,

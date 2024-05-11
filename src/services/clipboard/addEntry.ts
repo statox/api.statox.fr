@@ -2,9 +2,9 @@ import { File } from 'formidable';
 import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import mime from 'mime-types';
 import * as fs from 'fs';
-import { generate4BytesHex } from '../random';
-import { S3 } from '../env-helpers/s3';
-import { db } from '../env-helpers/db';
+import { generate4BytesHex } from '../random.js';
+import { S3 } from '../env-helpers/s3.js';
+import { db } from '../env-helpers/db.js';
 
 type NewEntryParams = {
     name: string;

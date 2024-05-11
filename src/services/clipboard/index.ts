@@ -1,5 +1,5 @@
-import { addEntry } from './addEntry';
-import { deleteEntry } from './deleteEntry';
-import { getAllEntries, getEntriesForStaticView, getPublicEntries } from './getEntries';
+import { addEntry } from './addEntry.js';
+import { deleteEntry } from './deleteEntry.js';
+import { getAllEntries, getEntriesForStaticView, getPublicEntries } from './getEntries.js';
 
 export { addEntry, deleteEntry, getAllEntries, getEntriesForStaticView, getPublicEntries };

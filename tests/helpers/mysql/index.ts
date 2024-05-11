@@ -1,8 +1,8 @@
-import { mysqlCheckContains } from './mysqlCheckContains';
-import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain';
-import { mysqlClearAllTables } from './mysqlClearTables';
-import { mysqlDumpTables } from './mysqlDumpTables';
-import { mysqlFixture } from './mysqlFixture';
+import { mysqlCheckContains } from './mysqlCheckContains.js';
+import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain.js';
+import { mysqlClearAllTables } from './mysqlClearTables.js';
+import { mysqlDumpTables } from './mysqlDumpTables.js';
+import { mysqlFixture } from './mysqlFixture.js';
 
 export {
     mysqlCheckContains,

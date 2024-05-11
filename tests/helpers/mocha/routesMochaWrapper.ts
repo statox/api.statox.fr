@@ -1,9 +1,9 @@
-import { initApp } from '../../../src/app';
-import { initDb } from '../../../src/services/env-helpers/db';
-import { restoreFakeAuth, setupFakeAuth } from '../auth';
-import { mysqlClearAllTables } from '../mysql';
-import { setupS3Spy } from '../s3';
-import { restoreSlogSpy, setupSlogSpy } from '../slog';
+import { initApp } from '../../../src/app.js';
+import { initDb } from '../../../src/services/env-helpers/db.js';
+import { restoreFakeAuth, setupFakeAuth } from '../auth/index.js';
+import { mysqlClearAllTables } from '../mysql/index.js';
+import { setupS3Spy } from '../s3/index.js';
+import { restoreSlogSpy, setupSlogSpy } from '../slog/index.js';
 
 // Used for tests of the routes
 export const mochaHooks = () => {

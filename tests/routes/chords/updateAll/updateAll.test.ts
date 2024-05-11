@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../../../../src/app';
-import { s3CheckCall } from '../../../helpers/s3';
-import { slogCheckLog } from '../../../helpers/slog';
+import { app } from '../../../../src/app.js';
+import { s3CheckCall } from '../../../helpers/s3/index.js';
+import { slogCheckLog } from '../../../helpers/slog/index.js';
 
 describe('chords/updateAll', () => {
     it('should work', async () => {

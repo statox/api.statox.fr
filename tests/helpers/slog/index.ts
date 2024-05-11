@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { slog } from '../../../src/services/logging';
-import { LogObject } from '../../../src/services/logging/slog';
-import { isDebug } from '../../../src/services/env-helpers/env';
+import { slog } from '../../../src/services/logging/index.js';
+import { LogObject } from '../../../src/services/logging/slog.js';
+import { isDebug } from '../../../src/services/env-helpers/env.js';
 
 let slogSpy: sinon.SinonSpy;
 
