@@ -1,5 +1,5 @@
 import jsdom from 'jsdom';
-import { slog } from '../services/logging';
+import { slog } from '../services/logging/index.js';
 const { JSDOM } = jsdom;
 
 export const watchKimsufi = async () => {

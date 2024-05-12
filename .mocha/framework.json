@@ -1,6 +1,9 @@
 {
-    "spec": "dist/tests/framework/**/*.test.js",
-    "require": "dist/tests/helpers/mocha/frameworkMochaWrapper.js",
+    "spec": "tests/framework/**/*.test.js",
+    "require": [
+        "tsx",
+        "tests/helpers/mocha/frameworkMochaWrapper.ts"
+    ],
     "exit": true,
     "timeout": 5000,
     "parallel": true,

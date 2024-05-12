@@ -1,1 +1,1 @@
-export * as slog from './slog';
+export * as slog from './slog.js';

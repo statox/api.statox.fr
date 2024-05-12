@@ -1,7 +1,7 @@
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
-import { isProd, isTests } from './env';
-import { slog } from '../logging';
+import { isProd, isTests } from './env.js';
+import { slog } from '../logging/index.js';
 
 const PROD_URL = process.env.JAWSDB_URL;
 const DEV_URL = 'mysql://root:example@127.0.0.1:13306/db';

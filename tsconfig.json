@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "lib": ["es2021"],
         "allowJs": true,
         "checkJs": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
-        "resolveJsonModule": true,
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": true

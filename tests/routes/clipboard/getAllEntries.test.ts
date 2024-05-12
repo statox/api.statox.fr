@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { DateTime } from 'luxon';
 import { expect } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
-import { app } from '../../../src/app';
+import { mysqlFixture } from '../../helpers/mysql/index.js';
+import { app } from '../../../src/app.js';
 
 describe('clipboard/getAllEntries', () => {
     it('Should retieve all entries', async () => {

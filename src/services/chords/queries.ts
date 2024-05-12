@@ -1,9 +1,9 @@
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { RowDataPacket } from 'mysql2';
-import { Chord } from './types';
-import { db } from '../env-helpers/db';
-import { S3 } from '../env-helpers/s3';
-import { slog } from '../logging';
+import { Chord } from './types.js';
+import { db } from '../env-helpers/db.js';
+import { S3 } from '../env-helpers/s3.js';
+import { slog } from '../logging/index.js';
 
 export const addLinkVisit = async (params: { url: string }) => {
     return db.query(

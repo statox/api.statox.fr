@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { mysqlFixture } from '../../helpers/mysql';
-import { app } from '../../../src/app';
+import { mysqlFixture } from '../../helpers/mysql/index.js';
+import { app } from '../../../src/app.js';
 import { assert } from 'chai';
 
 describe('r/:linkId', () => {

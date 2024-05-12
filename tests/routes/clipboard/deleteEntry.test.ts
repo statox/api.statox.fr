@@ -1,7 +1,11 @@
 import request from 'supertest';
-import { app } from '../../../src/app';
-import { mysqlCheckContains, mysqlCheckDoesNotContain, mysqlFixture } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { app } from '../../../src/app.js';
+import {
+    mysqlCheckContains,
+    mysqlCheckDoesNotContain,
+    mysqlFixture
+} from '../../helpers/mysql/index.js';
+import { s3CheckCall } from '../../helpers/s3/index.js';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {

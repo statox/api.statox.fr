@@ -6,7 +6,7 @@ import {
     S3Client
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { isProd, isTests } from './env';
+import { isProd, isTests } from './env.js';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';

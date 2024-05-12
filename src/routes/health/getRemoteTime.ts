@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { GetRoute } from '../types';
+import { GetRoute } from '../types.js';
 
 const handler = (_req: Request, res: Response) => {
     const o = { time: Date.now() };

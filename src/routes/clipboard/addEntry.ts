@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { File } from 'formidable';
 import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
-import { addEntry } from '../../services/clipboard';
+import { PostRoute } from '../types.js';
+import { addEntry } from '../../services/clipboard/index.js';
 
 import type { QueryError } from 'mysql2';
 

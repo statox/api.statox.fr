@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2/promise';
-import { db } from '../env-helpers/db';
-import { getPresignedUrl } from '../env-helpers/s3';
-import { slog } from '../logging';
+import { db } from '../env-helpers/db.js';
+import { getPresignedUrl } from '../env-helpers/s3.js';
+import { slog } from '../logging/index.js';
 
 interface DBReactorEntryForPublic extends RowDataPacket {
     name: string;

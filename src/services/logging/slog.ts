@@ -1,6 +1,6 @@
-import { isDebug, isProd, isTests } from '../env-helpers/env';
-import { logToELK } from './elk';
-import { logErrorToSlack, logMessageToSlack } from './slack';
+import { isDebug, isProd, isTests } from '../env-helpers/env.js';
+import { logToELK } from './elk.js';
+import { logErrorToSlack, logMessageToSlack } from './slack.js';
 
 type CloudflareGeoInfo = {
     'cf-ipcity'?: string;

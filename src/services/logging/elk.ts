@@ -5,8 +5,8 @@ import {
     ELK_TOKEN_2,
     ELK_DOMAIN_ENDPOINT,
     ELK_TOKEN
-} from '../env-helpers/elk';
-import { LogObject } from './slog';
+} from '../env-helpers/elk.js';
+import { LogObject } from './slog.js';
 
 // WARNING This disable SSL certificate checks for all queries but I need it only for
 // my self hosted stack

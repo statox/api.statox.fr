@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { GetRoute } from '../types';
-import { getEntryPresignedUrl } from '../../services/reactor';
+import { GetRoute } from '../types.js';
+import { getEntryPresignedUrl } from '../../services/reactor/index.js';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -1,6 +1,9 @@
 {
-    "spec": "dist/tests/routes/**/*.test.js",
-    "require": "dist/tests/helpers/mocha/routesMochaWrapper.js",
+    "spec": "tests/routes/**/*.test.ts",
+    "require": [
+        "tsx",
+        "tests/helpers/mocha/routesMochaWrapper.ts"
+    ],
     "exit": true,
     "timeout": 5000,
     "parallel": true,

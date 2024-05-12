@@ -1,8 +1,11 @@
 import sinon from 'sinon';
 import request from 'supertest';
-import { app } from '../../src/app';
-import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
-import { slogCheckLog } from '../helpers/slog';
+import { app } from '../../src/app.js';
+import {
+    fakeCheckRequiredPermissionsHandler,
+    fakeValidateAccessToken
+} from '../helpers/auth/index.js';
+import { slogCheckLog } from '../helpers/slog/index.js';
 import { ValidationError } from 'express-json-validator-middleware';
 import { assert } from 'chai';
 
