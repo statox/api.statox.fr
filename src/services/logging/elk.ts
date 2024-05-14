@@ -1,17 +1,5 @@
-import { Agent, setGlobalDispatcher } from 'undici';
-
 import { ELK_DOMAIN_ENDPOINT, ELK_TOKEN } from '../env-helpers/elk';
 import { LogObject } from './slog';
-
-// WARNING This disable SSL certificate checks for all queries but I need it only for
-// my self hosted stack
-const agent = new Agent({
-    connect: {
-        rejectUnauthorized: false
-    }
-});
-
-setGlobalDispatcher(agent);
 
 export const logToELK = async (data: LogObject) => {
     try {
