@@ -20,6 +20,7 @@ type xRequestInfo = {
 type LoggableProperties = {
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
+    checksDoneSinceLastLog?: number;
     code?: number;
     entryName?: string;
     error?: Error;
