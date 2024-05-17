@@ -13,6 +13,7 @@ import { route as getRemoteTime } from './health/getRemoteTime';
 import { route as reactorAddEntry } from './reactor/addEntry';
 import { route as reactorGetEntry } from './reactor/getEntry';
 import { route as reactorGetForPublic } from './reactor/getEntriesForPublic';
+import { route as homeTrackerUpload } from './homeTracker/upload';
 
 export const routes: Route[] = [
     addEntry,
@@ -24,6 +25,7 @@ export const routes: Route[] = [
     getClipboardPublicEntries,
     getLinksVisitsCount,
     getRemoteTime,
+    homeTrackerUpload,
     reactorAddEntry,
     reactorGetEntry,
     reactorGetForPublic,
