@@ -8,13 +8,17 @@ describe('homeTracker/upload', () => {
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
             .send({
-                value: 12
+                sensorName: 'foo',
+                ts: 1700000000000.23,
+                tempCelsius: 23.5
             })
             .expect(200);
 
         slogCheckLog({
             message: 'Home tracking event',
-            sample: 12
+            sensorName: 'foo',
+            ts: 1700000000000,
+            tempCelsius: 23.5
         });
     });
 });

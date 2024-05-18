@@ -34,8 +34,10 @@ type LoggableProperties = {
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;
-    sample?: number;
+    sensorName?: string;
     status?: string;
+    tempCelsius?: number;
+    ts?: number;
     visitedUrl?: string;
     xRequestInfo?: xRequestInfo;
 };
