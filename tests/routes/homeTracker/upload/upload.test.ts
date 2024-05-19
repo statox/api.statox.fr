@@ -10,7 +10,9 @@ describe('homeTracker/upload', () => {
             .send({
                 sensorName: 'foo',
                 ts: 1700000000000.23,
-                tempCelsius: 23.5
+                tempCelsius: 23.5,
+                tempCelsius2: 24,
+                humidity: 50
             })
             .expect(200);
 
@@ -18,7 +20,9 @@ describe('homeTracker/upload', () => {
             message: 'Home tracking event',
             sensorName: 'foo',
             ts: 1700000000000,
-            tempCelsius: 23.5
+            tempCelsius: 23.5,
+            tempCelsius2: 24,
+            humidity: 50
         });
     });
 });
