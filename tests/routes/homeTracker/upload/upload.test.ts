@@ -12,7 +12,9 @@ describe('homeTracker/upload', () => {
                 ts: 1700000000000.23,
                 tempCelsius: 23.5,
                 tempCelsius2: 24,
-                humidity: 50
+                humidity: 50,
+                batteryPercent: 100,
+                batteryReading: 700
             })
             .expect(200);
 
@@ -22,7 +24,9 @@ describe('homeTracker/upload', () => {
             ts: 1700000000000,
             tempCelsius: 23.5,
             tempCelsius2: 24,
-            humidity: 50
+            humidity: 50,
+            batteryPercent: 100,
+            batteryReading: 700
         });
     });
 });

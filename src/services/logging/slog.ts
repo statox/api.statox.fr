@@ -18,6 +18,8 @@ type xRequestInfo = {
 };
 // Should not contain a timestamp as it is added by logToELK (Maybe TODO refactor)
 type LoggableProperties = {
+    batteryPercent?: number;
+    batteryReading?: number;
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
     checksDoneSinceLastLog?: number;
