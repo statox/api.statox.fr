@@ -22,7 +22,6 @@ type LoggableProperties = {
     batteryReading?: number;
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
-    checksDoneSinceLastLog?: number;
     code?: number;
     entryName?: string;
     error?: Error;
@@ -34,6 +33,7 @@ type LoggableProperties = {
     nbChords?: number;
     path?: string;
     port?: number;
+    previousStatus?: string;
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;

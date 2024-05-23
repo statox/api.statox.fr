@@ -32,12 +32,18 @@ const getWatchedContent = async () => {
     return content;
 };
 
-const recordContentChanged = async (c: WatchedContent, newContent: string) => {
+const recordContentChanged = async (params: {
+    c: WatchedContent;
+    previousContent: string;
+    newContent: string;
+}) => {
+    const { c, previousContent, newContent } = params;
     slog.log({
         logToSlack: true,
         message: c.name + ' - ' + c.notificationMessage,
         watcherName: c.name,
-        status: newContent
+        status: newContent,
+        previousStatus: previousContent
     });
 
     return db.query(
@@ -79,7 +85,7 @@ const checkWatchedContent = async (c: WatchedContent) => {
     const contentClean = childElementText.replaceAll('\n', '');
 
     if (contentClean !== lastContent) {
-        return recordContentChanged(c, contentClean);
+        return recordContentChanged({ c, newContent: contentClean, previousContent: lastContent });
     }
 
     slog.log({ watcherName: c.name, message: 'Content not changed', status: contentClean });
