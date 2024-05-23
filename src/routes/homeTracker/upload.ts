@@ -4,26 +4,24 @@ import { PostRoute } from '../types';
 import { slog } from '../../services/logging';
 
 const handler = async (req: Request, res: Response) => {
-    const { sensorName, batteryPercent, batteryReading, humidity, tempCelsius, tempCelsius2, ts } =
+    const { batteryCharge, batteryPercent, batteryReading, humidity, sensorName, tempCelsius } =
         req.body;
 
     slog.log({
+        batteryCharge,
         batteryPercent,
         batteryReading,
         humidity,
         message: 'Home tracking event',
         sensorName,
-        tempCelsius,
-        tempCelsius2,
-        // Remove decimal part in case my IOT messes up the timestamp
-        ts: Math.trunc(ts)
+        tempCelsius
     });
     res.send({});
 };
 
 const inputSchema: AllowedSchema = {
     type: 'object',
-    required: ['sensorName', 'ts'],
+    required: ['sensorName'],
     additionalProperties: false,
     properties: {
         sensorName: {
@@ -31,15 +29,12 @@ const inputSchema: AllowedSchema = {
             type: 'string'
         },
         ts: {
-            description: 'Time of the recording in ms (should be based on getRemoteTime)',
+            description:
+                '(DEPRECATED) Time of the recording in ms (should be based on getRemoteTime)',
             type: 'number'
         },
         tempCelsius: {
             description: 'The current room temperature in celsius (from VMA)',
-            type: 'number'
-        },
-        tempCelsius2: {
-            description: 'The current room temperature in celsius (from DHT)',
             type: 'number'
         },
         humidity: {
@@ -47,7 +42,12 @@ const inputSchema: AllowedSchema = {
             type: 'number'
         },
         batteryReading: {
-            description: 'Analogue value read at tension divisor (See sensor code, max ~700)',
+            description:
+                '(DEPRECATED) Analogue value read at tension divisor (See sensor code, max ~700)',
+            type: 'number'
+        },
+        batteryCharge: {
+            description: 'Computed charge of the battery in Volts',
             type: 'number'
         },
         batteryPercent: {

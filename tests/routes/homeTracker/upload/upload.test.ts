@@ -9,24 +9,20 @@ describe('homeTracker/upload', () => {
             .set('Accept', 'application/json')
             .send({
                 sensorName: 'foo',
-                ts: 1700000000000.23,
                 tempCelsius: 23.5,
-                tempCelsius2: 24,
                 humidity: 50,
                 batteryPercent: 100,
-                batteryReading: 700
+                batteryCharge: 4.0
             })
             .expect(200);
 
         slogCheckLog({
             message: 'Home tracking event',
             sensorName: 'foo',
-            ts: 1700000000000,
             tempCelsius: 23.5,
-            tempCelsius2: 24,
             humidity: 50,
             batteryPercent: 100,
-            batteryReading: 700
+            batteryCharge: 4.0
         });
     });
 });
