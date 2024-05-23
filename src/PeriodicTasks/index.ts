@@ -1,6 +1,5 @@
 import { slog } from '../services/logging';
-import { watchAdafruit } from './adafruit_watcher';
-import { watchKimsufi } from './kimsufiWatcher';
+import { doWebWatcher } from '../services/webWatcher';
 
 const minutes15 = 1000 * 60 * 15;
 const hours1 = 1000 * 3600;
@@ -9,11 +8,8 @@ export const startPeriodicTasks = () => {
     logHealth();
     setInterval(logHealth, hours1);
 
-    watchKimsufi();
-    setInterval(watchKimsufi, minutes15);
-
-    watchAdafruit();
-    setInterval(watchAdafruit, hours1);
+    doWebWatcher();
+    setInterval(doWebWatcher, minutes15);
 };
 
 const logHealth = async () => {

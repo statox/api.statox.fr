@@ -4,7 +4,6 @@ import { app } from '../../src/app';
 import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
 import { slogCheckLog } from '../helpers/slog';
 import { ValidationError } from 'express-json-validator-middleware';
-import { assert } from 'chai';
 
 describe('routes', () => {
     it('should use the correct verbs', async () => {

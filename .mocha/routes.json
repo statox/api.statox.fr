@@ -1,5 +1,5 @@
 {
-    "spec": "dist/tests/routes/**/*.test.js",
+    "spec": ["dist/tests/routes/**/*.test.js", "dist/tests/periodicTasks/**/*.test.js"],
     "require": "dist/tests/helpers/mocha/routesMochaWrapper.js",
     "exit": true,
     "timeout": 5000,

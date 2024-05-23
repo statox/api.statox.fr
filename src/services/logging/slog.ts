@@ -43,6 +43,7 @@ type LoggableProperties = {
     tempCelsius?: number;
     ts?: number;
     visitedUrl?: string;
+    watcherName?: string;
     xRequestInfo?: xRequestInfo;
 };
 

@@ -35,3 +35,21 @@ export const slogCheckLog = (data: TestLogObject) => {
     }
     assert(calledWithCorrectArgs, 'Logged data doesnt match');
 };
+
+export const slogCheckNoLogs = () => {
+    const notCalled = slogSpy.notCalled;
+
+    if (!notCalled) {
+        const nbCalls = slogSpy.getCalls().length;
+        if (isDebug) {
+            console.log(`slog expected 0 zero but was called ${nbCalls} times with:`);
+            console.log(JSON.stringify(slogSpy.getCalls(), null, 2));
+        } else {
+            console.log(
+                `slog expected 0 zero but was called ${nbCalls} times (use debug=true to see calls)`
+            );
+        }
+    }
+
+    assert(notCalled === true, 'slog was expected not to be called');
+};
