@@ -39,8 +39,8 @@ const recordContentChanged = async (params: {
     newContent: string;
 }) => {
     const { c, previousContent, newContent } = params;
-    slog.log({
-        message: c.name + ' - ' + c.notificationMessage,
+    slog.log('WebWatcher content updated', {
+        notification: c.name + ' - ' + c.notificationMessage,
         watcherName: c.name,
         status: newContent,
         previousStatus: previousContent
@@ -89,7 +89,7 @@ const checkWatchedContent = async (c: WatchedContent) => {
         return recordContentChanged({ c, newContent: contentClean, previousContent: lastContent });
     }
 
-    slog.log({ watcherName: c.name, message: 'Content not changed', status: contentClean });
+    slog.log('WebWatcher content not changed', { watcherName: c.name, status: contentClean });
     return recordContentChecked(c);
 };
 

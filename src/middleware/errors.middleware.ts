@@ -14,7 +14,7 @@ export const errorHandler = async (
     response: Response,
     next: NextFunction
 ) => {
-    slog.log({ error });
+    slog.log('Caught error', { error });
     notifySlack({ error, directMention: true });
 
     if (error instanceof InsufficientScopeError) {

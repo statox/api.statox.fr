@@ -30,8 +30,9 @@ export const checkRequiredPermissions = (requiredPermissions: string[]) => {
             );
 
             if (!hasPermissions) {
-                slog.log({ message: 'Failed authentication' });
-                throw new InsufficientScopeError();
+                const error = new InsufficientScopeError();
+                slog.log('Failed authentication', { error });
+                throw error;
             }
 
             return hasPermissions;

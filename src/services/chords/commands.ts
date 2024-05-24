@@ -14,7 +14,7 @@ export const updateChords = async (chords: Chord[]) => {
 
         await S3.send(new PutObjectCommand(params));
     } catch (error) {
-        slog.log({ message: 'Error while uploading file to s3', error: error as Error });
+        slog.log('Error while uploading file to s3', { error: error as Error });
         return error;
     }
 };

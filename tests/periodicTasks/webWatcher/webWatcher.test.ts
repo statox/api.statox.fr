@@ -44,14 +44,14 @@ describe('WebWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog({
-            message: 'Web check 1 - Has changed',
+        slogCheckLog('WebWatcher content updated', {
+            notification: 'Web check 1 - Has changed',
             watcherName: 'Web check 1',
             status: 'Example Page',
             previousStatus: ''
         });
-        slogCheckLog({
-            message: 'Web check 2 - Has changed',
+        slogCheckLog('WebWatcher content updated', {
+            notification: 'Web check 2 - Has changed',
             watcherName: 'Web check 2',
             status: 'A header',
             previousStatus: 'old value'
@@ -148,8 +148,7 @@ describe('WebWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog({
-            message: 'Content not changed',
+        slogCheckLog('WebWatcher content not changed', {
             watcherName: 'Web check 1',
             status: 'Example Page'
         });

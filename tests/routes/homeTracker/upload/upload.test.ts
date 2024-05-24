@@ -16,8 +16,7 @@ describe('homeTracker/upload', () => {
             })
             .expect(200);
 
-        slogCheckLog({
-            message: 'Home tracking event',
+        slogCheckLog('Home tracking event', {
             sensorName: 'foo',
             tempCelsius: 23.5,
             humidity: 50,

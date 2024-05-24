@@ -25,11 +25,11 @@ export const getEntryPresignedUrl = async (params: { linkId: string }) => {
         params.linkId
     ]);
     if (!results.length) {
-        slog.log({ message: 'Reactor entry not found', linkId: params.linkId });
+        slog.log('Reactor entry not found', { linkId: params.linkId });
         throw new Error('ENTRY_NOT_FOUND');
     }
     if (results.length > 1) {
-        slog.log({ message: 'Reactor multiple entries with same linkId', linkId: params.linkId });
+        slog.log('Reactor multiple entries with same linkId', { linkId: params.linkId });
         throw new Error('TOO_MANY_ENTRIES');
     }
 
@@ -56,8 +56,7 @@ const enrichEntries = async (entries: DBReactorEntryForPublic[]) => {
                 uri: `/r/${entry.linkId}`
             });
         } catch (error) {
-            slog.log({
-                message: 'Error while enriching reactor entry',
+            slog.log('Error while enriching reactor entry', {
                 entryName: entry.name,
                 error: error as Error
             });

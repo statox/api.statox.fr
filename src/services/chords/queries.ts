@@ -39,7 +39,7 @@ export const getAllChords = async (): Promise<Chord[]> => {
 
         return JSON.parse(str);
     } catch (error) {
-        slog.log({ message: 'Error in get chords', error: error as Error });
+        slog.log('Error in get chords', { error: error as Error });
         throw error;
     }
 };

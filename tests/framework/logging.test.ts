@@ -6,7 +6,7 @@ import { slogCheckLog } from '../helpers/slog';
 describe('logging middleware', () => {
     it('should emit an access-log when the request finishes', async () => {
         await request(app).get('/getRoute');
-        slogCheckLog({
+        slogCheckLog('access-log', {
             path: '/getRoute',
             code: 200,
             remoteIp: '::ffff:127.0.0.1',
@@ -16,7 +16,7 @@ describe('logging middleware', () => {
         });
 
         await request(app).get('/pouet');
-        slogCheckLog({
+        slogCheckLog('access-log', {
             path: '/pouet',
             code: 404,
             executionTimeMs: sinon.match((val) => val < 5)

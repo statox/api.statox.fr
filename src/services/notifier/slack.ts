@@ -56,9 +56,8 @@ export const notifySlack = (params: { message?: string; error?: Error; directMen
 
         return webhook.send({ blocks });
     } catch (error) {
-        slog.log({
+        slog.log('Error notifying slack', {
             error: error as Error,
-            message: 'Error notifying slack',
             originalError: params.error,
             originalMessage: params.message
         });

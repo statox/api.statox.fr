@@ -21,7 +21,7 @@ describe('chords/updateAll', () => {
             })
             .expect(200);
 
-        slogCheckLog({ message: 'Updating chords', nbChords: 1 });
+        slogCheckLog('Updating chords', { nbChords: 1 });
         s3CheckCall({ nbCalls: 1 });
         s3CheckCall({
             commandType: 'PutObject',

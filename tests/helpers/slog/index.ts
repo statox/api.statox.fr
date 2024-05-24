@@ -18,13 +18,14 @@ export type TestLogObject = {
     [P in keyof LogObject]?: LogObject[P] | sinon.SinonMatcher;
 };
 
-export const slogCheckLog = (data: TestLogObject) => {
-    const calledWithCorrectArgs = slogSpy.calledWithMatch(data);
+export const slogCheckLog = (message: string, data?: TestLogObject) => {
+    const calledWithCorrectArgs = slogSpy.calledWithMatch(message, data);
     if (!calledWithCorrectArgs) {
         if (isDebug) {
             console.log('slog calls:');
             console.log(JSON.stringify(slogSpy.getCalls(), null, 2));
-            console.log('slog expected:');
+            console.log('slog expected message: ', message);
+            console.log('slog expected data:');
             console.log(JSON.stringify(data, null, 2));
         } else {
             console.log('slog calls (use debug=true to stringify):');

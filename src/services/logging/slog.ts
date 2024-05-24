@@ -28,8 +28,8 @@ type LoggableProperties = {
     executionTimeMs?: number;
     humidity?: number;
     linkId?: string;
-    message?: string;
     nbChords?: number;
+    notification?: string;
     originalError?: Error;
     originalMessage?: string;
     path?: string;
@@ -46,20 +46,20 @@ type LoggableProperties = {
     xRequestInfo?: xRequestInfo;
 };
 
-export type LogObject = LoggableProperties;
+export type LogObject = { message: string } | LoggableProperties;
 
-export const log = (data: LogObject) => {
+export const log = (message: string, data?: LogObject) => {
     if (isTests) {
         if (isDebug) {
-            console.log(data);
+            console.log(message, data || '');
         }
         return;
     }
 
     if (!isProd) {
-        console.log(data);
+        console.log(message, data || '');
         return;
     }
 
-    logToELK(data);
+    logToELK({ message, ...data });
 };
