@@ -27,7 +27,6 @@ type LoggableProperties = {
     entryName?: string;
     error?: Error;
     executionTimeMs?: number;
-    extRequestId?: string;
     humidity?: number;
     linkId?: string;
     message?: string;
@@ -40,9 +39,7 @@ type LoggableProperties = {
     requestInterrupted?: boolean;
     sensorName?: string;
     status?: string;
-    tempCelsius2?: number;
     tempCelsius?: number;
-    ts?: number;
     visitedUrl?: string;
     watcherName?: string;
     xRequestInfo?: xRequestInfo;
