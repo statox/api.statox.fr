@@ -1,38 +1,43 @@
 import { IncomingWebhook } from '@slack/webhook';
-import { isProd } from '../env-helpers/env';
+import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../env-helpers/slack';
 
-const url = isProd ? process.env.LOGS_SLACK_WEBHOOK_URL : '';
+const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
-if (isProd && !url) {
-    console.log('Error LOGS_SLACK_WEBHOOK_URL env variable is not defined');
-    process.exit(1);
-}
-
-const webhook = new IncomingWebhook(url!);
-
-export const logErrorToSlack = async (error: Error) => {
+export const logErrorToSlack = async (error: Error, options?: { notify?: true }) => {
     try {
         const message = (error as Error).message;
         const stack = (error as Error).stack;
 
+        const blocks = [
+            {
+                type: 'header',
+                text: {
+                    type: 'plain_text',
+                    text: message
+                }
+            },
+            {
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: `*Stack Trace:*\n${stack}`
+                }
+            }
+        ];
+
+        if (options?.notify) {
+            blocks.push({
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: `<@${SLACK_USERID}>`
+                }
+            });
+        }
+
         await webhook.send({
             text: 'An error occurred:',
-            blocks: [
-                {
-                    type: 'header',
-                    text: {
-                        type: 'plain_text',
-                        text: message
-                    }
-                },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*Stack Trace:*\n${stack}`
-                    }
-                }
-            ]
+            blocks
         });
     } catch (error) {
         console.log('Couldnt log error to slack');
@@ -40,19 +45,31 @@ export const logErrorToSlack = async (error: Error) => {
     }
 };
 
-export const logMessageToSlack = async (message: string) => {
+export const logMessageToSlack = async (message: string, options?: { notify?: true }) => {
     try {
+        const blocks = [
+            {
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: message
+                }
+            }
+        ];
+
+        if (options?.notify) {
+            blocks.push({
+                type: 'section',
+                text: {
+                    type: 'mrkdwn',
+                    text: `<@${SLACK_USERID}>`
+                }
+            });
+        }
+
         await webhook.send({
             text: 'An event occurred',
-            blocks: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: message
-                    }
-                }
-            ]
+            blocks
         });
     } catch (error) {
         console.log('Couldnt log message to slack');

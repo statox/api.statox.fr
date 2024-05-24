@@ -71,7 +71,7 @@ export const log = (data: LogObject) => {
             logMessageToSlack(data.message);
         }
         if (data.error) {
-            logErrorToSlack(data.error);
+            logErrorToSlack(data.error, { notify: true });
         }
     }
 };
