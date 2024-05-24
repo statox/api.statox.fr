@@ -30,6 +30,8 @@ type LoggableProperties = {
     linkId?: string;
     message?: string;
     nbChords?: number;
+    originalError?: Error;
+    originalMessage?: string;
     path?: string;
     port?: number;
     previousStatus?: string;
