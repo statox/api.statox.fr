@@ -22,7 +22,7 @@ if (isProd) {
 
 export let db: Pool;
 export const initDb = async () => {
-    slog.log({ message: 'init db', logToSlack: true });
+    slog.log({ message: 'init db' });
     const parsedUrl = url.parse(dbUrl);
 
     if (!parsedUrl) {

@@ -21,8 +21,7 @@ describe('addLinkVisit', () => {
                 const isCorrectMessage = bodyError?.message === "must have required property 'url'";
 
                 return isCorrectMessage;
-            }),
-            logToSlack: true
+            })
         });
     });
 

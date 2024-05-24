@@ -31,8 +31,7 @@ describe('routes', () => {
                     const isCorrectPath = bodyError?.instancePath === '/param1';
 
                     return isValidationError && isCorrectMessage && isCorrectPath;
-                }),
-                logToSlack: true
+                })
             });
         });
         it('should find missing params - 1', async () => {
@@ -46,8 +45,7 @@ describe('routes', () => {
                         bodyError?.message === "must have required property 'param1'";
 
                     return isValidationError && isCorrectMessage;
-                }),
-                logToSlack: true
+                })
             });
         });
         it('should find missing params - 2', async () => {
@@ -61,8 +59,7 @@ describe('routes', () => {
                         bodyError?.message === "must have required property 'param1'";
 
                     return isValidationError && isCorrectMessage;
-                }),
-                logToSlack: true
+                })
             });
         });
     });

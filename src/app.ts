@@ -17,7 +17,7 @@ export let app: express.Express;
 const PORT = process.env.PORT || 3000;
 
 export const initApp = () => {
-    slog.log({ message: 'init app', logToSlack: true });
+    slog.log({ message: 'init app' });
     app = express();
     app.use(
         cors({
@@ -56,9 +56,7 @@ export const initApp = () => {
     }
 
     app.use(errorHandler);
-    app.listen(PORT, () =>
-        slog.log({ message: 'App listening', port: Number(PORT), logToSlack: true })
-    );
+    app.listen(PORT, () => slog.log({ message: 'App listening', port: Number(PORT) }));
 
     startPeriodicTasks();
 };

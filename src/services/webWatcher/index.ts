@@ -2,6 +2,7 @@ import { RowDataPacket } from 'mysql2/promise';
 import jsdom from 'jsdom';
 import { db } from '../env-helpers/db';
 import { slog } from '../logging';
+import { logMessageToSlack } from '../logging/slack';
 
 interface WatchedContent extends RowDataPacket {
     name: string;
@@ -39,12 +40,12 @@ const recordContentChanged = async (params: {
 }) => {
     const { c, previousContent, newContent } = params;
     slog.log({
-        logToSlack: true,
         message: c.name + ' - ' + c.notificationMessage,
         watcherName: c.name,
         status: newContent,
         previousStatus: previousContent
     });
+    logMessageToSlack(c.name + ' - ' + c.notificationMessage, { notify: true });
 
     return db.query(
         `

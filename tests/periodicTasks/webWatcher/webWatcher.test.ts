@@ -45,14 +45,12 @@ describe('WebWatcher', () => {
         await doWebWatcher();
 
         slogCheckLog({
-            logToSlack: true,
             message: 'Web check 1 - Has changed',
             watcherName: 'Web check 1',
             status: 'Example Page',
             previousStatus: ''
         });
         slogCheckLog({
-            logToSlack: true,
             message: 'Web check 2 - Has changed',
             watcherName: 'Web check 2',
             status: 'A header',
@@ -151,7 +149,6 @@ describe('WebWatcher', () => {
         await doWebWatcher();
 
         slogCheckLog({
-            logToSlack: undefined,
             message: 'Content not changed',
             watcherName: 'Web check 1',
             status: 'Example Page'
