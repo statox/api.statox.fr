@@ -2,22 +2,25 @@ import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { isProd, isTests } from './env';
 import { slog } from '../logging';
+import { ConfigError } from './errors';
 
-const PROD_URL = process.env.JAWSDB_URL;
+const PROD_URL = process.env.JAWSDB_URL!;
 const DEV_URL = 'mysql://root:example@127.0.0.1:13306/db';
 const TESTS_URL = 'mysql://root:example@127.0.0.1:13306/tests';
 
 let dbUrl: string;
 if (isProd) {
-    if (PROD_URL) {
-        dbUrl = PROD_URL;
-    } else {
-        throw Error('db PROD_URL is not defined');
-    }
+    dbUrl = PROD_URL;
 } else if (isTests) {
     dbUrl = TESTS_URL;
 } else {
     dbUrl = DEV_URL;
+}
+
+if (!dbUrl) {
+    const configError = new ConfigError('db');
+    slog.log('Cant start app', { error: configError });
+    throw configError;
 }
 
 export let db: Pool;

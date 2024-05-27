@@ -10,13 +10,17 @@ import { isProd, isTests } from './env';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';
+import { ConfigError } from './errors';
+import { slog } from '../logging';
 
 const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
 const R2_SECRET_KEY = isProd ? process.env.R2_SECRET_KEY : 'test';
 const R2_ENDPOINT = isProd ? process.env.R2_ENDPOINT : 'http://127.0.0.1:4566';
 
 if (!R2_ENDPOINT || !R2_SECRET_KEY || !R2_ACCESS_KEY_ID) {
-    throw new Error('Missing R2 config env variable');
+    const configError = new ConfigError('R2');
+    slog.log('Cant start app', { error: configError });
+    throw configError;
 }
 
 export let s3Mock: AwsClientStub<S3Client>;
