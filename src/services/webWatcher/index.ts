@@ -4,18 +4,21 @@ import { db } from '../env-helpers/db';
 import { slog } from '../logging';
 import { notifySlack } from '../notifier/slack';
 
-interface WatchedContent extends RowDataPacket {
+export interface WatchedContent extends RowDataPacket {
+    id: number;
     name: string;
     notificationMessage: string;
     url: string;
     cssSelector: string;
     lastContent: string;
+    lastCheckDateUnix: number;
     lastUpdateDateUnix: number;
+    checkIntervalSeconds: number;
 }
 
 const { JSDOM } = jsdom;
 
-const getWatchedContent = async () => {
+export const getWatchedContent = async () => {
     const [content] = await db.query<WatchedContent[]>(
         `SELECT 
             id,
