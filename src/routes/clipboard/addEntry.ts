@@ -61,5 +61,5 @@ export const route: PostRoute = {
     path: '/clipboard/addEntry',
     inputSchema,
     handler,
-    protected: true
+    authentication: 'user'
 };

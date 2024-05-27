@@ -9,5 +9,6 @@ const handler = (_req: Request, res: Response) => {
 export const route: GetRoute = {
     method: 'get',
     path: '/health/getRemoteTime',
-    handler
+    handler,
+    authentication: 'none'
 };

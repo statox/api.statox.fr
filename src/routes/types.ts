@@ -6,7 +6,7 @@ type BaseRoute = {
     handler:
         | ((req: express.Request, res: express.Response) => void)
         | ((req: express.Request, res: express.Response, next: express.NextFunction) => void);
-    protected?: true;
+    authentication: 'none' | 'user';
 };
 
 export type GetRoute = BaseRoute & {

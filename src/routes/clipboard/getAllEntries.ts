@@ -15,5 +15,5 @@ export const route: GetRoute = {
     method: 'get',
     path: '/clipboard/getAllEntries',
     handler,
-    protected: true
+    authentication: 'user'
 };

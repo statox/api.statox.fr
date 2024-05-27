@@ -61,5 +61,6 @@ export const route: PostRoute = {
     method: 'post',
     path: '/homeTracker/upload',
     inputSchema,
-    handler
+    handler,
+    authentication: 'none'
 };

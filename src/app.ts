@@ -39,7 +39,7 @@ export const initApp = () => {
     for (const route of routes) {
         const pipeline = [];
 
-        if (route.protected) {
+        if (route.authentication === 'user') {
             pipeline.push(validateAccessToken);
             pipeline.push(checkRequiredPermissions(['author']));
         }

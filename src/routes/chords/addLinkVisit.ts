@@ -32,5 +32,5 @@ export const route: PostRoute = {
     path: '/chords/addLinkVisit',
     inputSchema,
     handler,
-    protected: true
+    authentication: 'user'
 };

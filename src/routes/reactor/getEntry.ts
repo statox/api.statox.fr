@@ -19,5 +19,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
 export const route: GetRoute = {
     method: 'get',
     path: '/r/:linkId',
-    handler
+    handler,
+    authentication: 'none'
 };

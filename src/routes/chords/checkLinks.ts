@@ -10,5 +10,6 @@ const handler = async (_req: Request, res: Response) => {
 export const route: GetRoute = {
     method: 'get',
     path: '/chords/checkLinks',
-    handler
+    handler,
+    authentication: 'none'
 };

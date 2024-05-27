@@ -57,5 +57,5 @@ export const route: PostRoute = {
     path: '/chords/updateAll',
     inputSchema,
     handler,
-    protected: true
+    authentication: 'user'
 };

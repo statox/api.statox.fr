@@ -14,5 +14,6 @@ const handler = async (_req: Request, res: Response, next: NextFunction) => {
 export const route: GetRoute = {
     method: 'get',
     path: '/clipboard/getPublicEntries',
-    handler
+    handler,
+    authentication: 'none'
 };

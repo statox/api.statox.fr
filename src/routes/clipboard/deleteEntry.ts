@@ -30,5 +30,5 @@ export const route: PostRoute = {
     path: '/clipboard/deleteEntry',
     inputSchema,
     handler,
-    protected: true
+    authentication: 'user'
 };

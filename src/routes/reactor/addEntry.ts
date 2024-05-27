@@ -49,5 +49,5 @@ export const route: PostRoute = {
     path: '/reactor/addEntry',
     inputSchema,
     handler,
-    protected: true
+    authentication: 'user'
 };

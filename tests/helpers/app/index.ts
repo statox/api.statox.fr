@@ -6,19 +6,21 @@ import { initApp } from '../../../src/app';
 
 const getRoute: GetRoute = {
     method: 'get',
+    authentication: 'none',
     path: '/getroute',
     handler: (_req: Request, res: Response) => res.end()
 };
 
-const protectedGetRoute: GetRoute = {
+const userAuthenticatedGetRoute: GetRoute = {
     method: 'get',
-    protected: true,
-    path: '/protectedGetRoute',
+    authentication: 'user',
+    path: '/userAuthenticatedGetRoute',
     handler: (_req: Request, res: Response) => res.end()
 };
 
 const postRoute: PostRoute = {
     method: 'post',
+    authentication: 'none',
     path: '/postroute',
     inputSchema: {
         type: 'object',
@@ -33,7 +35,7 @@ const postRoute: PostRoute = {
     handler: (_req: Request, res: Response) => res.end()
 };
 
-const testRoutes = [getRoute, postRoute, protectedGetRoute];
+const testRoutes = [getRoute, postRoute, userAuthenticatedGetRoute];
 
 let routesStub: sinon.SinonStub;
 

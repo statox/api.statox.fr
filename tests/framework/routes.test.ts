@@ -64,12 +64,16 @@ describe('routes', () => {
         });
     });
 
-    it('should call the auth functions only on protected routes', async () => {
-        await request(app).get('/getRoute');
-        sinon.assert.notCalled(fakeValidateAccessToken);
-        sinon.assert.notCalled(fakeCheckRequiredPermissionsHandler);
-        await request(app).get('/protectedGetRoute');
-        sinon.assert.calledOnce(fakeValidateAccessToken);
-        sinon.assert.calledOnce(fakeCheckRequiredPermissionsHandler);
+    describe('should enforce the authentication specified in the route configuration', async () => {
+        it('- authentication none', async () => {
+            await request(app).get('/getRoute');
+            sinon.assert.notCalled(fakeValidateAccessToken);
+            sinon.assert.notCalled(fakeCheckRequiredPermissionsHandler);
+        });
+        it('- authentication user', async () => {
+            await request(app).get('/userAuthenticatedGetRoute');
+            sinon.assert.calledOnce(fakeValidateAccessToken);
+            sinon.assert.calledOnce(fakeCheckRequiredPermissionsHandler);
+        });
     });
 });
