@@ -14,6 +14,7 @@ import { route as reactorAddEntry } from './reactor/addEntry';
 import { route as reactorGetEntry } from './reactor/getEntry';
 import { route as reactorGetForPublic } from './reactor/getEntriesForPublic';
 import { route as homeTrackerUpload } from './homeTracker/upload';
+import { route as webWatcherCreateWatcher } from './webWatcher/createWatcher';
 import { route as webWatcherGetAllWatcher } from './webWatcher/getAllWatchers';
 
 export const routes: Route[] = [
@@ -32,5 +33,6 @@ export const routes: Route[] = [
     reactorGetForPublic,
     updateAllChords,
     checkLinks,
+    webWatcherCreateWatcher,
     webWatcherGetAllWatcher
 ];

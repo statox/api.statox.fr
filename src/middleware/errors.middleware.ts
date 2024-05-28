@@ -7,6 +7,7 @@ import {
 } from 'express-oauth2-jwt-bearer';
 import { slog } from '../services/logging';
 import { notifySlack } from '../services/notifier/slack';
+import { EntryAlreadyExistsError } from '../services/webWatcher';
 
 export const errorHandler = async (
     error: Error,
@@ -37,6 +38,11 @@ export const errorHandler = async (
 
     if (error instanceof ValidationError) {
         response.status(400).send(error.validationErrors);
+        return next();
+    }
+
+    if (error instanceof EntryAlreadyExistsError) {
+        response.status(400).json({ message: error.message });
         return next();
     }
 

@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2/promise';
+import { QueryError, RowDataPacket } from 'mysql2/promise';
 import jsdom from 'jsdom';
 import { db } from '../env-helpers/db';
 import { slog } from '../logging';
@@ -34,6 +34,35 @@ export const getWatchedContent = async () => {
         `
     );
     return content;
+};
+
+export class EntryAlreadyExistsError extends Error {
+    constructor() {
+        super('ENTRY_ALREADY_EXISTS');
+    }
+}
+
+export const createWatcher = async (newWatcherParams: {
+    name: string;
+    notificationMessage: string;
+    url: string;
+    cssSelector: string;
+    checkIntervalSeconds: number;
+}) => {
+    const { name, notificationMessage, url, cssSelector, checkIntervalSeconds } = newWatcherParams;
+    try {
+        await db.query(
+            `INSERT INTO WebWatcher
+            (name, notificationMessage, url, cssSelector, checkIntervalSeconds)
+            VALUES (?, ?, ?, ?, ?)`,
+            [name, notificationMessage, url, cssSelector, checkIntervalSeconds]
+        );
+    } catch (error) {
+        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
+            throw new EntryAlreadyExistsError();
+        }
+        throw error;
+    }
 };
 
 const recordContentChanged = async (params: {
