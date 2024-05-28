@@ -1,13 +1,15 @@
 import { mysqlCheckContains } from './mysqlCheckContains';
 import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain';
+import { mysqlCheckTableLength } from './mysqlCheckTableLength';
 import { mysqlClearAllTables } from './mysqlClearTables';
 import { mysqlDumpTables } from './mysqlDumpTables';
 import { mysqlFixture } from './mysqlFixture';
 
 export {
     mysqlCheckContains,
-    mysqlClearAllTables,
     mysqlCheckDoesNotContain,
+    mysqlCheckTableLength,
+    mysqlClearAllTables,
     mysqlDumpTables,
     mysqlFixture
 };
