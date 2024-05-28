@@ -42,13 +42,14 @@ export class EntryAlreadyExistsError extends Error {
     }
 }
 
-export const createWatcher = async (newWatcherParams: {
+interface NewWatcherParams {
     name: string;
     notificationMessage: string;
     url: string;
     cssSelector: string;
     checkIntervalSeconds: number;
-}) => {
+}
+export const createWatcher = async (newWatcherParams: NewWatcherParams) => {
     const { name, notificationMessage, url, cssSelector, checkIntervalSeconds } = newWatcherParams;
     try {
         await db.query(
