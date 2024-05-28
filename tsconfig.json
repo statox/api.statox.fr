@@ -1,14 +1,18 @@
 {
+    "comment": "Check recommended tsconfig files for each node version at https://github.com/tsconfig/bases?tab=readme-ov-file#centralized-recommendations-for-tsconfig-bases",
+    "_version": "18.2.0",
     "compilerOptions": {
-        "lib": ["es2021"],
+        "lib": ["es2023"],
+        "module": "node16",
+        "target": "es2022",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node16",
         "allowJs": true,
         "checkJs": true,
-        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "sourceMap": true,
-        "strict": true
+        "sourceMap": true
     }
 }
