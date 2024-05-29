@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS `WebWatcher` (
     `lastCheckDateUnix` int(11) unsigned NOT NULL DEFAULT 0,
     `lastUpdateDateUnix` int(11) unsigned NOT NULL DEFAULT 0,
     `checkIntervalSeconds` int(11) unsigned NOT NULL,
+    `lastErrorDateUnix` int(11) unsigned,
+    `lastErrorMessage` varchar(400),
     PRIMARY KEY (`id`),
     UNIQUE KEY `name_uniq` (`name`),
     UNIQUE KEY `url_selector_uniq` (`url`, `cssSelector`)

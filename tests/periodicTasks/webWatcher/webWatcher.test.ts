@@ -74,7 +74,9 @@ describe('WebWatcher', () => {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
                     },
-                    checkIntervalSeconds: 0
+                    checkIntervalSeconds: 0,
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
                 },
                 {
                     id: 2,
@@ -86,7 +88,9 @@ describe('WebWatcher', () => {
                     lastUpdateDateUnix: {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
-                    }
+                    },
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
                 }
             ]
         });
@@ -124,7 +128,9 @@ describe('WebWatcher', () => {
                     lastContent: '',
                     lastCheckDateUnix: oneHourAgo,
                     lastUpdateDateUnix: 0,
-                    checkIntervalSeconds: 6000
+                    checkIntervalSeconds: 6000,
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
                 }
             ]
         });
@@ -167,7 +173,59 @@ describe('WebWatcher', () => {
                         precision: '1 SECOND'
                     },
                     lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0,
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
+                }
+            ]
+        });
+    });
+
+    it('should update error date and message when failure happens', async () => {
+        await mysqlFixture({
+            WebWatcher: [
+                {
+                    name: 'Web check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    cssSelector: 'invalid @# > selector . adsf',
+                    lastContent: 'Example Page',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0
+                }
+            ]
+        });
+
+        await doWebWatcher();
+
+        slogCheckLog('Failed to run watcher', {
+            watcherName: 'Web check 1',
+            error: sinon.match((error) => {
+                return error.message === "'invalid @# > selector . adsf' is not a valid selector";
+            })
+        });
+
+        await mysqlCheckContains({
+            WebWatcher: [
+                {
+                    id: 1,
+                    name: 'Web check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    cssSelector: 'invalid @# > selector . adsf',
+                    lastContent: 'Example Page',
+                    lastCheckDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                    lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0,
+                    lastErrorDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                    lastErrorMessage: "'invalid @# > selector . adsf' is not a valid selector"
                 }
             ]
         });

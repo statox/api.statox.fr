@@ -16,7 +16,9 @@ describe('webWatcher/getAllWatchers', () => {
                 lastContent: 'old value',
                 lastCheckDateUnix: 0,
                 lastUpdateDateUnix: 0,
-                checkIntervalSeconds: 0
+                checkIntervalSeconds: 0,
+                lastErrorDateUnix: 10,
+                lastErrorMessage: 'foo'
             },
             {
                 id: 1,
@@ -27,7 +29,9 @@ describe('webWatcher/getAllWatchers', () => {
                 lastContent: '',
                 lastCheckDateUnix: 0,
                 lastUpdateDateUnix: 0,
-                checkIntervalSeconds: 0
+                checkIntervalSeconds: 0,
+                lastErrorDateUnix: null,
+                lastErrorMessage: null
             }
         ];
 

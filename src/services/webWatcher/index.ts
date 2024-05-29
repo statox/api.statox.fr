@@ -14,6 +14,8 @@ export interface WatchedContent extends RowDataPacket {
     lastCheckDateUnix: number;
     lastUpdateDateUnix: number;
     checkIntervalSeconds: number;
+    lastErrorDateUnix: number;
+    lastErrorMessage: string;
 }
 
 const { JSDOM } = jsdom;
@@ -29,7 +31,9 @@ export const getWatchedContent = async () => {
             lastContent,
             lastCheckDateUnix,
             lastUpdateDateUnix,
-            checkIntervalSeconds
+            checkIntervalSeconds,
+            lastErrorDateUnix,
+            lastErrorMessage
         FROM WebWatcher
         `
     );
@@ -83,7 +87,11 @@ const recordContentChanged = async (params: {
     return db.query(
         `
         UPDATE WebWatcher
-        SET lastContent = ?, lastUpdateDateUnix = UNIX_TIMESTAMP(), lastCheckDateUnix = UNIX_TIMESTAMP()
+        SET lastContent = ?,
+        lastUpdateDateUnix = UNIX_TIMESTAMP(),
+        lastCheckDateUnix = UNIX_TIMESTAMP(),
+        lastErrorDateUnix = null,
+        lastErrorMessage = null
         WHERE id = ?
     `,
         [newContent, c.id]
@@ -94,42 +102,70 @@ const recordContentChecked = async (c: WatchedContent) => {
     return db.query(
         `
         UPDATE WebWatcher
-        SET lastCheckDateUnix = UNIX_TIMESTAMP()
+        SET lastCheckDateUnix = UNIX_TIMESTAMP(),
+        lastErrorDateUnix = null,
+        lastErrorMessage = null
         WHERE id = ?
     `,
         [c.id]
     );
 };
 
+const recordContentCheckFailed = async (c: WatchedContent, error: Error) => {
+    return db.query(
+        `
+        UPDATE WebWatcher
+        SET lastCheckDateUnix = UNIX_TIMESTAMP(),
+        lastErrorDateUnix = UNIX_TIMESTAMP(),
+        lastErrorMessage = ?
+        WHERE id = ?
+    `,
+        [error.message, c.id]
+    );
+};
+
 const checkWatchedContent = async (c: WatchedContent) => {
-    const { lastCheckDateUnix, checkIntervalSeconds, cssSelector, lastContent, url } = c;
+    try {
+        const { lastCheckDateUnix, checkIntervalSeconds, cssSelector, lastContent, url } = c;
 
-    if (Date.now() / 1000 < lastCheckDateUnix + checkIntervalSeconds) {
-        return;
+        if (Date.now() / 1000 < lastCheckDateUnix + checkIntervalSeconds) {
+            return;
+        }
+
+        const page = await fetch(url);
+        const text = await page.text();
+
+        const dom = new JSDOM(text);
+        const doc = dom.window.document;
+
+        const childElement = doc.querySelector(cssSelector);
+        const childElementText = childElement?.textContent ?? 'N/A';
+        const contentClean = childElementText.replaceAll('\n', '');
+
+        if (contentClean !== lastContent) {
+            return recordContentChanged({
+                c,
+                newContent: contentClean,
+                previousContent: lastContent
+            });
+        }
+
+        slog.log('WebWatcher content not changed', { watcherName: c.name, status: contentClean });
+        return recordContentChecked(c);
+    } catch (error) {
+        await recordContentCheckFailed(c, error as Error);
+        throw error;
     }
-
-    const page = await fetch(url);
-    const text = await page.text();
-
-    const dom = new JSDOM(text);
-    const doc = dom.window.document;
-
-    const childElement = doc.querySelector(cssSelector);
-    const childElementText = childElement?.textContent ?? 'N/A';
-    const contentClean = childElementText.replaceAll('\n', '');
-
-    if (contentClean !== lastContent) {
-        return recordContentChanged({ c, newContent: contentClean, previousContent: lastContent });
-    }
-
-    slog.log('WebWatcher content not changed', { watcherName: c.name, status: contentClean });
-    return recordContentChecked(c);
 };
 
 export const doWebWatcher = async () => {
     const contentsToCheck = await getWatchedContent();
 
     for (const content of contentsToCheck) {
-        await checkWatchedContent(content);
+        try {
+            await checkWatchedContent(content);
+        } catch (error) {
+            slog.log('Failed to run watcher', { watcherName: content.name, error: error as Error });
+        }
     }
 };
