@@ -1,9 +1,12 @@
 # Use root/example as user/password credentials
 version: '3.9'
 
+name: apistatox
+
 services:
     # Use root/example as user/password credentials
     db:
+        container_name: mysql
         image: mysql:8.0.33
         # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
         # (this is just an example, not intended to be a production configuration)
@@ -14,9 +17,7 @@ services:
             MYSQL_ROOT_PASSWORD: example
             MYSQL_ROOT_HOST: '%'
         ports:
-            - '127.0.0.1:13306:3306'
-        expose:
-            - '3306'
+            - '127.0.0.1:23306:3306'
 
     localstack:
         container_name: localstack

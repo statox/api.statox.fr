@@ -3,6 +3,6 @@
 user="root"
 password="example"
 host="127.0.0.1"
-port="13306"
+port="23306"
 
 echo mysql --host="$host" --user="$user" --password="$password" --port="$port"
