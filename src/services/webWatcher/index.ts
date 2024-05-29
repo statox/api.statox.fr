@@ -70,6 +70,10 @@ export const createWatcher = async (newWatcherParams: NewWatcherParams) => {
     }
 };
 
+export const deleteWatcher = async (watcherId: number) => {
+    await db.query(`DELETE FROM WebWatcher WHERE id = ?`, watcherId);
+};
+
 const recordContentChanged = async (params: {
     c: WatchedContent;
     previousContent: string;
