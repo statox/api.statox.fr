@@ -6,7 +6,7 @@ updates:
       interval: "daily"
     groups:
       # Group minor and patch dependencies which should be able to be applied blindly
-      # I expect this to create individual PRs for major updates (but I need too make sure it's the case)
+      # This creates individual PRs for major updates
       dev-dependencies:
         update-types:
           - "minor"
