@@ -80,7 +80,7 @@ const recordContentChanged = async (params: {
     newContent: string;
 }) => {
     const { c, previousContent, newContent } = params;
-    slog.log('WebWatcher content updated', {
+    slog.log('web-watcher', 'WebWatcher content updated', {
         notification: c.name + ' - ' + c.notificationMessage,
         watcherName: c.name,
         status: newContent,
@@ -154,7 +154,10 @@ const checkWatchedContent = async (c: WatchedContent) => {
             });
         }
 
-        slog.log('WebWatcher content not changed', { watcherName: c.name, status: contentClean });
+        slog.log('web-watcher', 'WebWatcher content not changed', {
+            watcherName: c.name,
+            status: contentClean
+        });
         return recordContentChecked(c);
     } catch (error) {
         await recordContentCheckFailed(c, error as Error);
@@ -169,7 +172,10 @@ export const doWebWatcher = async () => {
         try {
             await checkWatchedContent(content);
         } catch (error) {
-            slog.log('Failed to run watcher', { watcherName: content.name, error: error as Error });
+            slog.log('web-watcher', 'Failed to run watcher', {
+                watcherName: content.name,
+                error: error as Error
+            });
         }
     }
 };

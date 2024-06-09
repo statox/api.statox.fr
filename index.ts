@@ -8,7 +8,7 @@ const start = async () => {
     await initLocalStackS3();
     await initDb();
     initApp();
-    slog.log('App started');
+    slog.log('app', 'App started');
     notifySlack({ message: 'App started' });
 };
 

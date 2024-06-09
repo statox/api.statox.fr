@@ -44,13 +44,13 @@ describe('WebWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('WebWatcher content updated', {
+        slogCheckLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Web check 1 - Has changed',
             watcherName: 'Web check 1',
             status: 'Example Page',
             previousStatus: ''
         });
-        slogCheckLog('WebWatcher content updated', {
+        slogCheckLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Web check 2 - Has changed',
             watcherName: 'Web check 2',
             status: 'A header',
@@ -154,7 +154,7 @@ describe('WebWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('WebWatcher content not changed', {
+        slogCheckLog('web-watcher', 'WebWatcher content not changed', {
             watcherName: 'Web check 1',
             status: 'Example Page'
         });
@@ -199,7 +199,7 @@ describe('WebWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('Failed to run watcher', {
+        slogCheckLog('web-watcher', 'Failed to run watcher', {
             watcherName: 'Web check 1',
             error: sinon.match((error) => {
                 return error.message === "'invalid @# > selector . adsf' is not a valid selector";

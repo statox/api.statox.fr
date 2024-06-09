@@ -15,7 +15,7 @@ describe('addLinkVisit', () => {
             })
             .expect(400);
 
-        slogCheckLog('Caught error', {
+        slogCheckLog('app', 'Caught error', {
             error: sinon.match((error) => {
                 const bodyError = error?.validationErrors?.body[0];
                 const isCorrectMessage = bodyError?.message === "must have required property 'url'";

@@ -8,6 +8,6 @@ export const SLACK_WEBHOOK_URL = isProd ? process.env.SLACK_WEBHOOK_URL! : 'http
 
 if (!SLACK_USERID || !SLACK_WEBHOOK_URL) {
     const configError = new ConfigError('slack');
-    slog.log('Cant start app', { error: configError });
+    slog.log('env-helpers', 'Cant start app', { error: configError });
     throw configError;
 }

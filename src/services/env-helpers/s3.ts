@@ -19,7 +19,7 @@ const R2_ENDPOINT = isProd ? process.env.R2_ENDPOINT : 'http://127.0.0.1:4566';
 
 if (!R2_ENDPOINT || !R2_SECRET_KEY || !R2_ACCESS_KEY_ID) {
     const configError = new ConfigError('R2');
-    slog.log('Cant start app', { error: configError });
+    slog.log('env-helpers', 'Cant start app', { error: configError });
     throw configError;
 }
 

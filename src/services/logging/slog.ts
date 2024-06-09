@@ -48,20 +48,30 @@ type LoggableProperties = {
     xRequestInfo?: xRequestInfo;
 };
 
-export type LogObject = { message: string } | LoggableProperties;
+export type LogObject = { component: AppLogComponent; message: string } | LoggableProperties;
 
-export const log = (message: string, data?: LogObject) => {
+export type AppLogComponent =
+    | 'app'
+    | 'chords'
+    | 'env-helpers'
+    | 'home-tracker'
+    | 'meteo-france'
+    | 'notifier'
+    | 'reactor'
+    | 'web-watcher';
+
+export const log = (component: AppLogComponent, message: string, data?: LogObject) => {
     if (isTests) {
         if (isDebug) {
-            console.log(message, data || '');
+            console.log(component, message, data || '');
         }
         return;
     }
 
     if (!isProd) {
-        console.log(message, data || '');
+        console.log(component, message, data || '');
         return;
     }
 
-    logToELK({ message, ...data });
+    logToELK({ component, message, ...data });
 };

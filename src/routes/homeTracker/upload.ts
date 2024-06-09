@@ -7,7 +7,7 @@ const handler = async (req: Request, res: Response) => {
     const { batteryCharge, batteryPercent, batteryReading, humidity, sensorName, tempCelsius } =
         req.body;
 
-    slog.log('Home tracking event', {
+    slog.log('home-tracker', 'Home tracking event', {
         batteryCharge,
         batteryPercent,
         batteryReading,

@@ -137,25 +137,30 @@ let failedCalls = 0;
 let previousTimestamp = 0;
 export const periodicMeteoFranceCheck = async () => {
     try {
-        slog.log('Attempting to get meteo france observation', { previousTimestamp });
+        slog.log('meteo-france', 'Attempting to get an observation', {
+            previousTimestamp
+        });
         const station = stations[0];
         const observation = await getLatestObservationForHourlyStation(station.id);
 
         if (observation.timestamp === previousTimestamp) {
-            slog.log('Observation timestamp did not change', { previousTimestamp });
+            slog.log('meteo-france', 'Observation timestamp did not change', { previousTimestamp });
             return;
         }
 
         previousTimestamp = observation.timestamp;
-        slog.log('Meteo france observation', observation);
+        slog.log('meteo-france', 'New observation', observation);
         failedCalls = 0;
     } catch (error) {
-        slog.log('Failed meteo france call', { error: error as Error, failedCalls });
+        slog.log('meteo-france', 'Failed call', {
+            error: error as Error,
+            failedCalls
+        });
         failedCalls++;
         if (failedCalls < 5) {
             setTimeout(periodicMeteoFranceCheck, 5000);
         } else {
-            slog.log('Stop retrying meteo france calls');
+            slog.log('meteo-france', 'Stop retrying calls');
         }
     }
 };

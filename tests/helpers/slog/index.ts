@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { slog } from '../../../src/services/logging';
-import { LogObject } from '../../../src/services/logging/slog';
+import { AppLogComponent, LogObject } from '../../../src/services/logging/slog';
 import { isDebug } from '../../../src/services/env-helpers/env';
 
 let slogSpy: sinon.SinonSpy;
@@ -18,8 +18,8 @@ export type TestLogObject = {
     [P in keyof LogObject]?: LogObject[P] | sinon.SinonMatcher;
 };
 
-export const slogCheckLog = (message: string, data?: TestLogObject) => {
-    const calledWithCorrectArgs = slogSpy.calledWithMatch(message, data);
+export const slogCheckLog = (component: AppLogComponent, message: string, data?: TestLogObject) => {
+    const calledWithCorrectArgs = slogSpy.calledWithMatch(component, message, data);
     if (!calledWithCorrectArgs) {
         if (isDebug) {
             console.log('slog calls:');

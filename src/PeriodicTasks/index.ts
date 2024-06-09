@@ -17,5 +17,5 @@ export const startPeriodicTasks = () => {
 };
 
 const logHealth = async () => {
-    slog.log('Health check');
+    slog.log('app', 'Health check');
 };

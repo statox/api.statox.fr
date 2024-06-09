@@ -33,7 +33,7 @@ export const loggingHandler = async (req: Request, res: Response, next: NextFunc
         const executionTimeMs = Number(hrtime.bigint() - res.locals.startTimeNs) / 1e6;
         const code = res.statusCode;
 
-        slog.log('access-log', {
+        slog.log('app', 'access-log', {
             cfGeoInfo,
             cfRay,
             code,

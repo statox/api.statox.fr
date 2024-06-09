@@ -19,13 +19,13 @@ if (isProd) {
 
 if (!dbUrl) {
     const configError = new ConfigError('db');
-    slog.log('Cant start app', { error: configError });
+    slog.log('env-helpers', 'Cant start app', { error: configError });
     throw configError;
 }
 
 export let db: Pool;
 export const initDb = async () => {
-    slog.log('init db');
+    slog.log('app', 'init db');
     const parsedUrl = url.parse(dbUrl);
 
     if (!parsedUrl) {

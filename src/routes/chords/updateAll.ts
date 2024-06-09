@@ -6,7 +6,7 @@ import { slog } from '../../services/logging';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { chords } = req.body;
-    slog.log('Updating chords', { nbChords: chords.length });
+    slog.log('chords', 'Updating chords', { nbChords: chords.length });
 
     try {
         await updateChords(chords);

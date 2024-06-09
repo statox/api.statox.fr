@@ -6,7 +6,7 @@ import { slog } from '../../services/logging';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { url } = req.body;
-    slog.log('Adding visit', { visitedUrl: url });
+    slog.log('chords', 'Adding visit', { visitedUrl: url });
 
     try {
         await addLinkVisit({ url });

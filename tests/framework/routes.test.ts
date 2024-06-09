@@ -22,7 +22,7 @@ describe('routes', () => {
         });
         it('should find incorrect type', async () => {
             await request(app).post('/postRoute').send({ param1: 1 }).expect(400);
-            slogCheckLog('Caught error', {
+            slogCheckLog('app', 'Caught error', {
                 error: sinon.match((error) => {
                     // Cant use assert in a matcher because it is called for several logs even ones without the error
                     const isValidationError = error instanceof ValidationError;
@@ -36,7 +36,7 @@ describe('routes', () => {
         });
         it('should find missing params - 1', async () => {
             await request(app).post('/postRoute').send({ foo: 'pouet' }).expect(400);
-            slogCheckLog('Caught error', {
+            slogCheckLog('app', 'Caught error', {
                 error: sinon.match((error) => {
                     // Cant use assert in a matcher because it is called for several logs even ones without the error
                     const isValidationError = error instanceof ValidationError;
@@ -50,7 +50,7 @@ describe('routes', () => {
         });
         it('should find missing params - 2', async () => {
             await request(app).post('/postRoute').send().expect(400);
-            slogCheckLog('Caught error', {
+            slogCheckLog('app', 'Caught error', {
                 error: sinon.match((error) => {
                     // Cant use assert in a matcher because it is called for several logs even ones without the error
                     const isValidationError = error instanceof ValidationError;
