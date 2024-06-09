@@ -2,14 +2,20 @@ import sinon from 'sinon';
 import { slogCheckLog } from '../../helpers/slog';
 import { periodicMeteoFranceCheck } from '../../../src/services/meteofrance';
 import * as meteoFranceConnector from '../../../src/services/meteofrance/connector';
+import * as meteoFranceConfig from '../../../src/services/meteofrance/config';
 
 describe('meteofrance', () => {
-    let stub: sinon.SinonStub;
+    let stubObservationAPI: sinon.SinonStub;
+    let stubStations: sinon.SinonStub;
     beforeEach(() => {
-        stub = sinon.stub(meteoFranceConnector, 'getLatestObservationForHourlyStation');
+        stubObservationAPI = sinon.stub(
+            meteoFranceConnector,
+            'getLatestObservationForHourlyStation'
+        );
 
         // [{"lat":48.854833,"lon":2.233667,"geo_id_insee":"75116008","reference_time":"2024-06-09T14:10:06Z","insert_time":"2024-06-09T14:03:40Z","validity_time":"2024-06-09T14:00:00Z","t":294.75,"td":282.95,"tx":294.85,"tn":292.45,"u":47,"ux":51,"un":43,"dd":340,"ff":4.0,"dxy":360,"fxy":4.2,"dxi":360,"fxi":7.9,"rr1":0,"t_10":null,"t_20":null,"t_50":null,"t_100":null,"vv":null,"etat_sol":null,"sss":null,"n":null,"insolh":35,"ray_glo01":2344000,"pres":null,"pmer":null}]
-        stub.withArgs('75116008')
+        stubObservationAPI
+            .withArgs('75116008')
             .onFirstCall()
             .resolves({
                 reference_time: '2024-06-09T14:10:06Z',
@@ -23,9 +29,22 @@ describe('meteofrance', () => {
                 t: 296.15,
                 u: 50
             });
+
+        stubStations = sinon.stub(meteoFranceConfig, 'getStations');
+        stubStations.returns([
+            {
+                id: '75116008',
+                nom: 'LONGCHAMP'
+            },
+            {
+                id: '75104001',
+                nom: 'TOUR ST-JACQUES'
+            }
+        ]);
     });
     afterEach(() => {
-        stub.restore();
+        stubObservationAPI.restore();
+        stubStations.restore();
     });
 
     it('should get an observation and log it but not repeat the log if the timestamp doesnt change on second call', async () => {
