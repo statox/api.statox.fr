@@ -10,6 +10,7 @@ import { goatCounterHandler } from './middleware/goatcounter.middleware';
 import { loggingHandler } from './middleware/logging.middleware';
 import { startPeriodicTasks } from './PeriodicTasks';
 import { slog } from './services/logging';
+import { isTests } from './services/env-helpers/env';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -58,5 +59,7 @@ export const initApp = () => {
     app.use(errorHandler);
     app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
 
-    startPeriodicTasks();
+    if (!isTests) {
+        startPeriodicTasks();
+    }
 };
