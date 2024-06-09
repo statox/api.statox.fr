@@ -1,7 +1,8 @@
+import { setTimeout } from 'timers/promises';
 import { DateTime } from 'luxon';
 import { slog } from '../logging';
 import { getLatestObservationForHourlyStation } from './connector';
-import { getStations } from './config';
+import { failureTimeoutMs, getStations } from './config';
 
 const handleStationObservation = async (stationId: string) => {
     slog.log('meteo-france', 'Attempting to get an observation', {
@@ -36,23 +37,24 @@ const handleStationObservation = async (stationId: string) => {
     slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };
 
-let failedCalls = 0;
 let previousTimestamp = 0;
 export const periodicMeteoFranceCheck = async () => {
-    try {
-        const station = getStations()[0];
-        await handleStationObservation(station.id);
-        failedCalls = 0;
-    } catch (error) {
-        slog.log('meteo-france', 'Failed call', {
-            error: error as Error,
-            failedCalls
-        });
-        failedCalls++;
-        if (failedCalls < 5) {
-            setTimeout(periodicMeteoFranceCheck, 5000);
-        } else {
-            slog.log('meteo-france', 'Stop retrying calls');
+    let failedCalls = 0;
+
+    while (failedCalls < 5) {
+        try {
+            const station = getStations()[0];
+            await handleStationObservation(station.id);
+            return;
+        } catch (error) {
+            slog.log('meteo-france', 'Failed call', {
+                error: error as Error,
+                failedCalls
+            });
         }
+        failedCalls++;
+        await setTimeout(failureTimeoutMs());
     }
+
+    slog.log('meteo-france', 'Stop retrying calls', {});
 };
