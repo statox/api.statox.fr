@@ -26,6 +26,7 @@ type LoggableProperties = {
     entryName?: string;
     error?: Error;
     executionTimeMs?: number;
+    failedCalls?: number;
     humidity?: number;
     linkId?: string;
     nbChords?: number;
@@ -35,6 +36,7 @@ type LoggableProperties = {
     path?: string;
     port?: number;
     previousStatus?: string;
+    previousTimestamp?: number;
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;
