@@ -1,4 +1,5 @@
 import { METEO_FRANCE_API_KEY } from '../env-helpers/meteofrance';
+import { slog } from '../logging';
 import { MeteoFranceStationObservation } from './types';
 
 const BASE_URL = 'https://public-api.meteofrance.fr/public/DPObs/v1';
@@ -21,6 +22,15 @@ export const getLatestObservationForHourlyStation = async (stationId: string) =>
             accept: 'application/json'
         }
     });
+
+    if (observationsResponse.status !== 200) {
+        const error = new Error(observationsResponse.statusText);
+        slog.log('meteo-france', 'Error while fetching API', {
+            status: observationsResponse.status.toString(),
+            error
+        });
+        throw error;
+    }
 
     const observations = await observationsResponse.json();
     return observations[0] as MeteoFranceStationObservation;
