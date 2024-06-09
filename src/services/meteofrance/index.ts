@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { slog } from '../logging';
 import { getLatestObservationForHourlyStation } from './connector';
 
@@ -48,14 +49,20 @@ const handleStationObservation = async (stationId: string) => {
     const station = stations.find((s) => s.id == stationId);
     const lastObs = await getLatestObservationForHourlyStation(stationId);
 
-    const obsDate = new Date(lastObs?.reference_time || Date.now());
-    const obsTs = obsDate.valueOf() / 1000;
+    let obsDate = Date.now();
+    if (lastObs?.reference_time) {
+        // The returned date is in UTC, in kibana we store dates in paris zone
+        obsDate = DateTime.fromISO(lastObs.reference_time, { zone: 'europe/paris' }).toSeconds();
+    }
 
     const transformedObservation = {
         station: station?.nom || 'unknown',
-        timestamp: obsTs,
+        timestamp: obsDate,
         tempCelsius: (lastObs.t ?? 0) - 273.15,
-        humidity: lastObs.u ?? 0
+        humidity: lastObs.u ?? 0,
+        referenceTime: lastObs.reference_time,
+        insertTime: lastObs.insert_time,
+        validityTime: lastObs.validity_time
     };
 
     if (transformedObservation.timestamp === previousTimestamp) {
@@ -64,7 +71,7 @@ const handleStationObservation = async (stationId: string) => {
     }
 
     previousTimestamp = transformedObservation.timestamp;
-    slog.log('meteo-france', 'New observation', transformedObservation);
+    slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };
 
 let failedCalls = 0;

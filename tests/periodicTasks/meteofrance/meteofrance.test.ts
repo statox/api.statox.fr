@@ -13,6 +13,8 @@ describe('meteofrance', () => {
             .onFirstCall()
             .resolves({
                 reference_time: '2024-06-09T14:10:06Z',
+                insert_time: '2024-06-09T14:11:06Z',
+                validity_time: '2024-06-09T14:12:06Z',
                 t: 294.15,
                 u: 47
             })
@@ -33,6 +35,9 @@ describe('meteofrance', () => {
             previousTimestamp: 0
         });
         slogCheckLog('meteo-france', 'New observation', {
+            referenceTime: '2024-06-09T14:10:06Z',
+            insertTime: '2024-06-09T14:11:06Z',
+            validityTime: '2024-06-09T14:12:06Z',
             station: 'LONGCHAMP',
             timestamp: 1717942206,
             tempCelsius: 21,
@@ -44,6 +49,7 @@ describe('meteofrance', () => {
             previousTimestamp: 1717942206
         });
         slogCheckLog('meteo-france', 'New observation', {
+            referenceTime: '2024-06-09T16:10:06Z',
             station: 'LONGCHAMP',
             timestamp: 1717949406,
             tempCelsius: 23,
