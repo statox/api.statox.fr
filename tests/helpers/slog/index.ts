@@ -24,14 +24,13 @@ export const slogCheckLog = (component: AppLogComponent, message: string, data?:
         if (isDebug) {
             console.log('slog calls:');
             console.log(JSON.stringify(slogSpy.getCalls(), null, 2));
-            console.log('slog expected message: ', message);
-            console.log('slog expected data:');
-            console.log(JSON.stringify(data, null, 2));
+            console.log('slog expected args:');
+            console.log(JSON.stringify([component, message, data], null, 2));
         } else {
             console.log('slog calls (use debug=true to stringify):');
             console.log(slogSpy.getCalls());
             console.log('slog expected:');
-            console.log(data);
+            console.log([component, message, data]);
         }
     }
     assert(calledWithCorrectArgs, 'Logged data doesnt match');
