@@ -1,5 +1,7 @@
+import { Station } from './types';
+
 // List of hourly stations obstained once with an API call
-const stations = [
+const stations: Station[] = [
     {
         id: '75116008',
         nom: 'LONGCHAMP'

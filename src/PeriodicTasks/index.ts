@@ -1,5 +1,5 @@
 import { slog } from '../services/logging';
-import { periodicMeteoFranceCheck } from '../services/meteofrance';
+import { doMeteoFrance } from '../services/meteofrance';
 import { doWebWatcher } from '../services/webWatcher';
 
 const minutes15 = 1000 * 60 * 15;
@@ -12,8 +12,8 @@ export const startPeriodicTasks = () => {
     doWebWatcher();
     setInterval(doWebWatcher, minutes15);
 
-    periodicMeteoFranceCheck();
-    setInterval(periodicMeteoFranceCheck, minutes15);
+    doMeteoFrance();
+    setInterval(doMeteoFrance, minutes15);
 };
 
 const logHealth = async () => {

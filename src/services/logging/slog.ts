@@ -41,6 +41,9 @@ type LoggableProperties = {
     requestId?: string;
     requestInterrupted?: boolean;
     sensorName?: string;
+    station?: string;
+    stationId?: string;
+    stationName?: string;
     status?: string;
     tempCelsius?: number;
     visitedUrl?: string;

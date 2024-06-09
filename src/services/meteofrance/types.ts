@@ -33,3 +33,9 @@ export interface MeteoFranceStationObservation {
     pres: number | null; // station pressure in Pa
     pmer: number | null; // sea level pressure in Pa
 }
+
+// `nom` is in french because it matches the meteo france's API
+export interface Station {
+    id: string;
+    nom: string;
+}

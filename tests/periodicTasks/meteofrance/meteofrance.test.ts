@@ -1,25 +1,13 @@
 import sinon from 'sinon';
 import { slogCheckLog } from '../../helpers/slog';
-import { periodicMeteoFranceCheck } from '../../../src/services/meteofrance';
+import { doSingleStationCheck } from '../../../src/services/meteofrance';
 import * as meteoFranceConnector from '../../../src/services/meteofrance/connector';
 import * as meteoFranceConfig from '../../../src/services/meteofrance/config';
 
 describe('meteofrance - happy path', () => {
-    let stubStations: sinon.SinonStub;
     let stubFailureDelayMs: sinon.SinonStub;
     let stubObservationAPI: sinon.SinonStub;
     before(() => {
-        stubStations = sinon.stub(meteoFranceConfig, 'getStations');
-        stubStations.returns([
-            {
-                id: '75116008',
-                nom: 'LONGCHAMP'
-            },
-            {
-                id: '75104001',
-                nom: 'TOUR ST-JACQUES'
-            }
-        ]);
         stubFailureDelayMs = sinon.stub(meteoFranceConfig, 'failureTimeoutMs');
         stubFailureDelayMs.returns(1);
         stubObservationAPI = sinon.stub(
@@ -44,13 +32,12 @@ describe('meteofrance - happy path', () => {
             });
     });
     after(() => {
-        stubStations.restore();
         stubFailureDelayMs.restore();
         stubObservationAPI.restore();
     });
 
     it('should get an observation and log it but not repeat the log if the timestamp doesnt change on second call', async () => {
-        await periodicMeteoFranceCheck();
+        await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
 
         slogCheckLog('meteo-france', 'Attempting to get an observation', {
             previousTimestamp: 0
@@ -65,7 +52,7 @@ describe('meteofrance - happy path', () => {
             humidity: 47
         });
 
-        await periodicMeteoFranceCheck();
+        await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
         slogCheckLog('meteo-france', 'Attempting to get an observation', {
             previousTimestamp: 1717942206
         });
@@ -77,7 +64,7 @@ describe('meteofrance - happy path', () => {
             humidity: 50
         });
 
-        await periodicMeteoFranceCheck();
+        await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
         slogCheckLog('meteo-france', 'Attempting to get an observation', {
             previousTimestamp: 1717949406
         });
@@ -88,25 +75,12 @@ describe('meteofrance - happy path', () => {
 });
 
 describe('meteofrance - with failures', () => {
-    let stubStations: sinon.SinonStub;
     let stubFailureDelayMs: sinon.SinonStub;
     beforeEach(() => {
-        stubStations = sinon.stub(meteoFranceConfig, 'getStations');
-        stubStations.returns([
-            {
-                id: '75116008',
-                nom: 'LONGCHAMP'
-            },
-            {
-                id: '75104001',
-                nom: 'TOUR ST-JACQUES'
-            }
-        ]);
         stubFailureDelayMs = sinon.stub(meteoFranceConfig, 'failureTimeoutMs');
         stubFailureDelayMs.returns(1);
     });
     afterEach(() => {
-        stubStations.restore();
         stubFailureDelayMs.restore();
     });
 
@@ -125,7 +99,7 @@ describe('meteofrance - with failures', () => {
 
         // For now dont test the retry mechanism
         it('-', async () => {
-            await periodicMeteoFranceCheck();
+            await doSingleStationCheck({ id: '75104001', nom: 'TOUR ST-JACQUES' });
 
             slogCheckLog('meteo-france', 'Attempting to get an observation', {
                 previousTimestamp: sinon.match((val: number) => !isNaN(val))
@@ -148,7 +122,7 @@ describe('meteofrance - with failures', () => {
             );
 
             // [{"lat":48.854833,"lon":2.233667,"geo_id_insee":"75116008","reference_time":"2024-06-09T14:10:06Z","insert_time":"2024-06-09T14:03:40Z","validity_time":"2024-06-09T14:00:00Z","t":294.75,"td":282.95,"tx":294.85,"tn":292.45,"u":47,"ux":51,"un":43,"dd":340,"ff":4.0,"dxy":360,"fxy":4.2,"dxi":360,"fxi":7.9,"rr1":0,"t_10":null,"t_20":null,"t_50":null,"t_100":null,"vv":null,"etat_sol":null,"sss":null,"n":null,"insolh":35,"ray_glo01":2344000,"pres":null,"pmer":null}]
-            stubObservationAPI.withArgs('75116008').onThirdCall().resolves({
+            stubObservationAPI.withArgs('75104001').onThirdCall().resolves({
                 reference_time: '2024-06-09T14:10:06Z',
                 insert_time: '2024-06-09T14:11:06Z',
                 validity_time: '2024-06-09T14:12:06Z',
@@ -161,7 +135,7 @@ describe('meteofrance - with failures', () => {
         });
 
         it('-', async () => {
-            await periodicMeteoFranceCheck();
+            await doSingleStationCheck({ id: '75104001', nom: 'TOUR ST-JACQUES' });
 
             slogCheckLog('meteo-france', 'Attempting to get an observation', {
                 previousTimestamp: sinon.match((val: number) => !isNaN(val))
@@ -172,7 +146,7 @@ describe('meteofrance - with failures', () => {
                 referenceTime: '2024-06-09T14:10:06Z',
                 insertTime: '2024-06-09T14:11:06Z',
                 validityTime: '2024-06-09T14:12:06Z',
-                station: 'LONGCHAMP',
+                station: 'TOUR ST-JACQUES',
                 timestamp: 1717942206,
                 tempCelsius: 21,
                 humidity: 47
