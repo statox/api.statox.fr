@@ -29,13 +29,18 @@ const handleStationObservation = async (station: Station) => {
     }
 
     const transformedObservation = {
+        humidity: lastObs.u ?? undefined,
+        insertTime: lastObs.insert_time ?? undefined,
+        meanWindDirectionDegrees: lastObs.dd ?? undefined,
+        meanWindSpeedMS: lastObs.ff ?? undefined,
+        precipitationMM: lastObs.rr1 ?? undefined,
+        pressurePa: lastObs.pres ?? undefined,
+        pressureSeaLevelPa: lastObs.pmer ?? undefined,
+        referenceTime: lastObs.reference_time ?? undefined,
         station: station.nom,
+        tempCelsius: lastObs.t ? lastObs.t - 273.15 : undefined,
         timestamp: obsDate,
-        tempCelsius: (lastObs.t ?? 0) - 273.15,
-        humidity: lastObs.u ?? 0,
-        referenceTime: lastObs.reference_time,
-        insertTime: lastObs.insert_time,
-        validityTime: lastObs.validity_time
+        validityTime: lastObs.validity_time ?? undefined
     };
 
     if (transformedObservation.timestamp === previousTimestamp) {
