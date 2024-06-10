@@ -15,7 +15,7 @@ type xRequestInfo = {
     'x-request-id'?: string;
     'x-request-start'?: number;
 };
-// Should not contain a timestamp as it is added by logToELK (Maybe TODO refactor)
+
 type LoggableProperties = {
     batteryCharge?: number;
     batteryPercent?: number;
@@ -52,6 +52,7 @@ type LoggableProperties = {
     stationId?: string;
     stationName?: string;
     status?: string;
+    timestamp?: number;
     tempCelsius?: number;
     validityTime?: string;
     visitedUrl?: string;
