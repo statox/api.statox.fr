@@ -22,10 +22,11 @@ const handleStationObservation = async (station: Station) => {
         throw new Error('Meteo france API did not respond');
     }
 
+    // ELK expect a timestamp in milliseconds
     let obsDate = Date.now();
-    if (lastObs?.reference_time) {
+    if (lastObs?.validity_time) {
         // The returned date is in UTC, in kibana we store dates in paris zone
-        obsDate = DateTime.fromISO(lastObs.reference_time, { zone: 'europe/paris' }).toSeconds();
+        obsDate = DateTime.fromISO(lastObs.validity_time, { zone: 'europe/paris' }).toMillis();
     }
 
     const transformedObservation = {
@@ -39,11 +40,11 @@ const handleStationObservation = async (station: Station) => {
         referenceTime: lastObs.reference_time ?? undefined,
         station: station.nom,
         tempCelsius: lastObs.t ? lastObs.t - 273.15 : undefined,
-        timestamp: obsDate,
+        observationTimestamp: obsDate,
         validityTime: lastObs.validity_time ?? undefined
     };
 
-    if (transformedObservation.timestamp === previousTimestamp) {
+    if (transformedObservation.observationTimestamp === previousTimestamp) {
         slog.log('meteo-france', 'Observation timestamp did not change', {
             previousTimestamp,
             stationId: station.id,
@@ -52,7 +53,7 @@ const handleStationObservation = async (station: Station) => {
         return;
     }
 
-    previousTimestamps[station.id] = transformedObservation.timestamp;
+    previousTimestamps[station.id] = transformedObservation.observationTimestamp;
     slog.log('meteo-france', 'Got result', { ...transformedObservation });
     slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };

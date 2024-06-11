@@ -19,22 +19,22 @@ describe('meteofrance', () => {
             .withArgs('75116008')
             .onFirstCall()
             .resolves({
-                reference_time: '2024-06-09T14:10:06Z',
+                reference_time: '2024-06-09T14:12:06Z',
                 insert_time: '2024-06-09T14:11:06Z',
-                validity_time: '2024-06-09T14:12:06Z',
+                validity_time: '2024-06-09T14:10:06Z',
                 t: 294.15,
                 u: 47
             })
             .resolves({
-                reference_time: '2024-06-09T16:10:06Z',
+                validity_time: '2024-06-09T16:10:06Z',
                 t: 296.15,
                 u: 50
             });
 
         stubObservationAPI.withArgs('75104001').onThirdCall().resolves({
-            reference_time: '2024-06-09T14:10:06Z',
+            reference_time: '2024-06-09T14:12:06Z',
             insert_time: '2024-06-09T14:11:06Z',
-            validity_time: '2024-06-09T14:12:06Z',
+            validity_time: '2024-06-09T14:10:06Z',
             t: 294.15,
             u: 47
         });
@@ -55,11 +55,11 @@ describe('meteofrance', () => {
         slogCheckLog('meteo-france', 'Failed call', { failedCalls: 0 });
         slogCheckLog('meteo-france', 'Failed call', { failedCalls: 1 });
         slogCheckLog('meteo-france', 'New observation', {
-            referenceTime: '2024-06-09T14:10:06Z',
+            referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
-            validityTime: '2024-06-09T14:12:06Z',
+            validityTime: '2024-06-09T14:10:06Z',
             station: 'TOUR ST-JACQUES',
-            timestamp: 1717942206,
+            observationTimestamp: 1717942206000,
             tempCelsius: 21,
             humidity: 47
         });
@@ -74,33 +74,33 @@ describe('meteofrance', () => {
             stationName: 'LONGCHAMP'
         });
         slogCheckLog('meteo-france', 'New observation', {
-            referenceTime: '2024-06-09T14:10:06Z',
+            referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
-            validityTime: '2024-06-09T14:12:06Z',
+            validityTime: '2024-06-09T14:10:06Z',
             station: 'LONGCHAMP',
-            timestamp: 1717942206,
+            observationTimestamp: 1717942206000,
             tempCelsius: 21,
             humidity: 47
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
         slogCheckLog('meteo-france', 'Attempting to get an observation', {
-            previousTimestamp: 1717942206
+            previousTimestamp: 1717942206000
         });
         slogCheckLog('meteo-france', 'New observation', {
-            referenceTime: '2024-06-09T16:10:06Z',
+            validityTime: '2024-06-09T16:10:06Z',
             station: 'LONGCHAMP',
-            timestamp: 1717949406,
+            observationTimestamp: 1717949406000,
             tempCelsius: 23,
             humidity: 50
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
         slogCheckLog('meteo-france', 'Attempting to get an observation', {
-            previousTimestamp: 1717949406
+            previousTimestamp: 1717949406000
         });
         slogCheckLog('meteo-france', 'Observation timestamp did not change', {
-            previousTimestamp: 1717949406
+            previousTimestamp: 1717949406000
         });
     });
 
