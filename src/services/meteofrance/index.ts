@@ -53,6 +53,7 @@ const handleStationObservation = async (station: Station) => {
     }
 
     previousTimestamps[station.id] = transformedObservation.timestamp;
+    slog.log('meteo-france', 'Got result', { ...transformedObservation });
     slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };
 
@@ -64,6 +65,8 @@ export const doSingleStationCheck = async (station: Station) => {
         try {
             return await handleStationObservation(station);
         } catch (error) {
+            console.log('Caught error while handleStationObservation');
+            console.log(error);
             slog.log('meteo-france', 'Failed call', {
                 error: error as Error,
                 failedCalls,
