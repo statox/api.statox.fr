@@ -28,6 +28,7 @@ type LoggableProperties = {
     executionTimeMs?: number;
     failedCalls?: number;
     humidity?: number;
+    humidity2?: number;
     insertTime?: string;
     linkId?: string;
     meanWindDirectionDegrees?: number;
@@ -39,7 +40,7 @@ type LoggableProperties = {
     path?: string;
     port?: number;
     precipitationMM?: number;
-    pressurePa?: number;
+    pressurehPa?: number;
     pressureSeaLevelPa?: number;
     previousStatus?: string;
     previousTimestamp?: number;
@@ -54,6 +55,7 @@ type LoggableProperties = {
     status?: string;
     timestamp?: number;
     tempCelsius?: number;
+    tempCelsius2?: number;
     validityTime?: string;
     visitedUrl?: string;
     watcherName?: string;
