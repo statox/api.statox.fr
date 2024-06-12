@@ -23,7 +23,12 @@ describe('meteofrance', () => {
                 insert_time: '2024-06-09T14:11:06Z',
                 validity_time: '2024-06-09T14:10:06Z',
                 t: 294.15,
-                u: 47
+                u: 47,
+                pres: 101500,
+                pmer: 101000,
+                dd: 180,
+                ff: 10,
+                rr1: 5
             })
             .resolves({
                 validity_time: '2024-06-09T16:10:06Z',
@@ -80,7 +85,12 @@ describe('meteofrance', () => {
             station: 'LONGCHAMP',
             observationTimestamp: 1717942206000,
             tempCelsius: 21,
-            humidity: 47
+            humidity: 47,
+            pressurehPa: 1015,
+            pressureSeaLevelhPa: 1010,
+            meanWindDirectionDegrees: 180,
+            meanWindSpeedMS: 10,
+            precipitationMM: 5
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
