@@ -39,34 +39,32 @@ const inputSchema: AllowedSchema = {
             description: 'Name of the sensor',
             type: 'string'
         },
-        ts: {
-            description:
-                '(DEPRECATED) Time of the recording in ms (should be based on getRemoteTime)',
-            type: 'number'
-        },
         tempCelsius: {
-            description: 'The current room temperature in celsius (from DHT)',
-            type: 'number'
-        },
-        tempCelsius2: {
-            description: 'The current room temperature in celsius (from BME)',
+            description: 'The current room temperature in celsius',
             type: 'number'
         },
         humidity: {
-            description: 'The current room humidity in percent (from DHT)',
-            type: 'number'
-        },
-        humidity2: {
-            description: 'The current room humidity in percent (from BME)',
+            description: 'The current room humidity in percent',
             type: 'number'
         },
         pressurePa: {
-            description: 'The current pressure in Pascal (from BME)',
+            description: 'The current room pressure in Pascal',
             type: 'number'
         },
-        batteryReading: {
-            description:
-                '(DEPRECATED) Analogue value read at tension divisor (See sensor code, max ~700)',
+        internalTempCelsius: {
+            description: 'The current room temperature in celsius',
+            type: 'number'
+        },
+        internalHumidity: {
+            description: 'The current room humidity in percent',
+            type: 'number'
+        },
+        tempCelsius2: {
+            description: '(DEPRECATED) The current room temperature in celsius (from BME)',
+            type: 'number'
+        },
+        humidity2: {
+            description: '(DEPRECATED) The current room humidity in percent (from BME)',
             type: 'number'
         },
         batteryCharge: {
