@@ -23,6 +23,9 @@ describe('homeTracker/upload', () => {
             sensorName: 'foo',
             tempCelsius: 23.5,
             humidity: 50,
+            pressurehPa: 1000,
+            internalTempCelsius: 12.3,
+            internalHumidity: 60.9,
             batteryPercent: 100,
             batteryCharge: 4.0
         });
