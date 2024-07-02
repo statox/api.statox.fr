@@ -4,7 +4,11 @@ import { slog } from '../logging';
 
 const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
-export const notifySlack = (params: { message?: string; error?: Error; directMention?: true }) => {
+export const notifySlack = async (params: {
+    message?: string;
+    error?: Error;
+    directMention?: true;
+}) => {
     try {
         const { message, error, directMention } = params;
 
@@ -54,7 +58,7 @@ export const notifySlack = (params: { message?: string; error?: Error; directMen
             });
         }
 
-        return webhook.send({ blocks });
+        await webhook.send({ blocks });
     } catch (error) {
         slog.log('notifier', 'Error notifying slack', {
             error: error as Error,
