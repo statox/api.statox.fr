@@ -1,3 +1,4 @@
+import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../../../src/app';
 import { slogCheckLog } from '../../../helpers/slog';
@@ -28,6 +29,30 @@ describe('homeTracker/upload', () => {
             internalHumidity: 60.9,
             batteryPercent: 100,
             batteryCharge: 4.0
+        });
+    });
+
+    it('Should reject incoherent values', async () => {
+        await request(app)
+            .post('/homeTracker/upload')
+            .set('Accept', 'application/json')
+            .send({
+                sensorName: 'foo',
+                tempCelsius: 23.5,
+                humidity: 200,
+                batteryPercent: 100,
+                batteryCharge: 4.0
+            })
+            .expect(400);
+
+        slogCheckLog('app', 'Caught error', {
+            error: sinon.match((error) => {
+                const bodyError = error?.validationErrors?.body[0];
+                const isCorrectArg = bodyError?.instancePath === '/humidity';
+                const isCorrectMessage = bodyError?.message === 'must be <= 100';
+
+                return isCorrectArg && isCorrectMessage;
+            })
         });
     });
 });

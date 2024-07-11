@@ -19,7 +19,6 @@ type xRequestInfo = {
 type LoggableProperties = {
     batteryCharge?: number;
     batteryPercent?: number;
-    batteryReading?: number;
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
     code?: number;
@@ -27,7 +26,6 @@ type LoggableProperties = {
     error?: Error;
     executionTimeMs?: number;
     failedCalls?: number;
-    humidity2?: number;
     humidity?: number;
     insertTime?: string;
     internalHumidity?: number;
@@ -55,7 +53,6 @@ type LoggableProperties = {
     stationId?: string;
     stationName?: string;
     status?: string;
-    tempCelsius2?: number;
     tempCelsius?: number;
     timestamp?: number;
     validityTime?: string;
