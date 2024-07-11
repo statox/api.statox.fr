@@ -7,29 +7,23 @@ const handler = async (req: Request, res: Response) => {
     const {
         batteryCharge,
         batteryPercent,
-        batteryReading,
         humidity,
-        humidity2,
         internalHumidity,
         internalTempCelsius,
         pressurePa,
         sensorName,
-        tempCelsius,
-        tempCelsius2
+        tempCelsius
     } = req.body;
 
     slog.log('home-tracker', 'Home tracking event', {
         batteryCharge,
         batteryPercent,
-        batteryReading,
         humidity,
-        humidity2,
         internalHumidity,
         internalTempCelsius,
         pressurehPa: pressurePa / 100,
         sensorName,
-        tempCelsius,
-        tempCelsius2
+        tempCelsius
     });
     res.send({});
 };
@@ -45,39 +39,47 @@ const inputSchema: AllowedSchema = {
         },
         tempCelsius: {
             description: 'The current room temperature in celsius',
-            type: 'number'
+            type: 'number',
+            minimum: -50,
+            maximum: 80
         },
         humidity: {
             description: 'The current room humidity in percent',
-            type: 'number'
+            type: 'number',
+            minimum: 0,
+            maximum: 100
         },
         pressurePa: {
             description: 'The current room pressure in Pascal',
-            type: 'number'
+            type: 'number',
+            // https://en.wikipedia.org/wiki/Atmospheric_pressure#Records
+            minimum: 80000,
+            maximum: 110000
         },
         internalTempCelsius: {
             description: 'The current room temperature in celsius',
-            type: 'number'
+            type: 'number',
+            minimum: -50,
+            maximum: 80
         },
         internalHumidity: {
             description: 'The current room humidity in percent',
-            type: 'number'
-        },
-        tempCelsius2: {
-            description: '(DEPRECATED) The current room temperature in celsius (from BME)',
-            type: 'number'
-        },
-        humidity2: {
-            description: '(DEPRECATED) The current room humidity in percent (from BME)',
-            type: 'number'
+            type: 'number',
+            minimum: 0,
+            maximum: 100
         },
         batteryCharge: {
             description: 'Computed charge of the battery in Volts',
-            type: 'number'
+            type: 'number',
+            minimum: 0,
+            // LiPo should not go above 4.2 while in charge
+            maximum: 5
         },
         batteryPercent: {
             description: 'Computed percentage battery',
-            type: 'number'
+            type: 'number',
+            minimum: 0,
+            maximum: 100
         }
     }
 };
