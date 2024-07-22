@@ -8,6 +8,7 @@ import {
 import { slog } from '../services/logging';
 import { notifySlack } from '../services/notifier/slack';
 import { EntryAlreadyExistsError } from '../services/webWatcher';
+import { ApiKeyError } from './authIOT.middleware';
 
 export const errorHandler = async (
     error: Error,
@@ -17,6 +18,11 @@ export const errorHandler = async (
 ) => {
     slog.log('app', 'Caught error', { error });
     notifySlack({ error, directMention: true });
+
+    if (error instanceof ApiKeyError) {
+        response.status(error.status).json({ message: error.message });
+        return next();
+    }
 
     if (error instanceof InsufficientScopeError) {
         const message = 'Permission denied';

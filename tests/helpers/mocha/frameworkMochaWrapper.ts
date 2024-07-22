@@ -1,6 +1,6 @@
 import { initDb } from '../../../src/services/env-helpers/db';
 import { restoreAppStub, setupAppStub } from '../app';
-import { restoreFakeAuth, setupFakeAuth } from '../auth';
+import { createApiKeys, restoreFakeAuth, setupFakeAuth } from '../auth';
 import { mysqlClearAllTables } from '../mysql';
 import { restoreNotifierSlackStub, setupNotifierSlackStub } from '../notifier/slack';
 import { setupS3Spy } from '../s3';
@@ -18,6 +18,7 @@ export const mochaHooks = () => {
         beforeEach: async () => {
             setupS3Spy();
             await mysqlClearAllTables();
+            await createApiKeys();
             setupSlogSpy();
         },
         afterEach: () => {

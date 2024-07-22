@@ -18,6 +18,13 @@ const userAuthenticatedGetRoute: GetRoute = {
     handler: (_req: Request, res: Response) => res.end()
 };
 
+const apiiotAuthenticatedGetRoute: GetRoute = {
+    method: 'get',
+    authentication: 'apikey-iot',
+    path: '/apiiotAuthenticatedGetRoute',
+    handler: (_req: Request, res: Response) => res.end()
+};
+
 const postRoute: PostRoute = {
     method: 'post',
     authentication: 'none',
@@ -35,7 +42,7 @@ const postRoute: PostRoute = {
     handler: (_req: Request, res: Response) => res.end()
 };
 
-const testRoutes = [getRoute, postRoute, userAuthenticatedGetRoute];
+const testRoutes = [getRoute, postRoute, userAuthenticatedGetRoute, apiiotAuthenticatedGetRoute];
 
 let routesStub: sinon.SinonStub;
 

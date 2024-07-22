@@ -4,6 +4,7 @@ import { app } from '../../src/app';
 import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
 import { slogCheckLog } from '../helpers/slog';
 import { ValidationError } from 'express-json-validator-middleware';
+import { mysqlDumpTables, mysqlFixture } from '../helpers/mysql';
 
 describe('routes', () => {
     it('should use the correct verbs', async () => {
@@ -65,15 +66,34 @@ describe('routes', () => {
     });
 
     describe('should enforce the authentication specified in the route configuration', async () => {
-        it('- authentication none', async () => {
+        it('- no auth', async () => {
             await request(app).get('/getRoute');
             sinon.assert.notCalled(fakeValidateAccessToken);
             sinon.assert.notCalled(fakeCheckRequiredPermissionsHandler);
         });
-        it('- authentication user', async () => {
+        it('- user auth', async () => {
             await request(app).get('/userAuthenticatedGetRoute');
             sinon.assert.calledOnce(fakeValidateAccessToken);
             sinon.assert.calledOnce(fakeCheckRequiredPermissionsHandler);
+        });
+        describe('- API key auth', async () => {
+            it('- should reject missing Authorization header', async () => {
+                await request(app).get('/apiiotAuthenticatedGetRoute').expect(401);
+            });
+
+            it('- should reject malformed Authorization header', async () => {
+                await request(app)
+                    .get('/apiiotAuthenticatedGetRoute')
+                    .set('Authorization', 'InvalidScheme foobar')
+                    .expect(401);
+            });
+
+            it('- should accept valid api key', async () => {
+                await request(app)
+                    .get('/apiiotAuthenticatedGetRoute')
+                    .set('Authorization', 'Bearer fakeaccesskeyfortests')
+                    .expect(200);
+            });
         });
     });
 });
