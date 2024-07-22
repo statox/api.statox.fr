@@ -4,7 +4,7 @@ import { doSingleStationCheck } from '../../../src/services/meteofrance';
 import * as meteoFranceConnector from '../../../src/services/meteofrance/connector';
 import * as meteoFranceConfig from '../../../src/services/meteofrance/config';
 
-describe('meteofrance', () => {
+describe('periodic task - meteofrance', () => {
     let stubFailureDelayMs: sinon.SinonStub;
     let stubObservationAPI: sinon.SinonStub;
     before(() => {

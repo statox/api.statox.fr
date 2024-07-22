@@ -4,7 +4,7 @@ import { app } from '../../../src/app';
 import { assert } from 'chai';
 
 describe('r/:linkId', () => {
-    it('Should redirect to the s3 presigned url', async () => {
+    it('should redirect to the s3 presigned url', async () => {
         const entry1 = {
             id: 1,
             name: 'entry 1',
@@ -28,7 +28,7 @@ describe('r/:linkId', () => {
                 assert.match(url.search, /.*GetObject$/);
             });
     });
-    it('Should TBD for an unknown linkId', async () => {
+    it('should TBD for an unknown linkId', async () => {
         await mysqlFixture({
             Reactor: []
         });

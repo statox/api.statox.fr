@@ -45,7 +45,7 @@ describe('reactor/addEntry', () => {
         s3CheckCall({ nbCalls: 0 });
     });
 
-    it('Should create new entry and upload the file to R2', async () => {
+    it('should create new entry and upload the file to R2', async () => {
         await request(app)
             .post('/reactor/addEntry')
             .set('content-type', 'multipart/form-data')
@@ -78,7 +78,7 @@ describe('reactor/addEntry', () => {
         });
     });
 
-    it('Should create entry with empty tags array if no tags are provided', async () => {
+    it('should create entry with empty tags array if no tags are provided', async () => {
         await request(app)
             .post('/reactor/addEntry')
             .set('content-type', 'multipart/form-data')

@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { app } from '../../../../src/app';
 import { mysqlFixture } from '../../../helpers/mysql';
 
-describe('getLinksVisitsCount', () => {
+describe('chords/getLinksVisitsCount', () => {
     it('should return the visit counts ordered by descending order', async () => {
         const data = [
             {

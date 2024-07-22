@@ -5,7 +5,7 @@ import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 import { assert } from 'chai';
 import { slogCheckLog } from '../../../helpers/slog';
 
-describe('addLinkVisit', () => {
+describe('chords/addLinkVisit', () => {
     it('should check input schema', async () => {
         await request(app)
             .post('/chords/addLinkVisit')

@@ -2,7 +2,7 @@ import request from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../../../src/app';
 
-describe('getRemoteTime', () => {
+describe('health/getRemoteTime', () => {
     it('should return a timestamp close to now', () => {
         const now = Date.now();
         request(app)

@@ -4,7 +4,7 @@ import { app } from '../../../../src/app';
 import { slogCheckLog } from '../../../helpers/slog';
 
 describe('homeTracker/upload', () => {
-    it('Should log the sent value', async () => {
+    it('should log the sent value', async () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
@@ -32,7 +32,7 @@ describe('homeTracker/upload', () => {
         });
     });
 
-    it('Should reject incoherent values', async () => {
+    it('should reject incoherent values', async () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')

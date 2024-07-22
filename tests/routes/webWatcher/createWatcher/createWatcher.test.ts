@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { app } from '../../../../src/app';
 import { mysqlCheckContains, mysqlCheckTableLength, mysqlFixture } from '../../../helpers/mysql';
 
-describe('/webWatcher/createWatcher', () => {
+describe('webWatcher/createWatcher', () => {
     it('should fail on duplicate entry', async () => {
         await mysqlFixture({
             WebWatcher: [

@@ -5,7 +5,7 @@ import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/getPublicEntries', () => {
-    it('Should retieve only public entries', async () => {
+    it('should retieve only public entries', async () => {
         const publicEntry = {
             id: 1,
             name: 'public entry',
@@ -39,7 +39,7 @@ describe('clipboard/getPublicEntries', () => {
             });
     });
 
-    it('Should get s3PresignedUrl for entry with s3Key', async () => {
+    it('should get s3PresignedUrl for entry with s3Key', async () => {
         const entry = {
             id: 1,
             name: 'public entry',
@@ -64,7 +64,7 @@ describe('clipboard/getPublicEntries', () => {
             });
     });
 
-    it('Should retieve only entries with valid ttl', async () => {
+    it('should retieve only entries with valid ttl', async () => {
         const ttlOk = {
             id: 1,
             name: 'public entry',

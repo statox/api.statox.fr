@@ -5,7 +5,7 @@ import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/getAllEntries', () => {
-    it('Should retieve all entries', async () => {
+    it('should retieve all entries', async () => {
         const publicEntry = {
             id: 1,
             name: 'public entry',
