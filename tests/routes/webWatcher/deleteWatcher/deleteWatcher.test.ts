@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { app } from '../../../../src/app';
 import { mysqlCheckTableLength, mysqlFixture } from '../../../helpers/mysql';
 
-describe('/webWatcher/deleteWatcher', () => {
+describe('webWatcher/deleteWatcher', () => {
     it('should delete a watcher', async () => {
         await mysqlFixture({
             WebWatcher: [

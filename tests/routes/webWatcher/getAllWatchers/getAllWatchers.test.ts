@@ -5,7 +5,7 @@ import { app } from '../../../../src/app';
 import { WatchedContent } from '../../../../src/services/webWatcher';
 
 describe('webWatcher/getAllWatchers', () => {
-    it('Should return all the watchers', async () => {
+    it('should return all the watchers', async () => {
         const data = [
             {
                 id: 2,

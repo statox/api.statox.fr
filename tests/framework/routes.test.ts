@@ -13,7 +13,7 @@ describe('routes', () => {
         await request(app).get('/postRoute').expect(404);
     });
 
-    it('Should return 404 when route doesnt exist', async () => {
+    it('should return 404 when route doesnt exist', async () => {
         await request(app).get('/doesNotExists').expect(404);
     });
 

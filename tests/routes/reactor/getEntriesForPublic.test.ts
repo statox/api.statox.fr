@@ -4,7 +4,7 @@ import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('reactor/getEntriesForPublic', () => {
-    it('Should retrieve all entries and format the tags and s3key properly', async () => {
+    it('should retrieve all entries and format the tags and s3key properly', async () => {
         const entry1 = {
             id: 1,
             name: 'entry 1',

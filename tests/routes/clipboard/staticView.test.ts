@@ -5,7 +5,7 @@ import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/view', () => {
-    it('Should generate HTML page with only public non expired entries with an s3Key', async () => {
+    it('should generate HTML page with only public non expired entries with an s3Key', async () => {
         const publicEntryNoKey = {
             id: 1,
             name: 'public entry no key',

@@ -3,7 +3,7 @@ import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/services/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 
-describe('WebWatcher', () => {
+describe('periodic task - WebWatcher', () => {
     let stub: sinon.SinonStub;
     beforeEach(() => {
         stub = sinon.stub(globalThis, 'fetch');
@@ -96,7 +96,7 @@ describe('WebWatcher', () => {
         });
     });
 
-    it('Should respect the check interval and not check too often', async () => {
+    it('should respect the check interval and not check too often', async () => {
         const oneHourAgo = Math.round(Date.now() / 1000) - 3600;
         await mysqlFixture({
             WebWatcher: [
