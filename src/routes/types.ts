@@ -6,7 +6,7 @@ type BaseRoute = {
     handler:
         | ((req: express.Request, res: express.Response) => void)
         | ((req: express.Request, res: express.Response, next: express.NextFunction) => void);
-    authentication: 'none' | 'user';
+    authentication: 'none' | 'user' | 'apikey-iot';
 };
 
 export type GetRoute = BaseRoute & {

@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import { NextFunction, Request, Response } from 'express';
 import * as auth from '../../../src/middleware/auth0.middleware';
+import { mysqlFixture } from '../mysql';
 
 // exported for framework tests
 export let fakeValidateAccessToken: sinon.SinonStub;
@@ -30,4 +31,16 @@ export const setupFakeAuth = () => {
 export const restoreFakeAuth = () => {
     fakeValidateAccessToken.restore();
     fakeCheckRequiredPermissions.restore();
+};
+
+export const createApiKeys = async () => {
+    await mysqlFixture({
+        ApiKeys: [
+            {
+                id: 1,
+                accessKey: 'fakeaccesskeyfortests',
+                description: 'A fake access key, for tests'
+            }
+        ]
+    });
 };
