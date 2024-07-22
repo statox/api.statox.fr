@@ -2,6 +2,27 @@ import { NextFunction, Request, Response } from 'express';
 import { db } from '../services/env-helpers/db';
 import { RowDataPacket } from 'mysql2/promise';
 
+/*
+ * IOT API Key authentication middleware.
+ *
+ * This middleware implement a very basic authentication via api key.
+ *
+ * It is meant to be used by my home made sensors calling the /homeTracker/upload endoints.
+ * Note
+ *  - I want these sensors to be extremely battery efficient and to do as few computation
+ *    as possible with each call
+ *  - The endpoint enforces a JSON schema to validate the client inputs
+ *  - It seems I have very few bots traffic on my endpoints and the /homeTracker/upload
+ *    endpoint isn't very sensitive
+ *
+ * For these reasons the "api key" authentication limits itself to checking that the clients
+ * send a `Authorization` header of the form `Bearer API-KEY` where API-KEY is defined in db.
+ *
+ * If I end up needing other types of clients using API key auth I'll need to re-think another
+ * middleware with better security. For now, this is good enough.
+ *
+ */
+
 let IOT_API_KEY: string;
 
 interface apiKeyResult extends RowDataPacket {
