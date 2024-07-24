@@ -66,8 +66,6 @@ export const doSingleStationCheck = async (station: Station) => {
         try {
             return await handleStationObservation(station);
         } catch (error) {
-            console.log('Caught error while handleStationObservation');
-            console.log(error);
             slog.log('meteo-france', 'Failed call', {
                 error: error as Error,
                 failedCalls,
