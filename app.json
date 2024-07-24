@@ -3,5 +3,6 @@
     "description": "My personal API",
     "repository": "https://github.com/statox/api.statox.fr",
     "logo": "https://www.statox.fr/favicon/favicon-32x32.png",
-    "image": "heroku/nodejs"
+    "image": "heroku/nodejs",
+    "stack": "heroku-24"
 }
