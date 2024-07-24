@@ -45,7 +45,7 @@
         "undici": "^6.19.4"
     },
     "devDependencies": {
-        "@smithy/util-stream": "^3.1.0",
+        "@smithy/util-stream": "^3.1.2",
         "@types/chai": "^4.3.11",
         "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
