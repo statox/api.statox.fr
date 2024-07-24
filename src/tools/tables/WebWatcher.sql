@@ -17,9 +17,21 @@ CREATE TABLE IF NOT EXISTS `WebWatcher` (
     UNIQUE KEY `url_type_uniq` (`url`, `watchType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- INSERT INTO WebWatcher
---     ( name, notificationMessage, url, cssSelector, checkIntervalSeconds)
+-- INSERT INTO WebWatcher ( name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds)
 -- VALUES
--- ('kimsufi', 'New KS-4 server available! https://eco.ovhcloud.com/fr/?display=list&range=kimsufi', 'https://eco.ovhcloud.com/fr/?display=list&range=kimsufi', '.ods-all-servers > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > details:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(12) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2) > div:nth-child(5) > div:nth-child(1)', 850),
--- ('adafruit', 'New message in Adafruit support thread https://forums.adafruit.com/viewtopic.php?p=1016286', 'https://forums.adafruit.com/viewtopic.php?p=1016286', '#page-body > div.action-bar.bar-top > div.pagination', 21600)
+-- (
+--     'kimsufi',
+--     'New KS-4 server available! https://eco.ovhcloud.com/fr/?display=list&range=kimsufi',
+--     'https://eco.ovhcloud.com/fr/?display=list&range=kimsufi',
+--     'CSS',
+--     '.ods-all-servers > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > details:nth-child(1) > div:nth-child(2) > div:nth-child(4) > div:nth-child(12) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2) > div:nth-child(5) > div:nth-child(1)',
+--     850
+-- ),
+-- ('adafruit',
+--     'New message in Adafruit support thread https://forums.adafruit.com/viewtopic.php?p=1016286',
+--     'https://forums.adafruit.com/viewtopic.php?p=1016286',
+--     'CSS',
+--     '#page-body > div.action-bar.bar-top > div.pagination',
+--     21600
+-- )
 -- ON DUPLICATE KEY UPDATE name = name;
