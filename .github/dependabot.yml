@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     groups:
       # Group minor and patch dependencies which should be able to be applied blindly
       # This creates individual PRs for major updates
@@ -16,4 +16,4 @@ updates:
     # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
