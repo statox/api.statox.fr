@@ -18,12 +18,17 @@ import { route as webWatcherCreateWatcher } from './webWatcher/createWatcher';
 import { route as webWatcherDeleteWatcher } from './webWatcher/deleteWatcher';
 import { route as webWatcherGetAllWatcher } from './webWatcher/getAllWatchers';
 
+import { route as addReadingListItem } from './readingList/add';
+import { route as getAllReadingListItem } from './readingList/getAll';
+
 export const routes: Route[] = [
     addEntry,
+    addReadingListItem,
     addLinkVisit,
     clipboardStaticView,
     deleteClipboardEntry,
     getAllChords,
+    getAllReadingListItem,
     getClipboardAllEntries,
     getClipboardPublicEntries,
     getLinksVisitsCount,
