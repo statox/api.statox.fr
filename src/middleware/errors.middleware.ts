@@ -9,6 +9,7 @@ import { slog } from '../services/logging';
 import { notifySlack } from '../services/notifier/slack';
 import { EntryAlreadyExistsError } from '../services/webWatcher';
 import { ApiKeyError } from './authIOT.middleware';
+import { ItemAlreadyExistsError } from '../services/readingList/errors';
 
 export const errorHandler = async (
     error: Error,
@@ -18,6 +19,11 @@ export const errorHandler = async (
 ) => {
     slog.log('app', 'Caught error', { error });
     notifySlack({ error, directMention: true });
+
+    if (error instanceof ItemAlreadyExistsError) {
+        response.status(400).json({ message: error.message });
+        return next();
+    }
 
     if (error instanceof ApiKeyError) {
         response.status(error.status).json({ message: error.message });
