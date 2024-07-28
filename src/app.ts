@@ -5,7 +5,7 @@ import { Validator } from 'express-json-validator-middleware';
 import { checkRequiredPermissions, validateAccessToken } from './middleware/auth0.middleware';
 import { errorHandler } from './middleware/errors.middleware';
 import { goatCounterHandler } from './middleware/goatcounter.middleware';
-import { isTests } from './services/env-helpers/env';
+import { isProd } from './services/env-helpers/env';
 import { loggingHandler } from './middleware/logging.middleware';
 import { multipartHandler } from './middleware/multipart.middleware';
 import { routes } from './routes';
@@ -63,7 +63,7 @@ export const initApp = () => {
     app.use(errorHandler);
     app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
 
-    if (!isTests) {
+    if (isProd) {
         startPeriodicTasks();
     }
 };
