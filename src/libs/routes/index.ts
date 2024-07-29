@@ -1,45 +1,44 @@
 import { Route } from './types';
-import { route as addLinkVisit } from './chords/addLinkVisit';
-import { route as getAllChords } from './chords/getAll';
-import { route as getLinksVisitsCount } from './chords/getLinksVisitsCount';
-import { route as updateAllChords } from './chords/updateAll';
-import { route as checkLinks } from './chords/checkLinks';
-import { route as addEntry } from './clipboard/addEntry';
-import { route as deleteClipboardEntry } from './clipboard/deleteEntry';
-import { route as getClipboardPublicEntries } from './clipboard/getPublicEntries';
-import { route as getClipboardAllEntries } from './clipboard/getAllEntries';
-import { route as clipboardStaticView } from './clipboard/staticView';
-import { route as getRemoteTime } from './health/getRemoteTime';
-import { route as reactorAddEntry } from './reactor/addEntry';
-import { route as reactorGetEntry } from './reactor/getEntry';
-import { route as reactorGetForPublic } from './reactor/getEntriesForPublic';
-import { route as homeTrackerUpload } from './homeTracker/upload';
-import { route as webWatcherCreateWatcher } from './webWatcher/createWatcher';
-import { route as webWatcherDeleteWatcher } from './webWatcher/deleteWatcher';
-import { route as webWatcherGetAllWatcher } from './webWatcher/getAllWatchers';
-
-import { route as addReadingListItem } from './readingList/add';
-import { route as getAllReadingListItem } from './readingList/getAll';
+import { route as Chords_addLinkVisit } from './chords/addLinkVisit';
+import { route as Chords_checkLinks } from './chords/checkLinks';
+import { route as Chords_getAll } from './chords/getAll';
+import { route as Chords_getLinksVisitsCount } from './chords/getLinksVisitsCount';
+import { route as Chords_updateAll } from './chords/updateAll';
+import { route as Clipboard_addEntry } from './clipboard/addEntry';
+import { route as Clipboard_deleteEntry } from './clipboard/deleteEntry';
+import { route as Clipboard_geAllEntries } from './clipboard/getAllEntries';
+import { route as Clipboard_getPublicEntries } from './clipboard/getPublicEntries';
+import { route as Clipboard_staticView } from './clipboard/staticView';
+import { route as Health_GetRemoteTime } from './health/getRemoteTime';
+import { route as HomeTracker_upload } from './homeTracker/upload';
+import { route as Reactor_addEntry } from './reactor/addEntry';
+import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic';
+import { route as Reactor_getEntry } from './reactor/getEntry';
+import { route as ReadingList_add } from './readingList/add';
+import { route as ReadingList_getAll } from './readingList/getAll';
+import { route as WebWatcher_createWatcher } from './webWatcher/createWatcher';
+import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher';
+import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers';
 
 export const routes: Route[] = [
-    addEntry,
-    addReadingListItem,
-    addLinkVisit,
-    clipboardStaticView,
-    deleteClipboardEntry,
-    getAllChords,
-    getAllReadingListItem,
-    getClipboardAllEntries,
-    getClipboardPublicEntries,
-    getLinksVisitsCount,
-    getRemoteTime,
-    homeTrackerUpload,
-    reactorAddEntry,
-    reactorGetEntry,
-    reactorGetForPublic,
-    updateAllChords,
-    checkLinks,
-    webWatcherCreateWatcher,
-    webWatcherDeleteWatcher,
-    webWatcherGetAllWatcher
+    Chords_addLinkVisit,
+    Chords_checkLinks,
+    Chords_getAll,
+    Chords_getLinksVisitsCount,
+    Chords_updateAll,
+    Clipboard_addEntry,
+    Clipboard_deleteEntry,
+    Clipboard_geAllEntries,
+    Clipboard_getPublicEntries,
+    Clipboard_staticView,
+    Health_GetRemoteTime,
+    HomeTracker_upload,
+    Reactor_addEntry,
+    Reactor_getEntriesForPublic,
+    Reactor_getEntry,
+    ReadingList_add,
+    ReadingList_getAll,
+    WebWatcher_createWatcher,
+    WebWatcher_deleteWatcher,
+    WebWatcher_getAllWatcher
 ];
