@@ -49,6 +49,7 @@ type LoggableProperties = {
     requestId?: string;
     requestInterrupted?: boolean;
     sensorName?: string;
+    shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
     station?: string;
     stationId?: string;
     stationName?: string;

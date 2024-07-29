@@ -13,3 +13,24 @@ const start = async () => {
 };
 
 start();
+
+// https://help.heroku.com/D5GK0FHU/how-can-my-node-app-gracefully-shutdown-when-receiving-sigterm
+const shutdown = (signal: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin) => {
+    return (error: Error) => {
+        slog.log('app', 'App will shutdown', { shutdownOrigin: signal, error });
+        notifySlack({ message: 'App will shutdown' });
+
+        if (error) {
+            notifySlack({ message: 'Shutdown because of error', error });
+        }
+
+        setTimeout(() => {
+            process.exit(error ? 1 : 0);
+        }, 5000).unref();
+    };
+};
+
+process
+    .on('SIGTERM', shutdown('SIGTERM'))
+    .on('SIGINT', shutdown('SIGINT'))
+    .on('uncaughtException', shutdown('uncaughtException'));
