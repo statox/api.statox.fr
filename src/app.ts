@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import mustacheExpress from 'mustache-express';
+import { Server } from 'http';
 import { Validator } from 'express-json-validator-middleware';
 import { checkRequiredPermissions, validateAccessToken } from './libs/middleware/auth0.middleware';
 import { errorHandler } from './libs/middleware/errors.middleware';
@@ -61,9 +62,32 @@ export const initApp = () => {
     }
 
     app.use(errorHandler);
-    app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
+    const server = app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
+    configureServerTimeout(server);
 
     if (isProd) {
         startPeriodicTasks();
     }
+};
+
+const configureServerTimeout = (server: Server) => {
+    // https://betterstack.com/community/guides/scaling-nodejs/nodejs-timeouts/
+    // requestTimeout: limit for how long the server should wait to receive the entire request (including the body) from the client
+    server.requestTimeout = 5000; // (default 300000)
+
+    // headersTimeout: time allowed for receiving request headers from the client.
+    server.headersTimeout = 2000; // (default 60000)
+
+    // keepAliveTimeout: how long a server holds a connection open after responding to a request.
+    // It's key for HTTP Keep-Alive, which allows multiple requests over a single connection, boosting efficiency.
+    // It defaults to 5 seconds and if no additional request arrives within that time, the socket connection closes.
+    // server.keepAliveTimeout = 3000; (default 5000)
+
+    // timeout: limit the inactivity period (no data sent or received) on an established socket connection
+    server.timeout = 10000; // (default 0 - no limit)
+    // @ts-expect-error: The setTimeout() callback seems badly typed as the socket argument is actually passed
+    server.setTimeout(10000, (socket: Socket) => {
+        slog.log('app', 'A request timedout');
+        socket.destroy();
+    });
 };
