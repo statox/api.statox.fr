@@ -1,4 +1,4 @@
-import { initDb } from '../../../src/services/env-helpers/db';
+import { initDb } from '../../../src/libs/databases/db';
 import { restoreAppStub, setupAppStub } from '../app';
 import { createApiKeys, restoreFakeAuth, setupFakeAuth } from '../auth';
 import { mysqlClearAllTables } from '../mysql';

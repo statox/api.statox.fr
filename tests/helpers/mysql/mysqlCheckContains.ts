@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2/promise';
-import { db } from '../../../src/services/env-helpers/db';
+import { db } from '../../../src/libs/databases/db';
 import { ColumnCheckFunction, MysqlCheckData, TableCheck } from './types';
 
 const checkTableContains = async (table: string, checks: TableCheck[]) => {

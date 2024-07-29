@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { MysqlCheckData, TableCheck } from './types';
-import { db } from '../../../src/services/env-helpers/db';
+import { db } from '../../../src/libs/databases/db';
 
 const checkTableDoesNotContain = async (table: string, checks: TableCheck[]) => {
     for (const row of checks) {

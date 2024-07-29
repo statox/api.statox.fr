@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { NextFunction, Request, Response } from 'express';
-import * as auth from '../../../src/middleware/auth0.middleware';
+import * as auth from '../../../src/libs/middleware/auth0.middleware';
 import { mysqlFixture } from '../mysql';
 
 // exported for framework tests

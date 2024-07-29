@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { Request, Response } from 'express';
-import * as routes from '../../../src/routes';
-import { GetRoute, PostRoute } from '../../../src/routes/types';
+import * as routes from '../../../src/libs/routes';
+import { GetRoute, PostRoute } from '../../../src/libs/routes/types';
 import { initApp } from '../../../src/app';
 
 const getRoute: GetRoute = {

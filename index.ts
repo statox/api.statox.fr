@@ -1,8 +1,8 @@
 import { initApp } from './src/app';
-import { initDb } from './src/services/env-helpers/db';
-import { initLocalStackS3 } from './src/services/env-helpers/s3';
-import { slog } from './src/services/logging';
-import { notifySlack } from './src/services/notifier/slack';
+import { initDb } from './src/libs/databases/db';
+import { initLocalStackS3 } from './src/libs/databases/s3';
+import { slog } from './src/libs/services/logging';
+import { notifySlack } from './src/libs/services/notifier/slack';
 
 const start = async () => {
     await initLocalStackS3();

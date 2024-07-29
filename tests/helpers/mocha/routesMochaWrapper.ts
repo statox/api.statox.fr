@@ -1,5 +1,5 @@
 import { initApp } from '../../../src/app';
-import { initDb } from '../../../src/services/env-helpers/db';
+import { initDb } from '../../../src/libs/databases/db';
 import { createApiKeys, restoreFakeAuth, setupFakeAuth } from '../auth';
 import { mysqlClearAllTables } from '../mysql';
 import { restoreNotifierSlackStub, setupNotifierSlackStub } from '../notifier/slack';

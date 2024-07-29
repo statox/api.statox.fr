@@ -2,7 +2,7 @@ import request from 'supertest';
 import { assert } from 'chai';
 import { mysqlFixture } from '../../../helpers/mysql';
 import { app } from '../../../../src/app';
-import { WatchedContent } from '../../../../src/services/webWatcher';
+import { WatchedContent } from '../../../../src/libs/services/webWatcher';
 
 describe('webWatcher/getAllWatchers', () => {
     it('should return all the watchers', async () => {

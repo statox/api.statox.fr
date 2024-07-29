@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2/promise';
-import { db } from '../../../src/services/env-helpers/db';
+import { db } from '../../../src/libs/databases/db';
 import { assert } from 'chai';
 
 export const mysqlCheckTableLength = async (tableName: string, expectedTableLength: number) => {

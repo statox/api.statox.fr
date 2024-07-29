@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { slog } from '../../../src/services/logging';
-import { AppLogComponent, LogObject } from '../../../src/services/logging/slog';
-import { isDebug } from '../../../src/services/env-helpers/env';
+import { slog } from '../../../src/libs/services/logging';
+import { AppLogComponent, LogObject } from '../../../src/libs/services/logging/slog';
+import { isDebug } from '../../../src/libs/config/env';
 
 let slogSpy: sinon.SinonSpy;
 
