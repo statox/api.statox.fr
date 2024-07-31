@@ -1,10 +1,8 @@
 import { File } from 'formidable';
-import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import mime from 'mime-types';
-import * as fs from 'fs';
 import { generate4BytesHex } from '../random';
-import { S3 } from '../../databases/s3';
 import { db } from '../../databases/db';
+import { createS3FileInTransaction } from '../s3files';
 
 type NewEntryParams = {
     name: string;
@@ -41,16 +39,8 @@ VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
             [name, content, ttlSeconds, isPublic, linkId, s3Key]
         );
 
-        if (file) {
-            const fileStream = fs.createReadStream(file.filepath);
-            const params: PutObjectCommandInput = {
-                Bucket: 'clipboard',
-                Key: s3Key,
-                Body: fileStream,
-                ContentType: file.mimetype ?? undefined
-            };
-
-            await S3.send(new PutObjectCommand(params));
+        if (file && s3Key) {
+            await createS3FileInTransaction(conn, file, s3Key);
         }
 
         return conn.commit();
