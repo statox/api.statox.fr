@@ -1,10 +1,68 @@
 import request from 'supertest';
 import { DateTime } from 'luxon';
-import { expect } from 'chai';
+import { assert, expect } from 'chai';
 import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/getAllEntries', () => {
+    describe('Should fail', () => {
+        it('if an entry with an s3key does not have a corresponding s3File entry', async () => {
+            const publicEntryWithS3 = {
+                id: 4,
+                name: 'public entry with s3',
+                content: 'foo',
+                creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+                ttl: 60,
+                linkId: 'd',
+                isPublic: 1,
+                s3Key: 'foo'
+            };
+            await mysqlFixture({
+                Clipboard: [publicEntryWithS3]
+            });
+
+            await request(app)
+                .get('/clipboard/getAllEntries')
+                .set('Accept', 'application/json')
+                .expect(400)
+                .then((response) => {
+                    assert.equal(response.text, '{"message":"ITEM_NOT_FOUND"}');
+                });
+        });
+
+        it('if we try to retrieve an entry with a deleted s3File', async () => {
+            const publicEntryWithS3 = {
+                id: 4,
+                name: 'public entry with s3',
+                content: 'foo',
+                creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+                ttl: 60,
+                linkId: 'd',
+                isPublic: 1,
+                s3Key: 'foo'
+            };
+            await mysqlFixture({
+                Clipboard: [publicEntryWithS3],
+                S3Files: [
+                    {
+                        bucket: 'clipboard',
+                        s3Key: 'foo',
+                        creationDateUnix: 10,
+                        deletionDateUnix: 1000
+                    }
+                ]
+            });
+
+            await request(app)
+                .get('/clipboard/getAllEntries')
+                .set('Accept', 'application/json')
+                .expect(500)
+                .then((response) => {
+                    assert.equal(response.text, '{"message":"Internal Server Error"}');
+                });
+        });
+    });
+
     it('should retieve all entries', async () => {
         const publicEntry = {
             id: 1,
@@ -64,7 +122,19 @@ describe('clipboard/getAllEntries', () => {
             privateEntryWithS3
         ];
         await mysqlFixture({
-            Clipboard: allEntries
+            Clipboard: allEntries,
+            S3Files: [
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'bar',
+                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                },
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'foo',
+                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                }
+            ]
         });
 
         await request(app)

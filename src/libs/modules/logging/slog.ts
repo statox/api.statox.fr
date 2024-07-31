@@ -48,6 +48,7 @@ type LoggableProperties = {
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;
+    s3Key?: string;
     sensorName?: string;
     shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
     station?: string;
@@ -72,6 +73,7 @@ export type AppLogComponent =
     | 'meteo-france'
     | 'notifier'
     | 'reactor'
+    | 's3Files'
     | 'web-watcher';
 
 export const log = (component: AppLogComponent, message: string, data?: LogObject) => {

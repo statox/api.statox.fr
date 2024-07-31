@@ -15,3 +15,15 @@ export class ItemNotFoundError extends Error {
         super('ITEM_NOT_FOUND');
     }
 }
+
+export class ExpiredItemError extends Error {
+    constructor() {
+        super('ITEM_IS_EXPIRED');
+    }
+}
+
+export class TooManyEntriesError extends Error {
+    constructor() {
+        super('TOO_MANY_ENTRIES');
+    }
+}

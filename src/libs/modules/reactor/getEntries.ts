@@ -2,7 +2,7 @@ import { RowDataPacket } from 'mysql2/promise';
 import { db } from '../../databases/db';
 import { getPresignedUrl } from '../../databases/s3';
 import { slog } from '../logging';
-import { ItemNotFoundError } from '../../routes/errors';
+import { ItemNotFoundError, TooManyEntriesError } from '../../routes/errors';
 
 interface DBReactorEntryForPublic extends RowDataPacket {
     name: string;
@@ -20,12 +20,6 @@ interface ReactorEntryForPublic {
 
 interface s3KeyResult extends RowDataPacket {
     s3Key: string;
-}
-
-class TooManyEntriesError extends Error {
-    constructor() {
-        super('TOO_MANY_ENTRIES');
-    }
 }
 
 export const getEntryPresignedUrl = async (params: { linkId: string }) => {

@@ -1,5 +1,5 @@
 import { db } from '../../databases/db';
-import { getPresignedUrl } from '../../databases/s3';
+import { getPresignedURLForKey } from '../s3files';
 
 type ClipboardEntry = {
     id: number;
@@ -17,7 +17,7 @@ export const getPublicEntries = async () => {
     const [entries] = await db.query(
         `SELECT * FROM Clipboard
 WHERE isPublic = 1
-AND creationDateUnix + ttl > UNIX_TIMESTAMP() `
+AND creationDateUnix + ttl > UNIX_TIMESTAMP()`
     );
     return await enrichEntries(entries as ClipboardEntry[]);
 };
@@ -30,7 +30,7 @@ export const getAllEntries = async () => {
 const enrichEntries = async (entries: ClipboardEntry[]) => {
     for (const entry of entries) {
         if (entry.s3Key) {
-            entry.s3PresignedUrl = await getEntryFilePresignedURL(entry);
+            entry.s3PresignedUrl = await getPresignedURLForKey(entry.s3Key);
         }
     }
     return entries;
@@ -62,12 +62,4 @@ export const getEntriesForStaticView = async () => {
         result.push({ ...entry, contentIsLink });
     }
     return result;
-};
-
-const getEntryFilePresignedURL = async (entry: ClipboardEntry) => {
-    if (!entry.s3Key) {
-        return;
-    }
-
-    return await getPresignedUrl({ bucket: 'clipboard', key: entry.s3Key });
 };

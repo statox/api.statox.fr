@@ -70,6 +70,18 @@ describe('clipboard/view', () => {
                 privateEntryNoKey,
                 privateEntryKey,
                 expiredEntry
+            ],
+            S3Files: [
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'bar',
+                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                },
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'foo',
+                    creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120
+                }
             ]
         });
 

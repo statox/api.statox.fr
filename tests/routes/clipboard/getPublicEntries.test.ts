@@ -51,7 +51,14 @@ describe('clipboard/getPublicEntries', () => {
             s3Key: 'foo'
         };
         await mysqlFixture({
-            Clipboard: [entry]
+            Clipboard: [entry],
+            S3Files: [
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'foo',
+                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                }
+            ]
         });
 
         await request(app)
