@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2/promise';
 import { db } from '../../databases/db';
-import { getPresignedUrl } from '../../databases/s3';
 import { slog } from '../logging';
+import { getPresignedURLForKey } from '../s3files';
 import { ItemNotFoundError, TooManyEntriesError } from '../../routes/errors';
 
 interface DBReactorEntryForPublic extends RowDataPacket {
@@ -18,27 +18,6 @@ interface ReactorEntryForPublic {
     uri: string;
 }
 
-interface s3KeyResult extends RowDataPacket {
-    s3Key: string;
-}
-
-export const getEntryPresignedUrl = async (params: { linkId: string }) => {
-    const [results] = await db.query<s3KeyResult[]>('SELECT s3Key FROM Reactor WHERE linkId = ?', [
-        params.linkId
-    ]);
-    if (!results.length) {
-        slog.log('reactor', 'entry not found', { linkId: params.linkId });
-        throw new ItemNotFoundError();
-    }
-    if (results.length > 1) {
-        slog.log('reactor', 'multiple entries with same linkId', { linkId: params.linkId });
-        throw new TooManyEntriesError();
-    }
-
-    const { s3Key } = results.pop()!;
-    return await getPresignedUrl({ bucket: 'reactor', key: s3Key });
-};
-
 export const getEntriesForPublic = async () => {
     const [entries] = await db.query<DBReactorEntryForPublic[]>(
         'SELECT name, tags, creationDateUnix, s3Key, linkId FROM Reactor'
@@ -54,7 +33,10 @@ const enrichEntries = async (entries: DBReactorEntryForPublic[]) => {
                 name: entry.name,
                 tags: entry.tags ? JSON.parse(entry.tags) : [],
                 creationDateUnix: entry.creationDateUnix,
-                s3PresignedUrl: await getPresignedUrl({ bucket: 'reactor', key: entry.s3Key }),
+                s3PresignedUrl: await getPresignedURLForKey({
+                    bucket: 'reactor',
+                    s3Key: entry.s3Key
+                }),
                 uri: `/r/${entry.linkId}`
             });
         } catch (error) {
@@ -65,4 +47,24 @@ const enrichEntries = async (entries: DBReactorEntryForPublic[]) => {
         }
     }
     return result;
+};
+
+interface s3KeyResult extends RowDataPacket {
+    s3Key: string;
+}
+export const getRedirectForEntry = async (linkId: string) => {
+    const [results] = await db.query<s3KeyResult[]>(`SELECT s3Key FROM Reactor WHERE linkId = ?`, [
+        linkId
+    ]);
+    if (!results.length) {
+        slog.log('reactor', 'entry not found', { linkId });
+        throw new ItemNotFoundError();
+    }
+    if (results.length > 1) {
+        slog.log('reactor', 'multiple entries with same linkId', { linkId });
+        throw new TooManyEntriesError();
+    }
+
+    const { s3Key } = results.pop()!;
+    return getPresignedURLForKey({ bucket: 'reactor', s3Key });
 };

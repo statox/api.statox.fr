@@ -45,7 +45,7 @@ describe('reactor/addEntry', () => {
         s3CheckCall({ nbCalls: 0 });
     });
 
-    it('should create new entry and upload the file to R2', async () => {
+    it('should create new entry and upload the file to S3', async () => {
         await request(app)
             .post('/reactor/addEntry')
             .set('content-type', 'multipart/form-data')
@@ -73,6 +73,13 @@ describe('reactor/addEntry', () => {
                         assert.deepEqual(parsedTags, ['tag1', 'tag2']);
                         return true;
                     }
+                }
+            ],
+            S3Files: [
+                {
+                    bucket: 'reactor',
+                    s3Key: (value: string) => value.match(/.*entry name/) !== null,
+                    creationDateUnix: { aroundTimestamp: 'NOW()', precision: '1 SECOND' }
                 }
             ]
         });
@@ -105,6 +112,13 @@ describe('reactor/addEntry', () => {
                         assert.equal(value, '[]');
                         return true;
                     }
+                }
+            ],
+            S3Files: [
+                {
+                    bucket: 'reactor',
+                    s3Key: (value: string) => value.match(/.*entry name/) !== null,
+                    creationDateUnix: { aroundTimestamp: 'NOW()', precision: '1 SECOND' }
                 }
             ]
         });

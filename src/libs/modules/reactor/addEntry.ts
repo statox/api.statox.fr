@@ -1,12 +1,10 @@
 import { File } from 'formidable';
-import { PutObjectCommand, PutObjectCommandInput } from '@aws-sdk/client-s3';
 import mime from 'mime-types';
-import * as fs from 'fs';
 import { generate4BytesHex } from '../random';
-import { S3 } from '../../databases/s3';
 import { db } from '../../databases/db';
 import { ItemAlreadyExistsError } from '../../routes/errors';
 import { QueryError } from 'mysql2/promise';
+import { createS3FileInTransaction } from '../s3files';
 
 type NewEntryParams = {
     name: string;
@@ -18,22 +16,12 @@ export const addEntry = async (newEntry: NewEntryParams) => {
     const { name, tags, file } = newEntry;
 
     const linkId = generate4BytesHex();
-
-    const fileStream = fs.createReadStream(file.filepath);
     const extension = mime.extension(file.mimetype ?? '');
 
     let s3Key = `${linkId}_${name}`;
-
     if (extension) {
         s3Key += `.${extension}`;
     }
-
-    const params: PutObjectCommandInput = {
-        Bucket: 'reactor',
-        Key: s3Key,
-        Body: fileStream,
-        ContentType: file.mimetype ?? undefined
-    };
 
     const conn = await db.getConnection();
     try {
@@ -41,7 +29,8 @@ export const addEntry = async (newEntry: NewEntryParams) => {
             `INSERT INTO Reactor (name, tags, linkId, s3Key, creationDateUnix) VALUES (?, ?, ?, ?, UNIX_TIMESTAMP())`,
             [name, JSON.stringify(tags), linkId, s3Key]
         );
-        await S3.send(new PutObjectCommand(params));
+
+        await createS3FileInTransaction(conn, { file, bucket: 'reactor', s3Key });
         return conn.commit();
     } catch (error) {
         await conn.rollback();

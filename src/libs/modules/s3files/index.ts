@@ -71,5 +71,5 @@ export const getPresignedURLForKey = async (params: { bucket: ManagedBuckets; s3
         throw new ExpiredItemError();
     }
 
-    return getPresignedUrl({ bucket: 'clipboard', key: s3Key });
+    return getPresignedUrl({ bucket, key: s3Key });
 };
