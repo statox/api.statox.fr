@@ -39,8 +39,6 @@ describe('readingList/getAllEntries', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                console.log('body:');
-                console.log(response.body);
                 const items = response.body.items;
                 assert.equal(items.length, 2);
                 const entryFullResponse = items.find((e: { id: number }) => e.id === 1);

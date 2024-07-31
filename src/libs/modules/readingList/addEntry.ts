@@ -32,7 +32,6 @@ export const addEntry = async (params: AddReadingListItemParams) => {
             s3Key += `.${extension}`;
         }
     }
-    console.log({ file, s3Key });
 
     const conn = await db.getConnection();
     try {
