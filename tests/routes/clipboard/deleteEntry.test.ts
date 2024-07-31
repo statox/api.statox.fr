@@ -65,6 +65,13 @@ describe('clipboard/deleteEntry', () => {
                     linkId: 'aaaaaaaa',
                     s3Key: 'foo.png'
                 }
+            ],
+            S3Files: [
+                {
+                    bucket: 'clipboard',
+                    s3Key: 'foo.png',
+                    creationDateUnix: 10
+                }
             ]
         });
 
@@ -86,6 +93,18 @@ describe('clipboard/deleteEntry', () => {
             Clipboard: [
                 {
                     name: 'entry 1'
+                }
+            ]
+        });
+        await mysqlCheckContains({
+            S3Files: [
+                {
+                    s3Key: 'foo.png',
+                    creationDateUnix: 10,
+                    deletionDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    }
                 }
             ]
         });
