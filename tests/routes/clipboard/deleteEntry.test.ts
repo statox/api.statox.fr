@@ -1,6 +1,11 @@
 import request from 'supertest';
 import { app } from '../../../src/app';
-import { mysqlCheckContains, mysqlCheckDoesNotContain, mysqlFixture } from '../../helpers/mysql';
+import {
+    aroundNowSec,
+    mysqlCheckContains,
+    mysqlCheckDoesNotContain,
+    mysqlFixture
+} from '../../helpers/mysql';
 import { s3CheckCall } from '../../helpers/s3';
 
 describe('clipboard/deleteEntry', () => {
@@ -101,10 +106,7 @@ describe('clipboard/deleteEntry', () => {
                 {
                     s3Key: 'foo.png',
                     creationDateUnix: 10,
-                    deletionDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    }
+                    deletionDateUnix: aroundNowSec
                 }
             ]
         });

@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
+import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 import { assert } from 'chai';
 import { slogCheckLog } from '../../../helpers/slog';
 
@@ -42,10 +42,7 @@ describe('chords/addLinkVisit', () => {
                 {
                     url: 'https://bar.com',
                     count: 1,
-                    lastAccessDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    }
+                    lastAccessDateUnix: aroundNowSec
                 }
             ]
         });
@@ -82,10 +79,7 @@ describe('chords/addLinkVisit', () => {
                 {
                     url: 'https://bar.com',
                     count: 3,
-                    lastAccessDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    }
+                    lastAccessDateUnix: aroundNowSec
                 },
                 {
                     url: 'https://foo.com',

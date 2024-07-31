@@ -1,7 +1,6 @@
 import request from 'supertest';
-import { DateTime } from 'luxon';
 import { expect } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
+import { mysqlFixture, nowSec } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/getPublicEntries', () => {
@@ -10,7 +9,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -20,7 +19,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,
@@ -44,7 +43,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -56,7 +55,7 @@ describe('clipboard/getPublicEntries', () => {
                 {
                     bucket: 'clipboard',
                     s3Key: 'foo',
-                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                    creationDateUnix: nowSec()
                 }
             ]
         });
@@ -76,7 +75,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -86,7 +85,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120,
+            creationDateUnix: nowSec() - 120,
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,

@@ -1,7 +1,6 @@
 import request from 'supertest';
-import { DateTime } from 'luxon';
 import { assert, expect } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
+import { mysqlFixture, nowSec } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/getAllEntries', () => {
@@ -11,7 +10,7 @@ describe('clipboard/getAllEntries', () => {
                 id: 4,
                 name: 'public entry with s3',
                 content: 'foo',
-                creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+                creationDateUnix: nowSec(),
                 ttl: 60,
                 linkId: 'd',
                 isPublic: 1,
@@ -35,7 +34,7 @@ describe('clipboard/getAllEntries', () => {
                 id: 4,
                 name: 'public entry with s3',
                 content: 'foo',
-                creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+                creationDateUnix: nowSec(),
                 ttl: 60,
                 linkId: 'd',
                 isPublic: 1,
@@ -68,7 +67,7 @@ describe('clipboard/getAllEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -78,7 +77,7 @@ describe('clipboard/getAllEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,
@@ -88,7 +87,7 @@ describe('clipboard/getAllEntries', () => {
             id: 3,
             name: 'expired ttl',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120,
+            creationDateUnix: nowSec() - 120,
             ttl: 60,
             linkId: 'cccccccc',
             isPublic: 1,
@@ -98,7 +97,7 @@ describe('clipboard/getAllEntries', () => {
             id: 4,
             name: 'public entry with s3',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'd',
             isPublic: 1,
@@ -108,7 +107,7 @@ describe('clipboard/getAllEntries', () => {
             id: 5,
             name: 'private entry with s3',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'e',
             isPublic: 1,
@@ -127,12 +126,12 @@ describe('clipboard/getAllEntries', () => {
                 {
                     bucket: 'clipboard',
                     s3Key: 'bar',
-                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                    creationDateUnix: nowSec()
                 },
                 {
                     bucket: 'clipboard',
                     s3Key: 'foo',
-                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                    creationDateUnix: nowSec()
                 }
             ]
         });

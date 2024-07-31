@@ -1,7 +1,6 @@
 import request from 'supertest';
-import { DateTime } from 'luxon';
 import { expect } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
+import { mysqlFixture, nowSec } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 
 describe('clipboard/view', () => {
@@ -10,7 +9,7 @@ describe('clipboard/view', () => {
             id: 1,
             name: 'public entry no key',
             content: 'foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'a',
             isPublic: 1
@@ -19,7 +18,7 @@ describe('clipboard/view', () => {
             id: 2,
             name: 'public entry key',
             content: 'foo foo',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'b',
             isPublic: 1,
@@ -29,7 +28,7 @@ describe('clipboard/view', () => {
             id: 3,
             name: 'public entry link in content',
             content: 'https://foo.com:8080/bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'g',
             isPublic: 1
@@ -38,7 +37,7 @@ describe('clipboard/view', () => {
             id: 4,
             name: 'private entry no key',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'd',
             isPublic: 0
@@ -47,7 +46,7 @@ describe('clipboard/view', () => {
             id: 5,
             name: 'private entry key',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()),
+            creationDateUnix: nowSec(),
             ttl: 60,
             linkId: 'e',
             isPublic: 0,
@@ -57,7 +56,7 @@ describe('clipboard/view', () => {
             id: 6,
             name: 'expired entry',
             content: 'bar',
-            creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120,
+            creationDateUnix: nowSec() - 120,
             ttl: 60,
             linkId: 'f',
             isPublic: 1
@@ -75,12 +74,12 @@ describe('clipboard/view', () => {
                 {
                     bucket: 'clipboard',
                     s3Key: 'bar',
-                    creationDateUnix: Math.floor(DateTime.now().toSeconds())
+                    creationDateUnix: nowSec()
                 },
                 {
                     bucket: 'clipboard',
                     s3Key: 'foo',
-                    creationDateUnix: Math.floor(DateTime.now().toSeconds()) - 120
+                    creationDateUnix: nowSec() - 120
                 }
             ]
         });

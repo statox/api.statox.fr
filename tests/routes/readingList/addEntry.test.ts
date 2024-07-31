@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../src/app';
-import { mysqlCheckContains } from '../../helpers/mysql';
+import { aroundNowSec, mysqlCheckContains } from '../../helpers/mysql';
 import { s3CheckCall } from '../../helpers/s3';
 
 describe('readingList/addEntry', () => {
@@ -29,7 +29,7 @@ describe('readingList/addEntry', () => {
         await mysqlCheckContains({
             ReadingList: [
                 {
-                    creationDateUnix: { aroundTimestamp: 'NOW()', precision: '1 SECOND' },
+                    creationDateUnix: aroundNowSec,
                     name: 'entry name',
                     comment: 'An interesting comment',
                     link: 'http://foo.com/bar',
@@ -45,7 +45,7 @@ describe('readingList/addEntry', () => {
                 {
                     bucket: 'reading-list',
                     s3Key: (value: string) => value.match(/.*entry name/) !== null,
-                    creationDateUnix: { aroundTimestamp: 'NOW()', precision: '1 SECOND' }
+                    creationDateUnix: aroundNowSec
                 }
             ]
         });

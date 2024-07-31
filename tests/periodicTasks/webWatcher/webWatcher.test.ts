@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
+import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 import { slackCheckNoNotifications, slackCheckNotification } from '../../helpers/notifier/slack';
@@ -71,14 +71,8 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
-                    lastUpdateDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastCheckDateUnix: aroundNowSec,
+                    lastUpdateDateUnix: aroundNowSec,
                     checkIntervalSeconds: 0,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
@@ -86,14 +80,8 @@ describe('periodic task - webWatcher', () => {
                 {
                     id: 2,
                     lastContent: 'A header',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
-                    lastUpdateDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastCheckDateUnix: aroundNowSec,
+                    lastUpdateDateUnix: aroundNowSec,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
                 }
@@ -156,26 +144,14 @@ describe('periodic task - webWatcher', () => {
                     url: 'https://foo.com',
                     watchType: 'HASH',
                     lastContent: '965324907ec9f9d6ae72a8415dc127e853e746635b64fb8f2ac15427c3d2933c',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
-                    lastUpdateDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    }
+                    lastCheckDateUnix: aroundNowSec,
+                    lastUpdateDateUnix: aroundNowSec
                 },
                 {
                     id: 2,
                     lastContent: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
-                    lastUpdateDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastCheckDateUnix: aroundNowSec,
+                    lastUpdateDateUnix: aroundNowSec,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
                 }
@@ -263,10 +239,7 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastCheckDateUnix: aroundNowSec,
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0,
                     lastErrorDateUnix: null,
@@ -314,16 +287,10 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: 'invalid @# > selector . adsf',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastCheckDateUnix: aroundNowSec,
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0,
-                    lastErrorDateUnix: {
-                        aroundTimestamp: 'NOW()',
-                        precision: '1 SECOND'
-                    },
+                    lastErrorDateUnix: aroundNowSec,
                     lastErrorMessage: "'invalid @# > selector . adsf' is not a valid selector"
                 }
             ]
