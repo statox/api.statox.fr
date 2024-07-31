@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { checkChordsUrl } from '../../services/chords';
+import { checkChordsUrl } from '../../modules/chords';
 import { GetRoute } from '../types';
 
 const handler = async (_req: Request, res: Response) => {

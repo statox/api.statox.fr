@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { updateChords } from '../../services/chords/commands';
-import { slog } from '../../services/logging';
+import { updateChords } from '../../modules/chords/commands';
+import { slog } from '../../modules/logging';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { chords } = req.body;

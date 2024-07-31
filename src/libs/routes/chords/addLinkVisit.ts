@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { addLinkVisit } from '../../services/chords';
-import { slog } from '../../services/logging';
+import { addLinkVisit } from '../../modules/chords';
+import { slog } from '../../modules/logging';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { url } = req.body;

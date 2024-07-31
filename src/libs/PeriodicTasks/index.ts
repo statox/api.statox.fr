@@ -1,6 +1,6 @@
-import { slog } from '../services/logging';
-import { doMeteoFrance } from '../services/meteofrance';
-import { doWebWatcher } from '../services/webWatcher';
+import { slog } from '../modules/logging';
+import { doMeteoFrance } from '../modules/meteofrance';
+import { doWebWatcher } from '../modules/webWatcher';
 
 const minutes15 = 1000 * 60 * 15;
 const hours1 = 1000 * 3600;

@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getEntriesForPublic } from '../../services/reactor';
+import { getEntriesForPublic } from '../../modules/reactor';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {

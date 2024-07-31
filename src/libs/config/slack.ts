@@ -1,4 +1,4 @@
-import { slog } from '../services/logging';
+import { slog } from '../modules/logging';
 import { isProd } from './env';
 import { ConfigError } from './errors';
 

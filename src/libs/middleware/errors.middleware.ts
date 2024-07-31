@@ -5,11 +5,11 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { slog } from '../services/logging';
-import { notifySlack } from '../services/notifier/slack';
-import { EntryAlreadyExistsError } from '../services/webWatcher';
+import { slog } from '../modules/logging';
+import { notifySlack } from '../modules/notifier/slack';
+import { EntryAlreadyExistsError } from '../modules/webWatcher';
 import { ApiKeyError } from './authIOT.middleware';
-import { ItemAlreadyExistsError } from '../services/readingList/errors';
+import { ItemAlreadyExistsError } from '../modules/readingList/errors';
 
 export const errorHandler = async (
     error: Error,

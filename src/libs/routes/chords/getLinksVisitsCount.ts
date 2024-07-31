@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getLinksVisitsCount } from '../../services/chords';
+import { getLinksVisitsCount } from '../../modules/chords';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {

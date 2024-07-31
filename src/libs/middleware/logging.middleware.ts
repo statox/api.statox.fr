@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { randomUUID } from 'crypto';
 import { hrtime } from 'node:process';
-import { slog } from '../services/logging';
+import { slog } from '../modules/logging';
 import { isTests } from '../config/env';
 
 export const loggingHandler = async (req: Request, res: Response, next: NextFunction) => {

@@ -10,7 +10,7 @@ import { isProd } from './libs/config/env';
 import { loggingHandler } from './libs/middleware/logging.middleware';
 import { multipartHandler } from './libs/middleware/multipart.middleware';
 import { routes } from './libs/routes';
-import { slog } from './libs/services/logging';
+import { slog } from './libs/modules/logging';
 import { startPeriodicTasks } from './libs/PeriodicTasks';
 import { validateAPIKeyHeader } from './libs/middleware/authIOT.middleware';
 

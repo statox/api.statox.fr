@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import { doWebWatcher } from '../../../src/libs/services/webWatcher';
+import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 import { slackCheckNoNotifications, slackCheckNotification } from '../../helpers/notifier/slack';
 

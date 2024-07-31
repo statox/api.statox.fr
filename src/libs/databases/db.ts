@@ -2,7 +2,7 @@ import { AsyncDatabase } from 'promised-sqlite3';
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { isProd, isTests } from '../config/env';
-import { slog } from '../services/logging';
+import { slog } from '../modules/logging';
 import { ConfigError } from '../config/errors';
 
 const PROD_URL = process.env.JAWSDB_URL!;

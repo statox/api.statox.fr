@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { deleteEntry } from '../../services/clipboard';
+import { deleteEntry } from '../../modules/clipboard';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.body;

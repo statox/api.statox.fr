@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { deleteWatcher } from '../../services/webWatcher';
+import { deleteWatcher } from '../../modules/webWatcher';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;

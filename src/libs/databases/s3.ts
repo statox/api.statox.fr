@@ -11,7 +11,7 @@ import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';
 import { ConfigError } from '../config/errors';
-import { slog } from '../services/logging';
+import { slog } from '../modules/logging';
 
 const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
 const R2_SECRET_KEY = isProd ? process.env.R2_SECRET_KEY : 'test';

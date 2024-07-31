@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { createReadingListItem, getAllReadingListItems } from '../../services/readingList';
+import { createReadingListItem, getAllReadingListItems } from '../../modules/readingList';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const body = req.body;

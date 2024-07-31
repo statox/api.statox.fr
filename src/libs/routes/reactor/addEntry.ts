@@ -2,7 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { File } from 'formidable';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { addEntry } from '../../services/reactor';
+import { addEntry } from '../../modules/reactor';
 
 import type { QueryError } from 'mysql2';
 

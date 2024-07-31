@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { slackNotifier } from '../../../src/libs/services/notifier';
+import { slackNotifier } from '../../../src/libs/modules/notifier';
 import { isDebug } from '../../../src/libs/config/env';
 
 let slackStub: sinon.SinonStub;

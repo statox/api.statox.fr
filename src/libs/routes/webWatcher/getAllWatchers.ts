@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getWatchedContent } from '../../services/webWatcher';
+import { getWatchedContent } from '../../modules/webWatcher';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {

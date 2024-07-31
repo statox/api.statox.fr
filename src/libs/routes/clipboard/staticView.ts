@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getEntriesForStaticView } from '../../services/clipboard';
+import { getEntriesForStaticView } from '../../modules/clipboard';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {

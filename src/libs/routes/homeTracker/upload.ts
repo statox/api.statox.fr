@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { slog } from '../../services/logging';
+import { slog } from '../../modules/logging';
 
 const handler = async (req: Request, res: Response) => {
     const {

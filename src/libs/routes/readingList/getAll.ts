@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getAllReadingListItems } from '../../services/readingList';
+import { getAllReadingListItems } from '../../modules/readingList';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {

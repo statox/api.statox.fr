@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
-import { createWatcher } from '../../services/webWatcher';
+import { createWatcher } from '../../modules/webWatcher';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds } =
