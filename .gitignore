@@ -9,6 +9,3 @@ npm-debug.log
 
 chords_check_results.json
 src/tools/tmp.sql
-
-# TMP while seting up sqlite
-db.sqlite

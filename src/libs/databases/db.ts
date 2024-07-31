@@ -1,4 +1,3 @@
-import { AsyncDatabase } from 'promised-sqlite3';
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { isProd, isTests } from '../config/env';
@@ -25,7 +24,6 @@ if (!dbUrl) {
 }
 
 export let db: Pool;
-export let db2: AsyncDatabase;
 export const initDb = async () => {
     slog.log('app', 'init db');
     const parsedUrl = url.parse(dbUrl);
@@ -53,22 +51,6 @@ export const initDb = async () => {
     };
 
     db = mysql.createPool(connectionOptions);
-    db2 = await AsyncDatabase.open('./db.sqlite');
-
-    await db2.run(
-        `CREATE TABLE IF NOT EXISTS ReadingList (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            link TEXT NOT NULL,
-            tags TEXT NOT NULL,
-            creationDateUnix INTEGER NOT NULL,
-            isPublic INTEGER NOT NULL,
-            isDocument INTEGER NOT NULL,
-
-            UNIQUE(link),
-            UNIQUE(name)
-        )`
-    );
 };
 
 export type SQLError = Error & { code: string };
