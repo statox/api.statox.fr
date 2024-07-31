@@ -42,7 +42,7 @@ VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
         );
 
         if (file && s3Key) {
-            await createS3FileInTransaction(conn, file, s3Key);
+            await createS3FileInTransaction(conn, { file, bucket: 'clipboard', s3Key });
         }
 
         return conn.commit();

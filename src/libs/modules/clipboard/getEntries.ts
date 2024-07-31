@@ -30,7 +30,10 @@ export const getAllEntries = async () => {
 const enrichEntries = async (entries: ClipboardEntry[]) => {
     for (const entry of entries) {
         if (entry.s3Key) {
-            entry.s3PresignedUrl = await getPresignedURLForKey(entry.s3Key);
+            entry.s3PresignedUrl = await getPresignedURLForKey({
+                bucket: 'clipboard',
+                s3Key: entry.s3Key
+            });
         }
     }
     return entries;

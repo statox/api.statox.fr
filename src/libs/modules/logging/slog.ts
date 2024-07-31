@@ -19,6 +19,7 @@ type xRequestInfo = {
 type LoggableProperties = {
     batteryCharge?: number;
     batteryPercent?: number;
+    bucket?: string;
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
     code?: number;

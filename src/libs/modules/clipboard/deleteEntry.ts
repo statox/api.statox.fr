@@ -8,8 +8,8 @@ export const deleteEntry = async (params: { name: string }) => {
     ]);
 
     if (rows && rows[0]?.s3Key) {
-        const key = rows[0].s3Key;
-        await deleteS3File(key);
+        const s3Key = rows[0].s3Key;
+        await deleteS3File({ bucket: 'clipboard', s3Key });
     }
 
     await db.query(`DELETE FROM Clipboard WHERE name = ?`, [params.name]);
