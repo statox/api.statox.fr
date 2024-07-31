@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getAllReadingListItems } from '../../modules/readingList';
+import { getAllEntries } from '../../modules/readingList';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const items = await getAllReadingListItems();
-        res.send({ items });
+        const items = await getAllEntries();
+        res.json({ items });
     } catch (error) {
         next(error);
     }
@@ -13,7 +13,7 @@ const handler = async (_req: Request, res: Response, next: NextFunction) => {
 
 export const route: GetRoute = {
     method: 'get',
-    path: '/readingList/getAll',
+    path: '/readingList/getAllEntries',
     handler,
-    authentication: 'none'
+    authentication: 'user'
 };

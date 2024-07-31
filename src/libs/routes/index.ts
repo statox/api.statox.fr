@@ -14,8 +14,8 @@ import { route as HomeTracker_upload } from './homeTracker/upload';
 import { route as Reactor_addEntry } from './reactor/addEntry';
 import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic';
 import { route as Reactor_getEntry } from './reactor/getEntry';
-import { route as ReadingList_add } from './readingList/add';
-import { route as ReadingList_getAll } from './readingList/getAll';
+import { route as ReadingList_addEntry } from './readingList/addEntry';
+import { route as ReadingList_getAllEntries } from './readingList/getAllEntries';
 import { route as WebWatcher_createWatcher } from './webWatcher/createWatcher';
 import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher';
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers';
@@ -36,8 +36,8 @@ export const routes: Route[] = [
     Reactor_addEntry,
     Reactor_getEntriesForPublic,
     Reactor_getEntry,
-    ReadingList_add,
-    ReadingList_getAll,
+    ReadingList_addEntry,
+    ReadingList_getAllEntries,
     WebWatcher_createWatcher,
     WebWatcher_deleteWatcher,
     WebWatcher_getAllWatcher

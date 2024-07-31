@@ -7,7 +7,7 @@ import { db } from '../../databases/db';
 import { ExpiredItemError, ItemNotFoundError, TooManyEntriesError } from '../../routes/errors';
 import { slog } from '../logging';
 
-type ManagedBuckets = 'clipboard' | 'reactor';
+type ManagedBuckets = 'reading-list' | 'clipboard' | 'reactor';
 
 export const createS3FileInTransaction = async (
     conn: PoolConnection, //TODO probably a better way to get just a transaction

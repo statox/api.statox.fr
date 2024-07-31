@@ -74,6 +74,7 @@ export type AppLogComponent =
     | 'meteo-france'
     | 'notifier'
     | 'reactor'
+    | 'readingList'
     | 's3Files'
     | 'web-watcher';
 
