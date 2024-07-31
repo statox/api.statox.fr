@@ -28,11 +28,17 @@ describe('r/:linkId', () => {
                 assert.match(url.search, /.*GetObject$/);
             });
     });
-    it('should TBD for an unknown linkId', async () => {
+    it('should return an error for an unknown linkId', async () => {
         await mysqlFixture({
             Reactor: []
         });
 
-        await request(app).get('/r/aaaaaaaa').set('Accept', 'application/json').expect(404);
+        await request(app)
+            .get('/r/aaaaaaaa')
+            .set('Accept', 'application/json')
+            .expect(400)
+            .then((response) => {
+                assert.equal(response.text, '{"message":"ITEM_NOT_FOUND"}');
+            });
     });
 });

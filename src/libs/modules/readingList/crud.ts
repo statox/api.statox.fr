@@ -1,6 +1,6 @@
 import { File } from 'formidable';
 import { db2, isSQLError } from '../../databases/db';
-import { ItemAlreadyExistsError } from './errors';
+import { ItemAlreadyExistsError } from '../../routes/errors';
 
 interface AddReadingListItemParamsBase {
     name: string;

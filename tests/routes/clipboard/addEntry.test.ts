@@ -15,7 +15,7 @@ describe('clipboard/addEntry', () => {
                 .send({ name: 'A cool entry' })
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('FILE_OR_CONTENT_REQUIRED');
+                    expect(response.text).to.equal('{"message":"FILE_OR_CONTENT_REQUIRED"}');
                 });
         });
 
@@ -42,7 +42,7 @@ describe('clipboard/addEntry', () => {
                 })
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('ER_DUP_ENTRY');
+                    expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
             await mysqlCheckContains({
@@ -82,7 +82,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('ER_DUP_ENTRY');
+                    expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
             await mysqlCheckContains({

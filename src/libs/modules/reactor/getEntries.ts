@@ -2,6 +2,7 @@ import { RowDataPacket } from 'mysql2/promise';
 import { db } from '../../databases/db';
 import { getPresignedUrl } from '../../databases/s3';
 import { slog } from '../logging';
+import { ItemNotFoundError } from '../../routes/errors';
 
 interface DBReactorEntryForPublic extends RowDataPacket {
     name: string;
@@ -20,17 +21,24 @@ interface ReactorEntryForPublic {
 interface s3KeyResult extends RowDataPacket {
     s3Key: string;
 }
+
+class TooManyEntriesError extends Error {
+    constructor() {
+        super('TOO_MANY_ENTRIES');
+    }
+}
+
 export const getEntryPresignedUrl = async (params: { linkId: string }) => {
     const [results] = await db.query<s3KeyResult[]>('SELECT s3Key FROM Reactor WHERE linkId = ?', [
         params.linkId
     ]);
     if (!results.length) {
         slog.log('reactor', 'entry not found', { linkId: params.linkId });
-        throw new Error('ENTRY_NOT_FOUND');
+        throw new ItemNotFoundError();
     }
     if (results.length > 1) {
         slog.log('reactor', 'multiple entries with same linkId', { linkId: params.linkId });
-        throw new Error('TOO_MANY_ENTRIES');
+        throw new TooManyEntriesError();
     }
 
     const { s3Key } = results.pop()!;

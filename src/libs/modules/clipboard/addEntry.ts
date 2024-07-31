@@ -3,6 +3,8 @@ import mime from 'mime-types';
 import { generate4BytesHex } from '../random';
 import { db } from '../../databases/db';
 import { createS3FileInTransaction } from '../s3files';
+import { QueryError } from 'mysql2/promise';
+import { ItemAlreadyExistsError } from '../../routes/errors';
 
 type NewEntryParams = {
     name: string;
@@ -46,6 +48,9 @@ VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())
         return conn.commit();
     } catch (error) {
         await conn.rollback();
+        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
+            throw new ItemAlreadyExistsError();
+        }
         throw error;
     } finally {
         conn.release();

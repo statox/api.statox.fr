@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import { generate4BytesHex } from '../random';
 import { S3 } from '../../databases/s3';
 import { db } from '../../databases/db';
+import { ItemAlreadyExistsError } from '../../routes/errors';
+import { QueryError } from 'mysql2/promise';
 
 type NewEntryParams = {
     name: string;
@@ -43,6 +45,9 @@ export const addEntry = async (newEntry: NewEntryParams) => {
         return conn.commit();
     } catch (error) {
         await conn.rollback();
+        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
+            throw new ItemAlreadyExistsError();
+        }
         throw error;
     } finally {
         conn.release();

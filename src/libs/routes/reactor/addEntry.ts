@@ -4,8 +4,6 @@ import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addEntry } from '../../modules/reactor';
 
-import type { QueryError } from 'mysql2';
-
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name, commaSeparatedTags } = req.body;
 
@@ -17,9 +15,6 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
         await addEntry({ name, file, tags });
         res.send({});
     } catch (error) {
-        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
-            return res.status(400).send('ER_DUP_ENTRY');
-        }
         next(error);
     }
 };

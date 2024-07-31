@@ -3,8 +3,7 @@ import { File } from 'formidable';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addEntry } from '../../modules/clipboard';
-
-import type { QueryError } from 'mysql2';
+import { FileOrContentRequiredError } from '../errors';
 
 const handler = async (req: Request, res: Response, next: NextFunction) => {
     const { name, content, ttlSeconds: ttlSecondsInput, isPublic: isPublicInput } = req.body;
@@ -18,16 +17,13 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
     const file: File = req.body.file?.pop();
 
     if (!content && !file) {
-        return res.status(400).send('FILE_OR_CONTENT_REQUIRED');
+        return next(new FileOrContentRequiredError());
     }
 
     try {
         await addEntry({ name, content, ttlSeconds, isPublic, file });
         res.send({});
     } catch (error) {
-        if ((error as QueryError).code === 'ER_DUP_ENTRY') {
-            return res.status(400).send('ER_DUP_ENTRY');
-        }
         next(error);
     }
 };

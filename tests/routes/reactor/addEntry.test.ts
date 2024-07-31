@@ -27,7 +27,7 @@ describe('reactor/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(400)
             .then((response) => {
-                assert.equal(response.text, 'ER_DUP_ENTRY');
+                assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
             });
 
         await mysqlCheckContains({

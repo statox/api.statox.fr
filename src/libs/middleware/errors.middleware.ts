@@ -9,7 +9,11 @@ import { slog } from '../modules/logging';
 import { notifySlack } from '../modules/notifier/slack';
 import { EntryAlreadyExistsError } from '../modules/webWatcher';
 import { ApiKeyError } from './authIOT.middleware';
-import { ItemAlreadyExistsError } from '../modules/readingList/errors';
+import {
+    FileOrContentRequiredError,
+    ItemAlreadyExistsError,
+    ItemNotFoundError
+} from '../routes/errors';
 
 export const errorHandler = async (
     error: Error,
@@ -20,7 +24,12 @@ export const errorHandler = async (
     slog.log('app', 'Caught error', { error });
     notifySlack({ error, directMention: true });
 
-    if (error instanceof ItemAlreadyExistsError) {
+    if (
+        error instanceof ItemAlreadyExistsError ||
+        error instanceof FileOrContentRequiredError ||
+        error instanceof EntryAlreadyExistsError ||
+        error instanceof ItemNotFoundError
+    ) {
         response.status(400).json({ message: error.message });
         return next();
     }
@@ -50,11 +59,6 @@ export const errorHandler = async (
 
     if (error instanceof ValidationError) {
         response.status(400).send(error.validationErrors);
-        return next();
-    }
-
-    if (error instanceof EntryAlreadyExistsError) {
-        response.status(400).json({ message: error.message });
         return next();
     }
 
