@@ -23,6 +23,8 @@ type LoggableProperties = {
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
     code?: number;
+    detectedForcedReset?: boolean;
+    detectedLowBattery?: boolean;
     entryName?: string;
     error?: Error;
     executionTimeMs?: number;
@@ -58,6 +60,7 @@ type LoggableProperties = {
     status?: string;
     tempCelsius?: number;
     timestamp?: number;
+    timeToSendMs?: number;
     validityTime?: string;
     visitedUrl?: string;
     watcherName?: string;

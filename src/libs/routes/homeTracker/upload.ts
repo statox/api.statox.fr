@@ -7,23 +7,29 @@ const handler = async (req: Request, res: Response) => {
     const {
         batteryCharge,
         batteryPercent,
+        detectedForcedReset,
+        detectedLowBattery,
         humidity,
         internalHumidity,
         internalTempCelsius,
         pressurePa,
         sensorName,
-        tempCelsius
+        tempCelsius,
+        timeToSendMs
     } = req.body;
 
     slog.log('home-tracker', 'Home tracking event', {
         batteryCharge,
         batteryPercent,
+        detectedLowBattery,
+        detectedForcedReset,
         humidity,
         internalHumidity,
         internalTempCelsius,
         pressurehPa: pressurePa / 100,
         sensorName,
-        tempCelsius
+        tempCelsius,
+        timeToSendMs
     });
     res.send({});
 };
@@ -79,7 +85,20 @@ const inputSchema: AllowedSchema = {
             description: 'Computed percentage battery',
             type: 'number',
             minimum: 0,
-            maximum: 100
+            maximum: 110
+        },
+        timeToSendMs: {
+            description: 'Computed interval between the start of the loop and the HTTP call',
+            type: 'number',
+            minimum: 0
+        },
+        detectedLowBattery: {
+            description: 'True if board detected a battery voltage low enough to trigger shutdown',
+            type: 'boolean'
+        },
+        detectedForcedReset: {
+            description: 'True if board detected it restarted after an interrupt forced a restart',
+            type: 'boolean'
         }
     }
 };

@@ -16,7 +16,10 @@ describe('homeTracker/upload', () => {
                 internalTempCelsius: 12.3,
                 internalHumidity: 60.9,
                 batteryPercent: 100,
-                batteryCharge: 4.0
+                batteryCharge: 4.0,
+                timeToSendMs: 7000,
+                detectedLowBattery: true,
+                detectedForcedReset: false
             })
             .expect(200);
 
@@ -28,7 +31,10 @@ describe('homeTracker/upload', () => {
             internalTempCelsius: 12.3,
             internalHumidity: 60.9,
             batteryPercent: 100,
-            batteryCharge: 4.0
+            batteryCharge: 4.0,
+            timeToSendMs: 7000,
+            detectedLowBattery: true,
+            detectedForcedReset: false
         });
     });
 
