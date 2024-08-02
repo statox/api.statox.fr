@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { db } from '../databases/db';
 import { RowDataPacket } from 'mysql2/promise';
+import { slog } from '../modules/logging';
 
 /*
  * IOT API Key authentication middleware.
@@ -72,23 +73,35 @@ export class UnkownApiKeyError extends ApiKeyError {
     }
 }
 
+const livemode = false;
 export const validateAPIKeyHeader = async (req: Request, _res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
+    let error;
     if (!authHeader) {
-        return next(new MissingApiKeyError());
+        error = new MissingApiKeyError();
+    } else {
+        const [scheme, token] = authHeader.split(' ');
+
+        if (scheme !== 'Bearer') {
+            error = new InvalidAuthHeaderError();
+        }
+
+        const apiKey = await getAPIKey();
+        if (token !== apiKey) {
+            error = new UnkownApiKeyError();
+        }
     }
 
-    const [scheme, token] = authHeader.split(' ');
-
-    if (scheme !== 'Bearer') {
-        return next(new InvalidAuthHeaderError());
+    if (error) {
+        slog.log('auth', 'authIOT rejected', { livemode, error });
     }
 
-    const apiKey = await getAPIKey();
-    if (token !== apiKey) {
-        return next(new UnkownApiKeyError());
+    // Waiting for the client side implementation we just log the result
+    // but we allow all the calls
+    if (!livemode) {
+        return next();
     }
 
-    return next();
+    return next(error);
 };

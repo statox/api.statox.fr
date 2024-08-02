@@ -109,5 +109,5 @@ export const route: PostRoute = {
     path: '/homeTracker/upload',
     inputSchema,
     handler,
-    authentication: 'none'
+    authentication: 'apikey-iot'
 };

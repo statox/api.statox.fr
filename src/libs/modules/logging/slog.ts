@@ -34,6 +34,7 @@ type LoggableProperties = {
     internalHumidity?: number;
     internalTempCelsius?: number;
     linkId?: string;
+    livemode?: boolean;
     meanWindDirectionDegrees?: number;
     meanWindSpeedMS?: number;
     nbChords?: number;
@@ -71,6 +72,7 @@ export type LogObject = { component: AppLogComponent; message: string } | Loggab
 
 export type AppLogComponent =
     | 'app'
+    | 'auth'
     | 'chords'
     | 'env-helpers'
     | 'home-tracker'
