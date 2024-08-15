@@ -6,7 +6,9 @@ export interface SensorRawData {
     batteryCharge?: number;
     batteryPercent?: number;
     detectedForcedReset?: boolean;
+    detectedInternalSensorFailure?: boolean;
     detectedLowBattery?: boolean;
+    detectedSensorFailure?: boolean;
     humidity?: number;
     internalHumidity?: number;
     internalTempCelsius?: number;
@@ -21,13 +23,21 @@ export interface SensorLogData {
     batteryCharge?: number;
     batteryPercent?: number;
     detectedForcedReset?: boolean;
+    detectedInternalSensorFailure?: boolean;
     detectedLowBattery?: boolean;
+    detectedSensorFailure?: boolean;
     humidity?: number;
     internalHumidity?: number;
     internalTempCelsius?: number;
     pressurehPa?: number;
     tempCelsius?: number;
     timeToSendMs?: number;
+}
+
+export interface SensorErrorData {
+    sensorName: string;
+    invalidField: string;
+    invalidValueStr: string;
 }
 
 export const sensorRawDataInputSchema: AllowedSchema = {
@@ -77,6 +87,16 @@ export const sensorRawDataInputSchema: AllowedSchema = {
         },
         detectedForcedReset: {
             description: 'True if board detected it restarted after an interrupt forced a restart',
+            type: 'boolean'
+        },
+        detectedInternalSensorFailure: {
+            description:
+                'True if board detected it could not succcessfully read from the internal sensor',
+            type: 'boolean'
+        },
+        detectedSensorFailure: {
+            description:
+                'True if board detected it could not succcessfully read from the main sensor',
             type: 'boolean'
         }
     }

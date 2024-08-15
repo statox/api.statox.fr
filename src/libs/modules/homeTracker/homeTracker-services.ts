@@ -6,7 +6,9 @@ export const ingestSensorData = (sensorRawData: SensorRawData) => {
         batteryCharge,
         batteryPercent,
         detectedForcedReset,
+        detectedInternalSensorFailure,
         detectedLowBattery,
+        detectedSensorFailure,
         humidity,
         internalHumidity,
         internalTempCelsius,
@@ -139,6 +141,12 @@ export const ingestSensorData = (sensorRawData: SensorRawData) => {
     }
     if (detectedForcedReset !== undefined) {
         loggedData.detectedForcedReset = detectedForcedReset;
+    }
+    if (detectedSensorFailure !== undefined) {
+        loggedData.detectedSensorFailure = detectedSensorFailure;
+    }
+    if (detectedInternalSensorFailure !== undefined) {
+        loggedData.detectedInternalSensorFailure = detectedInternalSensorFailure;
     }
 
     slog.log('home-tracker', 'Home tracking event', loggedData);

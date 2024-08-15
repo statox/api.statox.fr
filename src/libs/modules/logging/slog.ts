@@ -1,4 +1,5 @@
 import { isDebug, isProd, isTests } from '../../config/env';
+import { SensorErrorData, SensorLogData } from '../homeTracker';
 import { logToELK } from './elk';
 
 type CloudflareGeoInfo = {
@@ -16,59 +17,51 @@ type xRequestInfo = {
     'x-request-start'?: number;
 };
 
-type LoggableProperties = {
-    batteryCharge?: number;
-    batteryPercent?: number;
-    bucket?: string;
-    cfGeoInfo?: CloudflareGeoInfo;
-    cfRay?: string;
-    code?: number;
-    detectedForcedReset?: boolean;
-    detectedLowBattery?: boolean;
-    entryName?: string;
-    error?: Error;
-    executionTimeMs?: number;
-    failedCalls?: number;
-    humidity?: number;
-    insertTime?: string;
-    internalHumidity?: number;
-    internalTempCelsius?: number;
-    invalidField?: string;
-    invalidValueStr?: string;
-    linkId?: string;
-    livemode?: boolean;
-    meanWindDirectionDegrees?: number;
-    meanWindSpeedMS?: number;
-    nbChords?: number;
-    notification?: string;
-    originalError?: Error;
-    originalMessage?: string;
-    path?: string;
-    port?: number;
-    precipitationMM?: number;
-    pressureSeaLevelPa?: number;
-    pressurehPa?: number;
-    previousStatus?: string;
-    previousTimestamp?: number;
-    referenceTime?: string;
-    remoteIp?: string;
-    requestId?: string;
-    requestInterrupted?: boolean;
-    s3Key?: string;
-    sensorName?: string;
-    shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
-    station?: string;
-    stationId?: string;
-    stationName?: string;
-    status?: string;
-    tempCelsius?: number;
-    timestamp?: number;
-    timeToSendMs?: number;
-    validityTime?: string;
-    visitedUrl?: string;
-    watcherName?: string;
-    xRequestInfo?: xRequestInfo;
-};
+type LoggableProperties =
+    | {
+          bucket?: string;
+          cfGeoInfo?: CloudflareGeoInfo;
+          cfRay?: string;
+          code?: number;
+          entryName?: string;
+          error?: Error;
+          executionTimeMs?: number;
+          failedCalls?: number;
+          insertTime?: string;
+          invalidField?: string;
+          invalidValueStr?: string;
+          linkId?: string;
+          livemode?: boolean;
+          meanWindDirectionDegrees?: number;
+          meanWindSpeedMS?: number;
+          nbChords?: number;
+          notification?: string;
+          originalError?: Error;
+          originalMessage?: string;
+          path?: string;
+          port?: number;
+          precipitationMM?: number;
+          pressureSeaLevelPa?: number;
+          previousStatus?: string;
+          previousTimestamp?: number;
+          referenceTime?: string;
+          remoteIp?: string;
+          requestId?: string;
+          requestInterrupted?: boolean;
+          s3Key?: string;
+          shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
+          station?: string;
+          stationId?: string;
+          stationName?: string;
+          status?: string;
+          timestamp?: number;
+          validityTime?: string;
+          visitedUrl?: string;
+          watcherName?: string;
+          xRequestInfo?: xRequestInfo;
+      }
+    | SensorLogData
+    | SensorErrorData;
 
 export type LogObject = { component: AppLogComponent; message: string } | LoggableProperties;
 
@@ -97,6 +90,5 @@ export const log = (component: AppLogComponent, message: string, data?: LogObjec
         console.log(component, message, data || '');
         return;
     }
-
     logToELK({ component, message, ...data });
 };
