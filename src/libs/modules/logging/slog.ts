@@ -33,6 +33,8 @@ type LoggableProperties = {
     insertTime?: string;
     internalHumidity?: number;
     internalTempCelsius?: number;
+    invalidField?: string;
+    invalidValueStr?: string;
     linkId?: string;
     livemode?: boolean;
     meanWindDirectionDegrees?: number;

@@ -38,7 +38,7 @@ describe('homeTracker/upload', () => {
         });
     });
 
-    it('should reject incoherent values', async () => {
+    it('should add log for incorrect value but still log what is correct', async () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
@@ -49,16 +49,18 @@ describe('homeTracker/upload', () => {
                 batteryPercent: 100,
                 batteryCharge: 4.0
             })
-            .expect(400);
+            .expect(200);
 
-        slogCheckLog('app', 'Caught error', {
-            error: sinon.match((error) => {
-                const bodyError = error?.validationErrors?.body[0];
-                const isCorrectArg = bodyError?.instancePath === '/humidity';
-                const isCorrectMessage = bodyError?.message === 'must be <= 100';
-
-                return isCorrectArg && isCorrectMessage;
-            })
+        slogCheckLog('home-tracker', 'Home tracking event', {
+            sensorName: 'foo',
+            tempCelsius: 23.5,
+            batteryPercent: 100,
+            batteryCharge: 4.0
+        });
+        slogCheckLog('home-tracker', 'data error', {
+            sensorName: 'foo',
+            invalidField: 'humidity',
+            invalidValueStr: '200'
         });
     });
 });
