@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 
 COMPOSE_FILE='src/tools/docker-compose.yml'
-COMPOSE=''
-
-if command -v podman-compose &>/dev/null; then
-    COMPOSE='podman-compose'
-elif command -v docker-compose &>/dev/null; then
-    COMPOSE='docker-compose'
-else
-    echo "Neither podman-compose nor docker-compose were found on this system" >&2
-    exit 1
-fi
 
 CMD=''
 case "$1" in
@@ -26,4 +16,11 @@ case "$1" in
         ;;
 esac
 
-"$COMPOSE" -f "$COMPOSE_FILE" ${CMD}
+if command -v podman-compose &>/dev/null; then
+    podman-compose -f "${COMPOSE_FILE}" ${CMD}
+elif command -v docker &>/dev/null; then
+    docker compose -f "${COMPOSE_FILE}" ${CMD}
+else
+    echo "Neither podman-compose nor docker were found on this system" >&2
+    exit 1
+fi
