@@ -1,6 +1,7 @@
 import { IncomingWebhook } from '@slack/webhook';
 import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../../config/slack';
 import { slog } from '../logging';
+import { isProd, isTests } from '../../config/env';
 
 const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
@@ -14,6 +15,10 @@ export const notifySlack = async (params: {
 
         if (!message && !error) {
             throw new Error('Slack notification without message or error to notify');
+        }
+
+        if (!isTests && !isProd) {
+            console.log('SLACK NOTIFICATION', { directMention, message, error });
         }
 
         const blocks = [];
