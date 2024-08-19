@@ -156,6 +156,18 @@ export const ingestSensorData = (sensorRawData: SensorRawData) => {
 
 const missingSensorLogs_alertedSensors = new Set();
 export const doHomeTrackerMonitoring = async () => {
+    try {
+        _doHomeTrackerMonitoring();
+    } catch (error) {
+        slog.log('periodic-tasks', 'error in doHomeTrackerMonitoring', { error: error as Error });
+        notifySlack({
+            message: 'error in doHomeTrackerMonitoring',
+            error: error as Error
+        });
+    }
+};
+
+export const _doHomeTrackerMonitoring = async () => {
     const monitoredSensorNames = ['salon', 'jardiniere'];
 
     for (const sensorName of monitoredSensorNames) {
