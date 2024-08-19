@@ -159,7 +159,6 @@ export const doHomeTrackerMonitoring = async () => {
     const monitoredSensorNames = ['salon', 'jardiniere'];
 
     for (const sensorName of monitoredSensorNames) {
-        console.log('Check', sensorName);
         const result = await elk.search<{ sensorName: string }>({
             index: 'logs-home-tracker-default',
             query: {
