@@ -54,6 +54,7 @@ type LoggableProperties =
           stationId?: string;
           stationName?: string;
           status?: string;
+          taskName?: string;
           timestamp?: number;
           validityTime?: string;
           visitedUrl?: string;

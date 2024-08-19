@@ -10,12 +10,6 @@ const previousTimestamps: { [stationId: string]: number } = {};
 const handleStationObservation = async (station: Station) => {
     const previousTimestamp = previousTimestamps[station.id] || 0;
 
-    slog.log('meteo-france', 'Attempting to get an observation', {
-        previousTimestamp,
-        stationId: station.id,
-        stationName: station.nom
-    });
-
     const lastObs = await getLatestObservationForHourlyStation(station.id);
 
     if (!lastObs) {
@@ -55,7 +49,6 @@ const handleStationObservation = async (station: Station) => {
 
     previousTimestamps[station.id] = transformedObservation.observationTimestamp;
     slog.log('meteo-france', 'Got result', { ...transformedObservation });
-    slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };
 
 // exported for tests
@@ -84,9 +77,7 @@ export const doSingleStationCheck = async (station: Station) => {
 };
 
 export const doMeteoFrance = async () => {
-    slog.log('meteo-france', 'Start doMeteoFrance');
     for (const station of getStations()) {
         await doSingleStationCheck(station);
     }
-    slog.log('meteo-france', 'Done doMeteoFrance');
 };
