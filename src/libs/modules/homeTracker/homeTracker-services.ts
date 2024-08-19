@@ -157,7 +157,7 @@ export const ingestSensorData = (sensorRawData: SensorRawData) => {
 const missingSensorLogs_alertedSensors = new Set();
 export const doHomeTrackerMonitoring = async () => {
     try {
-        _doHomeTrackerMonitoring();
+        await _doHomeTrackerMonitoring();
     } catch (error) {
         slog.log('periodic-tasks', 'error in doHomeTrackerMonitoring', { error: error as Error });
         notifySlack({
@@ -203,7 +203,7 @@ export const _doHomeTrackerMonitoring = async () => {
 
         if (nbLogs < 2) {
             if (!missingSensorLogs_alertedSensors.has(sensorName)) {
-                notifySlack({
+                await notifySlack({
                     message: 'Missing home tracker data for sensor ' + sensorName,
                     directMention: true
                 });
