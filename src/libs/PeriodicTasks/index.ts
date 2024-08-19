@@ -1,10 +1,10 @@
 import { slog } from '../modules/logging';
-// import { doHomeTrackerMonitoring } from '../modules/homeTracker';
+import { doHomeTrackerMonitoring } from '../modules/homeTracker';
 import { doMeteoFrance } from '../modules/meteofrance';
 import { doWebWatcher } from '../modules/webWatcher';
 
 const minutes15 = 1000 * 60 * 15;
-// const minutes20 = 1000 * 60 * 15;
+const minutes20 = 1000 * 60 * 15;
 const hours1 = 1000 * 3600;
 
 export const startPeriodicTasks = () => {
@@ -17,8 +17,8 @@ export const startPeriodicTasks = () => {
     doMeteoFrance();
     setInterval(doMeteoFrance, minutes15);
 
-    // doHomeTrackerMonitoring();
-    // setInterval(doHomeTrackerMonitoring, minutes20);
+    doHomeTrackerMonitoring();
+    setInterval(doHomeTrackerMonitoring, minutes20);
 };
 
 const logHealth = async () => {
