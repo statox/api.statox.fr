@@ -10,18 +10,7 @@ import { isProd, isTests } from '../config/env';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';
-import { ConfigError } from '../config/errors';
-import { slog } from '../modules/logging';
-
-const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
-const R2_SECRET_KEY = isProd ? process.env.R2_SECRET_KEY : 'test';
-const R2_ENDPOINT = isProd ? process.env.R2_ENDPOINT : 'http://127.0.0.1:4566';
-
-if (!R2_ENDPOINT || !R2_SECRET_KEY || !R2_ACCESS_KEY_ID) {
-    const configError = new ConfigError('R2');
-    slog.log('env-helpers', 'Cant start app', { error: configError });
-    throw configError;
-}
+import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../config/s3';
 
 export let s3Mock: AwsClientStub<S3Client>;
 if (isTests) {
@@ -31,10 +20,10 @@ if (isTests) {
 
 export const S3 = new S3Client({
     region: isProd ? 'auto' : 'eu-west-1',
-    endpoint: R2_ENDPOINT,
+    endpoint: R2_ENDPOINT!,
     credentials: {
-        accessKeyId: R2_ACCESS_KEY_ID,
-        secretAccessKey: R2_SECRET_KEY
+        accessKeyId: R2_ACCESS_KEY_ID!,
+        secretAccessKey: R2_SECRET_KEY!
     }
 });
 
