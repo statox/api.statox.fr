@@ -3,7 +3,6 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
     plugins: ['@typescript-eslint'],
-    ignorePatterns: ['*.cjs'],
     parserOptions: {
         sourceType: 'module',
         ecmaVersion: 2020
@@ -11,5 +10,9 @@ module.exports = {
     env: {
         es2017: true,
         node: true
+    },
+    rules: {
+        // Don't check if the error of try...catch blocks are used
+        '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }]
     }
 };
