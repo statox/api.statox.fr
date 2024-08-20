@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import mustacheExpress from 'mustache-express';
+import { Socket } from 'net';
 import { Server } from 'http';
 import { Validator } from 'express-json-validator-middleware';
 import { checkRequiredPermissions, validateAccessToken } from './libs/middleware/auth0.middleware';
@@ -85,8 +86,8 @@ const configureServerTimeout = (server: Server) => {
 
     // timeout: limit the inactivity period (no data sent or received) on an established socket connection
     server.timeout = 10000; // (default 0 - no limit)
-    // @ts-expect-error: The setTimeout() callback seems badly typed as the socket argument is actually passed
-    server.setTimeout(10000, (socket: Socket) => {
+
+    server.on('timeout', (socket: Socket) => {
         slog.log('app', 'A request timedout');
         socket.destroy();
     });
