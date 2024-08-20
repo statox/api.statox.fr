@@ -1,32 +1,12 @@
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
-import { isProd, isTests } from '../config/env';
 import { slog } from '../modules/logging';
-import { ConfigError } from '../config/errors';
-
-const PROD_URL = process.env.JAWSDB_URL!;
-const DEV_URL = 'mysql://root:example@127.0.0.1:23306/db';
-const TESTS_URL = 'mysql://root:example@127.0.0.1:23306/tests';
-
-let dbUrl: string;
-if (isProd) {
-    dbUrl = PROD_URL;
-} else if (isTests) {
-    dbUrl = TESTS_URL;
-} else {
-    dbUrl = DEV_URL;
-}
-
-if (!dbUrl) {
-    const configError = new ConfigError('db');
-    slog.log('env-helpers', 'Cant start app', { error: configError });
-    throw configError;
-}
+import { MYSQL_CONNECTION_URL } from '../config/db';
 
 export let db: Pool;
 export const initDb = async () => {
     slog.log('app', 'init db');
-    const parsedUrl = url.parse(dbUrl);
+    const parsedUrl = url.parse(MYSQL_CONNECTION_URL);
 
     if (!parsedUrl) {
         throw new Error('Couldnt parse DB url');
