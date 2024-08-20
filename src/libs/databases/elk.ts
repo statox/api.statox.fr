@@ -7,6 +7,7 @@ export let elk: Client;
 export let elkMock: Mock;
 
 if (isTests) {
+    console.log('mocking elk');
     elkMock = new Mock();
     elk = new Client({
         node: 'http://localhost:9200',
