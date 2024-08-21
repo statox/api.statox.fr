@@ -1,9 +1,12 @@
 {
-    "spec": ["dist/tests/routes/**/*.test.js", "dist/tests/periodicTasks/**/*.test.js"],
+    "spec": [
+        "dist/tests/routes/**/*.test.js",
+        "dist/tests/periodicTasks/**/*.test.js"
+    ],
     "require": "dist/tests/helpers/mocha/routesMochaWrapper.js",
     "exit": true,
     "timeout": 5000,
-    "parallel": true,
+    "parallel": false,
     "jobs": 1,
     "slow": 2
 }

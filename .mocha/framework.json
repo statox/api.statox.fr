@@ -3,6 +3,6 @@
     "require": "dist/tests/helpers/mocha/frameworkMochaWrapper.js",
     "exit": true,
     "timeout": 5000,
-    "parallel": true,
+    "parallel": false,
     "jobs": 1
 }
