@@ -48,7 +48,7 @@ const handleStationObservation = async (station: Station) => {
     }
 
     previousTimestamps[station.id] = transformedObservation.observationTimestamp;
-    slog.log('meteo-france', 'Got result', { ...transformedObservation });
+    slog.log('meteo-france', 'New observation', { ...transformedObservation });
 };
 
 // exported for tests

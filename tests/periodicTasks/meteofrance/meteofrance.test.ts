@@ -54,7 +54,7 @@ describe('periodic task - meteofrance', () => {
 
         slogCheckLog('meteo-france', 'Failed call', { failedCalls: 0 });
         slogCheckLog('meteo-france', 'Failed call', { failedCalls: 1 });
-        slogCheckLog('meteo-france', 'Got result', {
+        slogCheckLog('meteo-france', 'New observation', {
             referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
             validityTime: '2024-06-09T14:10:06Z',
@@ -68,7 +68,7 @@ describe('periodic task - meteofrance', () => {
     it('should get an observation and log it but not repeat the log if the timestamp doesnt change on second call', async () => {
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
 
-        slogCheckLog('meteo-france', 'Got result', {
+        slogCheckLog('meteo-france', 'New observation', {
             referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
             validityTime: '2024-06-09T14:10:06Z',
@@ -84,7 +84,7 @@ describe('periodic task - meteofrance', () => {
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
-        slogCheckLog('meteo-france', 'Got result', {
+        slogCheckLog('meteo-france', 'New observation', {
             validityTime: '2024-06-09T16:10:06Z',
             station: 'LONGCHAMP',
             observationTimestamp: 1717949406000,
