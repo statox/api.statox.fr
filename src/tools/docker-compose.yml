@@ -16,6 +16,9 @@ services:
             MYSQL_ROOT_HOST: '%'
         ports:
             - '127.0.0.1:23306:3306'
+        # Store the data in memory and not on disk (drastically improves tests run time)
+        tmpfs:
+            - /var/lib/mysql:rw
 
     localstack:
         container_name: apistatox.localstack

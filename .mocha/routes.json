@@ -4,5 +4,6 @@
     "exit": true,
     "timeout": 5000,
     "parallel": true,
-    "jobs": 1
+    "jobs": 1,
+    "slow": 2
 }
