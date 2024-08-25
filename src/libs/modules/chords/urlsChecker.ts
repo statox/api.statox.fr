@@ -10,19 +10,19 @@ const checkChordUrl = async (chord: Chord) => {
         return { status: 'skipped' };
     }
 
-    return fetch(chord.url)
-        .then((response) => {
-            if (response.status !== 200) {
-                return { status: response.status.toString(), chord };
-            }
-            return { status: 'ok' };
-        })
-        .catch((error) => {
-            return { status: 'error', chord, error };
-        });
+    try {
+        const response = await fetch(chord.url);
+        if (response.status !== 200) {
+            return { status: response.status.toString(), chord };
+        }
+        return { status: 'ok' };
+    } catch (error) {
+        return { status: 'error', chord, error };
+    }
 };
 
 const getFailingUrls = async (chords: Chord[]) => {
+    // TODO limit calls in parallel like I'd do with async.eachLimit()
     return Promise.all(chords.map((c) => checkChordUrl(c))).then((result) => {
         const nbChecks = result.length;
         const nbSkipped = result.filter((r) => r.status === 'skipped').length;
