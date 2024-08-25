@@ -21,7 +21,7 @@ export const errorHandler = async (
     response: Response,
     next: NextFunction
 ) => {
-    slog.log('app', 'Caught error', { error });
+    slog.log('middleware', 'Caught error', { error });
     notifySlack({ error, directMention: true });
 
     if (

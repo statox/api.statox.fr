@@ -73,6 +73,7 @@ export type AppLogComponent =
     | 'env-helpers'
     | 'home-tracker'
     | 'meteo-france'
+    | 'middleware'
     | 'notifier'
     | 'periodic-tasks'
     | 'reactor'
