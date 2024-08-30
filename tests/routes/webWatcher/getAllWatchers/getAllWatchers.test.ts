@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { assert } from 'chai';
-import { app } from '../../../../src/app';
 import { WatchedContent } from '../../../../src/libs/modules/webWatcher';
+import { app } from '../../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../../helpers';
 
 describe('webWatcher/getAllWatchers', () => {

@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { assert } from 'chai';
 import { app } from '../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../helpers';
 
 describe('reactor/addEntry', () => {

@@ -1,7 +1,7 @@
+import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config';
+import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector';
 import sinon from 'sinon';
 import { doSingleStationCheck } from '../../../src/libs/modules/meteofrance';
-import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector';
-import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config';
 import { th } from '../../helpers';
 
 describe('periodic task - meteofrance', () => {

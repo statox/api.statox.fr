@@ -1,7 +1,7 @@
-import sinon from 'sinon';
 import request from 'supertest';
-import { app } from '../../src/app';
+import sinon from 'sinon';
 import { ValidationError } from 'express-json-validator-middleware';
+import { app } from '../../src/app';
 import { th } from '../helpers';
 
 describe('JSON schema validation middleware', () => {

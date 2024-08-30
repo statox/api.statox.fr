@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import { app } from '../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../helpers';
 
 describe('clipboard/view', () => {
@@ -111,7 +111,7 @@ describe('clipboard/view', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                expect(response.text).to.match(expectedRE);
+                assert.match(response.text, expectedRE);
             });
     });
 });

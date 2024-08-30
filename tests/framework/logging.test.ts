@@ -1,5 +1,5 @@
-import sinon from 'sinon';
 import request from 'supertest';
+import sinon from 'sinon';
 import { app } from '../../src/app';
 import { th } from '../helpers';
 

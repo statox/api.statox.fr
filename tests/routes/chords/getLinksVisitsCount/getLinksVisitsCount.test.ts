@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import { app } from '../../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../../helpers';
 
 describe('chords/getLinksVisitsCount', () => {
@@ -32,7 +32,7 @@ describe('chords/getLinksVisitsCount', () => {
             .expect(200)
             .then((response) => {
                 const sortedData = data.sort((a, b) => b.count - a.count);
-                expect(response.body).to.have.deep.ordered.members(sortedData);
+                assert.deepEqual(response.body, sortedData);
             });
     });
 });

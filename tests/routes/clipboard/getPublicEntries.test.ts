@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { assert, expect } from 'chai';
 import { app } from '../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../helpers';
 
 describe('clipboard/getPublicEntries', () => {
@@ -34,7 +34,7 @@ describe('clipboard/getPublicEntries', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                expect(response.body).to.have.same.deep.members([publicEntry]);
+                assert.deepEqual(response.body, [publicEntry]);
             });
     });
 
@@ -100,7 +100,7 @@ describe('clipboard/getPublicEntries', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                expect(response.body).to.have.same.deep.members([ttlOk]);
+                assert.deepEqual(response.body, [ttlOk]);
             });
     });
 });

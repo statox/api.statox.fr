@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import { app } from '../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../helpers';
 
 describe('clipboard/addEntry', () => {
@@ -14,7 +14,7 @@ describe('clipboard/addEntry', () => {
                 .send({ name: 'A cool entry' })
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('{"message":"FILE_OR_CONTENT_REQUIRED"}');
+                    assert.equal(response.text, '{"message":"FILE_OR_CONTENT_REQUIRED"}');
                 });
         });
 
@@ -41,7 +41,7 @@ describe('clipboard/addEntry', () => {
                 })
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
+                    assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
             await th.mysql.checkContains({
@@ -81,7 +81,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(400)
                 .then((response) => {
-                    expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
+                    assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
             await th.mysql.checkContains({

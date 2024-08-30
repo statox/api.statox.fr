@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { assert, expect } from 'chai';
 import { app } from '../../../src/app';
+import { assert } from 'chai';
 import { th } from '../../helpers';
 
 describe('clipboard/getAllEntries', () => {
@@ -141,12 +141,8 @@ describe('clipboard/getAllEntries', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {
-                expect(response.body).to.be.length(5);
-                expect(response.body).to.include.deep.members([
-                    publicEntry,
-                    privateEntry,
-                    expiredTTL
-                ]);
+                assert.lengthOf(response.body, 5);
+                assert.includeDeepMembers(response.body, [publicEntry, privateEntry, expiredTTL]);
 
                 const publicEntryWithS3Response = response.body.find(
                     (e: { id: number }) => e.id === 4
