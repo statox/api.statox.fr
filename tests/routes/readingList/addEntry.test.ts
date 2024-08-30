@@ -2,7 +2,7 @@ import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../src/app';
 import { aroundNowSec, mysqlCheckContains } from '../../helpers/mysql';
-import { testHelper_S3 } from '../../helpers/s3';
+import { th } from '../../helpers';
 
 describe('readingList/addEntry', () => {
     // TODO Add other possible cases
@@ -17,8 +17,8 @@ describe('readingList/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        testHelper_S3.checkCall({ nbCalls: 1 });
-        testHelper_S3.checkCall({
+        th.s3.checkCall({ nbCalls: 1 });
+        th.s3.checkCall({
             commandType: 'PutObject',
             input: {
                 Bucket: 'reading-list',

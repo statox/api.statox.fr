@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { testHelper_ELK } from '../../../helpers/elk';
-import { testHelper_Slog } from '../../../helpers/slog';
+import { th } from '../../../helpers';
 
 describe('homeTracker/upload', () => {
     it('should log the sent value', async () => {
@@ -26,7 +25,7 @@ describe('homeTracker/upload', () => {
             })
             .expect(200);
 
-        testHelper_ELK.checkDocumentCreated('data-home-tracker', {
+        th.elk.checkDocumentCreated('data-home-tracker', {
             message: 'Home tracking event',
             sensorName: 'foo',
 
@@ -58,14 +57,14 @@ describe('homeTracker/upload', () => {
             })
             .expect(200);
 
-        testHelper_ELK.checkDocumentCreated('data-home-tracker', {
+        th.elk.checkDocumentCreated('data-home-tracker', {
             message: 'Home tracking event',
             sensorName: 'foo',
             tempCelsius: 23.5,
             batteryPercent: 100,
             batteryCharge: 4.0
         });
-        testHelper_Slog.checkLog('home-tracker', 'data error', {
+        th.slog.checkLog('home-tracker', 'data error', {
             sensorName: 'foo',
             invalidField: 'humidity',
             invalidValueStr: '200'

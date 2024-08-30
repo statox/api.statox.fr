@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../src/app';
 import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
-import { testHelper_Slog } from '../helpers/slog';
+import { th } from '../helpers';
 
 describe('authentication middlewares', () => {
     describe('auth none', () => {
@@ -23,7 +23,7 @@ describe('authentication middlewares', () => {
         it('should reject missing Authorization header', async () => {
             // await request(app).get('/apiiotAuthenticatedGetRoute').expect(401);
             await request(app).get('/apiiotAuthenticatedGetRoute').expect(200);
-            testHelper_Slog.checkLog('auth', 'authIOT rejected', {
+            th.slog.checkLog('auth', 'authIOT rejected', {
                 livemode: false,
                 error: {
                     statusCode: 401,
@@ -43,7 +43,7 @@ describe('authentication middlewares', () => {
                 .get('/apiiotAuthenticatedGetRoute')
                 .set('Authorization', 'InvalidScheme foobar')
                 .expect(200);
-            testHelper_Slog.checkLog('auth', 'authIOT rejected', {
+            th.slog.checkLog('auth', 'authIOT rejected', {
                 livemode: false,
                 error: {
                     statusCode: 403,

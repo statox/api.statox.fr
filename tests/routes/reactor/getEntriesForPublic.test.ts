@@ -2,7 +2,7 @@ import request from 'supertest';
 import { assert } from 'chai';
 import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
-import { testHelper_Slog } from '../../helpers/slog';
+import { th } from '../../helpers';
 
 describe('reactor/getEntriesForPublic', () => {
     it('should retrieve all entries and format the tags and s3key properly', async () => {
@@ -111,7 +111,7 @@ describe('reactor/getEntriesForPublic', () => {
                 }
             });
 
-        testHelper_Slog.checkLog('reactor', 'error while enriching entry', {
+        th.slog.checkLog('reactor', 'error while enriching entry', {
             entryName: 'entry 2'
         });
     });

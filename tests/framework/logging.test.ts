@@ -1,12 +1,12 @@
 import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../src/app';
-import { testHelper_Slog } from '../helpers/slog';
+import { th } from '../helpers';
 
 describe('logging middleware', () => {
     it('should emit an access-log when the request finishes', async () => {
         await request(app).get('/getRoute');
-        testHelper_Slog.checkLog('app', 'access-log', {
+        th.slog.checkLog('app', 'access-log', {
             path: '/getRoute',
             code: 200,
             remoteIp: '::ffff:127.0.0.1',
@@ -16,7 +16,7 @@ describe('logging middleware', () => {
         });
 
         await request(app).get('/pouet');
-        testHelper_Slog.checkLog('app', 'access-log', {
+        th.slog.checkLog('app', 'access-log', {
             path: '/pouet',
             code: 404,
             executionTimeMs: sinon.match((val) => val < 5)

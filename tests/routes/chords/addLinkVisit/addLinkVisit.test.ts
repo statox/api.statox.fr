@@ -3,7 +3,7 @@ import request from 'supertest';
 import { app } from '../../../../src/app';
 import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 import { assert } from 'chai';
-import { testHelper_Slog } from '../../../helpers/slog';
+import { th } from '../../../helpers';
 
 describe('chords/addLinkVisit', () => {
     it('should check input schema', async () => {
@@ -15,7 +15,7 @@ describe('chords/addLinkVisit', () => {
             })
             .expect(400);
 
-        testHelper_Slog.checkLog('middleware', 'Caught error', {
+        th.slog.checkLog('middleware', 'Caught error', {
             error: sinon.match((error) => {
                 const bodyError = error?.validationErrors?.body[0];
                 const isCorrectMessage = bodyError?.message === "must have required property 'url'";

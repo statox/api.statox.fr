@@ -1,5 +1,5 @@
 import { doHomeTrackerMonitoring, ingestSensorData } from '../../../src/libs/modules/homeTracker';
-import { testHelper_SlackNotifier } from '../../helpers/notifier/slack';
+import { th } from '../../helpers';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
     it('Should create a notification for missing sensor data, and should notify only once', async () => {
@@ -20,14 +20,14 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
 
         await doHomeTrackerMonitoring();
 
-        testHelper_SlackNotifier.checkNotification({
+        th.slack.checkNotification({
             message: 'Missing home tracker data for sensor jardiniere',
             directMention: true
         });
-        testHelper_SlackNotifier.checkNbNotifications(1);
+        th.slack.checkNbNotifications(1);
 
         // On second call we shouldn't create another notification for the failing sensor
         await doHomeTrackerMonitoring();
-        testHelper_SlackNotifier.checkNbNotifications(1);
+        th.slack.checkNbNotifications(1);
     });
 });
