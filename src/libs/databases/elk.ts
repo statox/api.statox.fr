@@ -1,6 +1,6 @@
 import { Client } from '@elastic/elasticsearch';
 import { ELK_API_ENDPOINT, ELK_API_KEY } from '../config/elk';
-import { isProd, isTests } from '../config/env';
+import { isProd } from '../config/env';
 
 export let elk: Client;
 
@@ -87,72 +87,12 @@ const createDataStream = async () => {
     await elk.indices.createDataStream({ name: 'data-home-tracker' });
 };
 
-/*
- * const createLog = async () => {
- *     console.log('Creating log');
- *     const indexedDoc = await elk.index({
- *         index: 'data-home-tracker',
- *         document: {
- *             '@timestamp': new Date().toISOString(),
- *             document: {
- *                 message: 'Event while init ELK'
- *             }
- *         }
- *     });
- *     console.log('Created doc with id', indexedDoc._id);
- *
- *     console.log('Refresh index');
- *     await elk.indices.refresh({ index: 'data-home-tracker' });
- *
- *     console.log('Trying it get it immediately');
- *
- *     const singleLog = await elk.search({
- *         index: 'data-home-tracker',
- *         query: {
- *             term: {
- *                 _id: indexedDoc._id
- *             }
- *         }
- *     });
- *     console.log(JSON.stringify(singleLog));
- * };
- */
-
-/*
- * const getAllLogs = async () => {
- *     console.log('Trying to get all logs:');
- *     const allLogs = await elk.search({
- *         index: 'data-home-tracker',
- *         query: {
- *             match_all: {}
- *         }
- *     });
- *     console.log(JSON.stringify(allLogs));
- * };
- */
-
 export const initELK = async () => {
+    if (isProd) {
+        console.log('dont init local ELK we are in prod');
+        return;
+    }
+
     await deleteExistingDataStream();
     await createDataStream();
-
-    // const indexTemplate = await elk.indices.getIndexTemplate({ name: 'data-home-tracker' });
-    // console.log('index template:');
-    // console.log(JSON.stringify(indexTemplate, null, 2));
-
-    // const index = await elk.indices.get({ index: 'data-home-tracker' });
-    // console.log('index');
-    // console.log(JSON.stringify(index, null, 2));
-
-    // await createLog();
-
-    // await getAllLogs();
-    // console.log('Waiting for 5 seconds');
-    // await setTimeout(5000);
-    // await getAllLogs();
 };
-
-if (!isProd && !isTests) {
-    // On prod we don't want to delete/recreate the existing data stream that would cause data loss
-    // in tests we have the mocha wrapper calling initELK() when needed
-    initELK();
-}

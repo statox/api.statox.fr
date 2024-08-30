@@ -1,5 +1,6 @@
 import { initApp } from './src/app';
 import { initDb } from './src/libs/databases/db';
+import { initELK } from './src/libs/databases/elk';
 import { initLocalStackS3 } from './src/libs/databases/s3';
 import { slog } from './src/libs/modules/logging';
 import { notifySlack } from './src/libs/modules/notifier/slack';
@@ -7,6 +8,7 @@ import { notifySlack } from './src/libs/modules/notifier/slack';
 const start = async () => {
     await initLocalStackS3();
     await initDb();
+    await initELK();
     initApp();
     slog.log('app', 'App started');
     notifySlack({ message: 'App started' });
