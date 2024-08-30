@@ -23,7 +23,7 @@ describe('chords/getLinksVisitsCount', () => {
             }
         ];
 
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             ChordFrequency: data
         });
 

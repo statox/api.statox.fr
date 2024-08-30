@@ -23,7 +23,7 @@ describe('readingList/getAllEntries', () => {
             s3Key: null,
             tags: '["tag1"]'
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             ReadingList: [entryFull, entryLinkOnly],
             S3Files: [
                 {

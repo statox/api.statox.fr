@@ -13,7 +13,7 @@ describe('r/:linkId', () => {
             linkId: 'aaaaaaaa',
             s3Key: 'foo'
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: [entry1],
             S3Files: [
                 {
@@ -37,7 +37,7 @@ describe('r/:linkId', () => {
     });
 
     it('should return an error for an unknown linkId', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: []
         });
 
@@ -59,7 +59,7 @@ describe('r/:linkId', () => {
             linkId: 'aaaaaaaa',
             s3Key: 'foo'
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: [entry1],
             S3Files: []
         });

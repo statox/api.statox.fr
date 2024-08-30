@@ -9,11 +9,11 @@ import { mysqlFixture } from './mysqlFixture';
 import { MysqlCheckData, MysqlFixture } from './types';
 
 class TestHelper_MySQL extends TestHelper {
-    mysqlCheckContains: (data: MysqlCheckData) => Promise<void>;
-    mysqlCheckDoesNotContain: (data: MysqlCheckData) => Promise<void>;
-    mysqlCheckTableLength: (tableName: string, expectedTableLength: number) => Promise<void>;
-    mysqlDumpTables: (tables: string[] | string) => Promise<void>;
-    mysqlFixture: (fixture: MysqlFixture) => Promise<void>;
+    checkContains: (data: MysqlCheckData) => Promise<void>;
+    checkDoesNotContain: (data: MysqlCheckData) => Promise<void>;
+    checkTableLength: (tableName: string, expectedTableLength: number) => Promise<void>;
+    dumpTables: (tables: string[] | string) => Promise<void>;
+    fixture: (fixture: MysqlFixture) => Promise<void>;
 
     constructor() {
         super({
@@ -23,11 +23,11 @@ class TestHelper_MySQL extends TestHelper {
             }
         });
 
-        this.mysqlCheckContains = mysqlCheckContains;
-        this.mysqlCheckDoesNotContain = mysqlCheckDoesNotContain;
-        this.mysqlCheckTableLength = mysqlCheckTableLength;
-        this.mysqlDumpTables = mysqlDumpTables;
-        this.mysqlFixture = mysqlFixture;
+        this.checkContains = mysqlCheckContains;
+        this.checkDoesNotContain = mysqlCheckDoesNotContain;
+        this.checkTableLength = mysqlCheckTableLength;
+        this.dumpTables = mysqlDumpTables;
+        this.fixture = mysqlFixture;
     }
 
     aroundNowSec = {

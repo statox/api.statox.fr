@@ -5,7 +5,7 @@ import { th } from '../../helpers';
 
 describe('reactor/addEntry', () => {
     it('should fail on duplicate entry', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: [
                 {
                     id: 1,
@@ -29,7 +29,7 @@ describe('reactor/addEntry', () => {
                 assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
             });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             Reactor: [
                 {
                     name: 'A cool entry',
@@ -62,7 +62,7 @@ describe('reactor/addEntry', () => {
             }
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             Reactor: [
                 {
                     name: 'entry name',
@@ -102,7 +102,7 @@ describe('reactor/addEntry', () => {
             }
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             Reactor: [
                 {
                     name: 'entry name',

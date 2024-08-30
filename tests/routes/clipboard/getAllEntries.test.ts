@@ -16,7 +16,7 @@ describe('clipboard/getAllEntries', () => {
                 isPublic: 1,
                 s3Key: 'foo'
             };
-            await th.mysql.mysqlFixture({
+            await th.mysql.fixture({
                 Clipboard: [publicEntryWithS3]
             });
 
@@ -40,7 +40,7 @@ describe('clipboard/getAllEntries', () => {
                 isPublic: 1,
                 s3Key: 'foo'
             };
-            await th.mysql.mysqlFixture({
+            await th.mysql.fixture({
                 Clipboard: [publicEntryWithS3],
                 S3Files: [
                     {
@@ -120,7 +120,7 @@ describe('clipboard/getAllEntries', () => {
             expiredTTL,
             privateEntryWithS3
         ];
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Clipboard: allEntries,
             S3Files: [
                 {

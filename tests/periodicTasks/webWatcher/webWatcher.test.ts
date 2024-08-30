@@ -17,7 +17,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should detect a change, notify and record the change - for CSS Watchers', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -59,7 +59,7 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -97,7 +97,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should detect a change, notify and record the change - for HASH Watchers', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Hash check 1',
@@ -139,7 +139,7 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -174,7 +174,7 @@ describe('periodic task - webWatcher', () => {
 
     it('should respect the check interval and not check too often', async () => {
         const oneHourAgo = Math.round(Date.now() / 1000) - 3600;
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -194,7 +194,7 @@ describe('periodic task - webWatcher', () => {
 
         th.slog.checkNoLogs();
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -216,7 +216,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should update last check time even when no changed happened in the page', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -239,7 +239,7 @@ describe('periodic task - webWatcher', () => {
             status: 'Example Page'
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -262,7 +262,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should update error date and message when failure happens', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -287,7 +287,7 @@ describe('periodic task - webWatcher', () => {
             })
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -313,7 +313,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should continue with other checks if one has an unsupported type in DB', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     name: 'Incorrect check',

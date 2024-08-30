@@ -5,7 +5,7 @@ import { th } from '../../../helpers';
 
 describe('webWatcher/deleteWatcher', () => {
     it('should delete a watcher', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: [
                 {
                     id: 1,
@@ -31,6 +31,6 @@ describe('webWatcher/deleteWatcher', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await th.mysql.mysqlCheckTableLength('WebWatcher', 0);
+        await th.mysql.checkTableLength('WebWatcher', 0);
     });
 });

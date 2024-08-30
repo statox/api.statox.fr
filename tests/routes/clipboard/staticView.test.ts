@@ -61,7 +61,7 @@ describe('clipboard/view', () => {
             linkId: 'f',
             isPublic: 1
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Clipboard: [
                 publicEntryNoKey,
                 publicEntryKey,

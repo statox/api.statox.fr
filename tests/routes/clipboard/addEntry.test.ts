@@ -19,7 +19,7 @@ describe('clipboard/addEntry', () => {
         });
 
         it('Query with duplicate entry (no file)', async () => {
-            await th.mysql.mysqlFixture({
+            await th.mysql.fixture({
                 Clipboard: [
                     {
                         id: 1,
@@ -44,7 +44,7 @@ describe('clipboard/addEntry', () => {
                     expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'A cool entry',
@@ -55,12 +55,12 @@ describe('clipboard/addEntry', () => {
             });
 
             th.s3.checkCall({ nbCalls: 0 });
-            await th.mysql.mysqlCheckTableLength('S3Files', 0);
+            await th.mysql.checkTableLength('S3Files', 0);
         });
 
         it('Query with duplicate entry (file) - should not call S3', async () => {
             const buffer = Buffer.from('some data');
-            await th.mysql.mysqlFixture({
+            await th.mysql.fixture({
                 Clipboard: [
                     {
                         id: 1,
@@ -84,7 +84,7 @@ describe('clipboard/addEntry', () => {
                     expect(response.text).to.equal('{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'A cool entry',
@@ -95,7 +95,7 @@ describe('clipboard/addEntry', () => {
             });
 
             th.s3.checkCall({ nbCalls: 0 });
-            await th.mysql.mysqlCheckTableLength('S3Files', 0);
+            await th.mysql.checkTableLength('S3Files', 0);
         });
     });
 
@@ -110,7 +110,7 @@ describe('clipboard/addEntry', () => {
                 })
                 .expect(200);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'A cool entry',
@@ -124,7 +124,7 @@ describe('clipboard/addEntry', () => {
             });
 
             th.s3.checkCall({ nbCalls: 0 });
-            await th.mysql.mysqlCheckTableLength('S3Files', 0);
+            await th.mysql.checkTableLength('S3Files', 0);
         });
 
         it('public entry - with custom ttl', async () => {
@@ -139,7 +139,7 @@ describe('clipboard/addEntry', () => {
                 })
                 .expect(200);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'A cool entry',
@@ -153,7 +153,7 @@ describe('clipboard/addEntry', () => {
             });
 
             th.s3.checkCall({ nbCalls: 0 });
-            await th.mysql.mysqlCheckTableLength('S3Files', 0);
+            await th.mysql.checkTableLength('S3Files', 0);
         });
 
         it('file entry - file is uploaded to S3', async () => {
@@ -174,9 +174,9 @@ describe('clipboard/addEntry', () => {
                     ContentType: 'application/octet-stream'
                 }
             });
-            await th.mysql.mysqlCheckTableLength('S3Files', 1);
+            await th.mysql.checkTableLength('S3Files', 1);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'entry name',
@@ -212,9 +212,9 @@ describe('clipboard/addEntry', () => {
                     ContentType: 'application/octet-stream'
                 }
             });
-            await th.mysql.mysqlCheckTableLength('S3Files', 1);
+            await th.mysql.checkTableLength('S3Files', 1);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'entry name',
@@ -247,9 +247,9 @@ describe('clipboard/addEntry', () => {
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/png' }
             });
-            await th.mysql.mysqlCheckTableLength('S3Files', 1);
+            await th.mysql.checkTableLength('S3Files', 1);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'image',
@@ -280,9 +280,9 @@ describe('clipboard/addEntry', () => {
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/gif' }
             });
-            await th.mysql.mysqlCheckTableLength('S3Files', 1);
+            await th.mysql.checkTableLength('S3Files', 1);
 
-            await th.mysql.mysqlCheckContains({
+            await th.mysql.checkContains({
                 Clipboard: [
                     {
                         name: 'animated_image',

@@ -4,7 +4,7 @@ import { th } from '../../helpers';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Clipboard: [
                 {
                     id: 1,
@@ -33,7 +33,7 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             Clipboard: [
                 {
                     name: 'entry 2'
@@ -41,7 +41,7 @@ describe('clipboard/deleteEntry', () => {
             ]
         });
 
-        await th.mysql.mysqlCheckDoesNotContain({
+        await th.mysql.checkDoesNotContain({
             Clipboard: [
                 {
                     name: 'entry 1'
@@ -53,7 +53,7 @@ describe('clipboard/deleteEntry', () => {
     });
 
     it('should delete associated S3 file if it exists', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Clipboard: [
                 {
                     id: 1,
@@ -88,14 +88,14 @@ describe('clipboard/deleteEntry', () => {
             input: { Bucket: 'clipboard', Key: 'foo.png' }
         });
 
-        await th.mysql.mysqlCheckDoesNotContain({
+        await th.mysql.checkDoesNotContain({
             Clipboard: [
                 {
                     name: 'entry 1'
                 }
             ]
         });
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             S3Files: [
                 {
                     s3Key: 'foo.png',

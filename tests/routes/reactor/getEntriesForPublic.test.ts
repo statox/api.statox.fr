@@ -21,7 +21,7 @@ describe('reactor/getEntriesForPublic', () => {
             linkId: 'bbbbbbbb',
             s3Key: 'bar'
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: [entry1, entry2],
             S3Files: [
                 {
@@ -82,7 +82,7 @@ describe('reactor/getEntriesForPublic', () => {
             linkId: 'bbbbbbbb',
             s3Key: 'bar'
         };
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             Reactor: [entry1, entry2],
             S3Files: [
                 {

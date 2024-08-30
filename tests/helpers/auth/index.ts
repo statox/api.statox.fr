@@ -35,7 +35,7 @@ const restoreFakeAuth = async () => {
 };
 
 const createApiKeys = async () => {
-    await th.mysql.mysqlFixture({
+    await th.mysql.fixture({
         ApiKeys: [
             {
                 id: 1,

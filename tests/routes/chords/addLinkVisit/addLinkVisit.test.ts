@@ -36,7 +36,7 @@ describe('chords/addLinkVisit', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
@@ -47,7 +47,7 @@ describe('chords/addLinkVisit', () => {
         });
     });
     it('should update existing entry', async () => {
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
@@ -73,7 +73,7 @@ describe('chords/addLinkVisit', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',

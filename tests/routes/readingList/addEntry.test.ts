@@ -25,7 +25,7 @@ describe('readingList/addEntry', () => {
             }
         });
 
-        await th.mysql.mysqlCheckContains({
+        await th.mysql.checkContains({
             ReadingList: [
                 {
                     creationDateUnix: th.mysql.aroundNowSec,

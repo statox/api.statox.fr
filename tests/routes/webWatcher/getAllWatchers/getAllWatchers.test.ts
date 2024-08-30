@@ -37,7 +37,7 @@ describe('webWatcher/getAllWatchers', () => {
             }
         ];
 
-        await th.mysql.mysqlFixture({
+        await th.mysql.fixture({
             WebWatcher: data
         });
 
