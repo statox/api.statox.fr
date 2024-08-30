@@ -1,12 +1,12 @@
 import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../../src/app';
-import { mysqlCheckContains, mysqlCheckTableLength, mysqlFixture } from '../../../helpers/mysql';
+import { th } from '../../../helpers';
 
 describe('webWatcher/createWatcher', () => {
     describe('should fail', () => {
         it('on duplicate entry', async () => {
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 WebWatcher: [
                     {
                         id: 1,
@@ -39,7 +39,7 @@ describe('webWatcher/createWatcher', () => {
                     assert.deepEqual(response.body, { message: 'ENTRY_ALREADY_EXISTS' });
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 1);
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 1);
         });
         it('on CSS check without css selector', async () => {
             await request(app)
@@ -61,7 +61,7 @@ describe('webWatcher/createWatcher', () => {
                     );
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 0);
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 0);
         });
         it('on HASH check with css selector', async () => {
             await request(app)
@@ -84,13 +84,13 @@ describe('webWatcher/createWatcher', () => {
                     );
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 0);
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 0);
         });
     });
 
     describe('should suceed', () => {
         it('creating a new CSS watcher', async () => {
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 WebWatcher: []
             });
 
@@ -110,8 +110,8 @@ describe('webWatcher/createWatcher', () => {
                     assert.deepEqual(response.body, {});
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 1);
-            await mysqlCheckContains({
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 1);
+            await th.mysql.mysqlCheckContains({
                 WebWatcher: [
                     {
                         id: 1,
@@ -130,7 +130,7 @@ describe('webWatcher/createWatcher', () => {
         });
 
         it('creating a new HASH watcher', async () => {
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 WebWatcher: []
             });
 
@@ -149,8 +149,8 @@ describe('webWatcher/createWatcher', () => {
                     assert.deepEqual(response.body, {});
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 1);
-            await mysqlCheckContains({
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 1);
+            await th.mysql.mysqlCheckContains({
                 WebWatcher: [
                     {
                         id: 1,
@@ -169,7 +169,7 @@ describe('webWatcher/createWatcher', () => {
         });
 
         it('accepting both a HASH and CSS watcher on the same URL', async () => {
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 WebWatcher: [
                     {
                         id: 1,
@@ -201,8 +201,8 @@ describe('webWatcher/createWatcher', () => {
                     assert.deepEqual(response.body, {});
                 });
 
-            await mysqlCheckTableLength('WebWatcher', 2);
-            await mysqlCheckContains({
+            await th.mysql.mysqlCheckTableLength('WebWatcher', 2);
+            await th.mysql.mysqlCheckContains({
                 WebWatcher: [
                     {
                         id: 2,

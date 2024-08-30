@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { expect } from 'chai';
-import { mysqlFixture, nowSec } from '../../helpers/mysql';
+import { assert, expect } from 'chai';
 import { app } from '../../../src/app';
+import { th } from '../../helpers';
 
 describe('clipboard/getPublicEntries', () => {
     it('should retieve only public entries', async () => {
@@ -9,7 +9,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -19,13 +19,13 @@ describe('clipboard/getPublicEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,
             s3Key: null
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: [publicEntry, privateEntry]
         });
 
@@ -43,19 +43,19 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
             s3Key: 'foo'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: [entry],
             S3Files: [
                 {
                     bucket: 'clipboard',
                     s3Key: 'foo',
-                    creationDateUnix: nowSec()
+                    creationDateUnix: th.mysql.nowSec()
                 }
             ]
         });
@@ -66,7 +66,7 @@ describe('clipboard/getPublicEntries', () => {
             .expect(200)
             .then((response) => {
                 const entry = response.body.pop();
-                expect(entry.s3PresignedUrl).to.exist;
+                assert.exists(entry.s3PresignedUrl);
             });
     });
 
@@ -75,7 +75,7 @@ describe('clipboard/getPublicEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -85,13 +85,13 @@ describe('clipboard/getPublicEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: nowSec() - 120,
+            creationDateUnix: th.mysql.nowSec() - 120,
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,
             s3Key: null
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: [ttlOk, ttlOver]
         });
 

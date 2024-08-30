@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 import { assert } from 'chai';
+import { th } from '../../helpers';
 
 describe('r/:linkId', () => {
     it('should redirect to the s3 presigned url', async () => {
@@ -13,7 +13,7 @@ describe('r/:linkId', () => {
             linkId: 'aaaaaaaa',
             s3Key: 'foo'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: [entry1],
             S3Files: [
                 {
@@ -37,7 +37,7 @@ describe('r/:linkId', () => {
     });
 
     it('should return an error for an unknown linkId', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: []
         });
 
@@ -59,7 +59,7 @@ describe('r/:linkId', () => {
             linkId: 'aaaaaaaa',
             s3Key: 'foo'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: [entry1],
             S3Files: []
         });

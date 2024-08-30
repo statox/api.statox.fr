@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 // Allow functions with void so that we can use chai's assert in the checkers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ColumnCheckFunction = (value: any) => boolean;
 
 export type TableCheck = {
@@ -14,4 +14,8 @@ export type TableCheck = {
 
 export type MysqlCheckData = {
     [table: string]: TableCheck[];
+};
+
+export type MysqlFixture = {
+    [table: string]: { [column: string]: string | number | boolean | null }[];
 };

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { assert, expect } from 'chai';
-import { mysqlFixture, nowSec } from '../../helpers/mysql';
 import { app } from '../../../src/app';
+import { th } from '../../helpers';
 
 describe('clipboard/getAllEntries', () => {
     describe('Should fail', () => {
@@ -10,13 +10,13 @@ describe('clipboard/getAllEntries', () => {
                 id: 4,
                 name: 'public entry with s3',
                 content: 'foo',
-                creationDateUnix: nowSec(),
+                creationDateUnix: th.mysql.nowSec(),
                 ttl: 60,
                 linkId: 'd',
                 isPublic: 1,
                 s3Key: 'foo'
             };
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 Clipboard: [publicEntryWithS3]
             });
 
@@ -34,13 +34,13 @@ describe('clipboard/getAllEntries', () => {
                 id: 4,
                 name: 'public entry with s3',
                 content: 'foo',
-                creationDateUnix: nowSec(),
+                creationDateUnix: th.mysql.nowSec(),
                 ttl: 60,
                 linkId: 'd',
                 isPublic: 1,
                 s3Key: 'foo'
             };
-            await mysqlFixture({
+            await th.mysql.mysqlFixture({
                 Clipboard: [publicEntryWithS3],
                 S3Files: [
                     {
@@ -67,7 +67,7 @@ describe('clipboard/getAllEntries', () => {
             id: 1,
             name: 'public entry',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
             isPublic: 1,
@@ -77,7 +77,7 @@ describe('clipboard/getAllEntries', () => {
             id: 2,
             name: 'private entry',
             content: 'bar',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
             isPublic: 0,
@@ -87,7 +87,7 @@ describe('clipboard/getAllEntries', () => {
             id: 3,
             name: 'expired ttl',
             content: 'bar',
-            creationDateUnix: nowSec() - 120,
+            creationDateUnix: th.mysql.nowSec() - 120,
             ttl: 60,
             linkId: 'cccccccc',
             isPublic: 1,
@@ -97,7 +97,7 @@ describe('clipboard/getAllEntries', () => {
             id: 4,
             name: 'public entry with s3',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'd',
             isPublic: 1,
@@ -107,7 +107,7 @@ describe('clipboard/getAllEntries', () => {
             id: 5,
             name: 'private entry with s3',
             content: 'foo',
-            creationDateUnix: nowSec(),
+            creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'e',
             isPublic: 1,
@@ -120,18 +120,18 @@ describe('clipboard/getAllEntries', () => {
             expiredTTL,
             privateEntryWithS3
         ];
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: allEntries,
             S3Files: [
                 {
                     bucket: 'clipboard',
                     s3Key: 'bar',
-                    creationDateUnix: nowSec()
+                    creationDateUnix: th.mysql.nowSec()
                 },
                 {
                     bucket: 'clipboard',
                     s3Key: 'foo',
-                    creationDateUnix: nowSec()
+                    creationDateUnix: th.mysql.nowSec()
                 }
             ]
         });
@@ -151,12 +151,12 @@ describe('clipboard/getAllEntries', () => {
                 const publicEntryWithS3Response = response.body.find(
                     (e: { id: number }) => e.id === 4
                 );
-                expect(publicEntryWithS3Response.s3PresignedUrl).to.exist;
+                assert.exists(publicEntryWithS3Response.s3PresignedUrl);
 
                 const privateEntryWithS3Response = response.body.find(
                     (e: { id: number }) => e.id === 4
                 );
-                expect(privateEntryWithS3Response.s3PresignedUrl).to.exist;
+                assert.exists(privateEntryWithS3Response.s3PresignedUrl);
             });
     });
 });

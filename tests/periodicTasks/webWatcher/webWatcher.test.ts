@@ -1,7 +1,6 @@
 import sinon from 'sinon';
-import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
 import { th } from '../../helpers';
+import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
 
 describe('periodic task - webWatcher', () => {
     let stub: sinon.SinonStub;
@@ -18,7 +17,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should detect a change, notify and record the change - for CSS Watchers', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -60,7 +59,7 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -70,8 +69,8 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: aroundNowSec,
-                    lastUpdateDateUnix: aroundNowSec,
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
+                    lastUpdateDateUnix: th.mysql.aroundNowSec,
                     checkIntervalSeconds: 0,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
@@ -79,8 +78,8 @@ describe('periodic task - webWatcher', () => {
                 {
                     id: 2,
                     lastContent: 'A header',
-                    lastCheckDateUnix: aroundNowSec,
-                    lastUpdateDateUnix: aroundNowSec,
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
+                    lastUpdateDateUnix: th.mysql.aroundNowSec,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
                 }
@@ -98,7 +97,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should detect a change, notify and record the change - for HASH Watchers', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Hash check 1',
@@ -140,7 +139,7 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -149,14 +148,14 @@ describe('periodic task - webWatcher', () => {
                     url: 'https://foo.com',
                     watchType: 'HASH',
                     lastContent: '965324907ec9f9d6ae72a8415dc127e853e746635b64fb8f2ac15427c3d2933c',
-                    lastCheckDateUnix: aroundNowSec,
-                    lastUpdateDateUnix: aroundNowSec
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
+                    lastUpdateDateUnix: th.mysql.aroundNowSec
                 },
                 {
                     id: 2,
                     lastContent: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
-                    lastCheckDateUnix: aroundNowSec,
-                    lastUpdateDateUnix: aroundNowSec,
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
+                    lastUpdateDateUnix: th.mysql.aroundNowSec,
                     lastErrorDateUnix: null,
                     lastErrorMessage: null
                 }
@@ -175,7 +174,7 @@ describe('periodic task - webWatcher', () => {
 
     it('should respect the check interval and not check too often', async () => {
         const oneHourAgo = Math.round(Date.now() / 1000) - 3600;
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -195,7 +194,7 @@ describe('periodic task - webWatcher', () => {
 
         th.slog.checkNoLogs();
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -217,7 +216,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should update last check time even when no changed happened in the page', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -240,7 +239,7 @@ describe('periodic task - webWatcher', () => {
             status: 'Example Page'
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -250,7 +249,7 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: aroundNowSec,
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0,
                     lastErrorDateUnix: null,
@@ -263,7 +262,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should update error date and message when failure happens', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Web check 1',
@@ -288,7 +287,7 @@ describe('periodic task - webWatcher', () => {
             })
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             WebWatcher: [
                 {
                     id: 1,
@@ -298,10 +297,10 @@ describe('periodic task - webWatcher', () => {
                     watchType: 'CSS',
                     cssSelector: 'invalid @# > selector . adsf',
                     lastContent: 'Example Page',
-                    lastCheckDateUnix: aroundNowSec,
+                    lastCheckDateUnix: th.mysql.aroundNowSec,
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0,
-                    lastErrorDateUnix: aroundNowSec,
+                    lastErrorDateUnix: th.mysql.aroundNowSec,
                     lastErrorMessage: "'invalid @# > selector . adsf' is not a valid selector"
                 }
             ]
@@ -314,7 +313,7 @@ describe('periodic task - webWatcher', () => {
     });
 
     it('should continue with other checks if one has an unsupported type in DB', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     name: 'Incorrect check',

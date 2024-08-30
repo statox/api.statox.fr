@@ -1,16 +1,10 @@
 import request from 'supertest';
 import { app } from '../../../src/app';
-import {
-    aroundNowSec,
-    mysqlCheckContains,
-    mysqlCheckDoesNotContain,
-    mysqlFixture
-} from '../../helpers/mysql';
 import { th } from '../../helpers';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: [
                 {
                     id: 1,
@@ -39,7 +33,7 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             Clipboard: [
                 {
                     name: 'entry 2'
@@ -47,7 +41,7 @@ describe('clipboard/deleteEntry', () => {
             ]
         });
 
-        await mysqlCheckDoesNotContain({
+        await th.mysql.mysqlCheckDoesNotContain({
             Clipboard: [
                 {
                     name: 'entry 1'
@@ -59,7 +53,7 @@ describe('clipboard/deleteEntry', () => {
     });
 
     it('should delete associated S3 file if it exists', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Clipboard: [
                 {
                     id: 1,
@@ -94,19 +88,19 @@ describe('clipboard/deleteEntry', () => {
             input: { Bucket: 'clipboard', Key: 'foo.png' }
         });
 
-        await mysqlCheckDoesNotContain({
+        await th.mysql.mysqlCheckDoesNotContain({
             Clipboard: [
                 {
                     name: 'entry 1'
                 }
             ]
         });
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             S3Files: [
                 {
                     s3Key: 'foo.png',
                     creationDateUnix: 10,
-                    deletionDateUnix: aroundNowSec
+                    deletionDateUnix: th.mysql.aroundNowSec
                 }
             ]
         });

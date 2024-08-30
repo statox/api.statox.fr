@@ -1,11 +1,11 @@
 import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../../src/app';
-import { mysqlCheckTableLength, mysqlFixture } from '../../../helpers/mysql';
+import { th } from '../../../helpers';
 
 describe('webWatcher/deleteWatcher', () => {
     it('should delete a watcher', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: [
                 {
                     id: 1,
@@ -31,6 +31,6 @@ describe('webWatcher/deleteWatcher', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await mysqlCheckTableLength('WebWatcher', 0);
+        await th.mysql.mysqlCheckTableLength('WebWatcher', 0);
     });
 });

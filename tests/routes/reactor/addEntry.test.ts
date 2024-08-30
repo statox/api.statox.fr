@@ -1,12 +1,11 @@
 import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../src/app';
-import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { th } from '../../helpers';
 
 describe('reactor/addEntry', () => {
     it('should fail on duplicate entry', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: [
                 {
                     id: 1,
@@ -30,7 +29,7 @@ describe('reactor/addEntry', () => {
                 assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
             });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             Reactor: [
                 {
                     name: 'A cool entry',
@@ -63,7 +62,7 @@ describe('reactor/addEntry', () => {
             }
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             Reactor: [
                 {
                     name: 'entry name',
@@ -79,7 +78,7 @@ describe('reactor/addEntry', () => {
                 {
                     bucket: 'reactor',
                     s3Key: (value: string) => value.match(/.*entry name/) !== null,
-                    creationDateUnix: aroundNowSec
+                    creationDateUnix: th.mysql.aroundNowSec
                 }
             ]
         });
@@ -103,7 +102,7 @@ describe('reactor/addEntry', () => {
             }
         });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             Reactor: [
                 {
                     name: 'entry name',
@@ -118,7 +117,7 @@ describe('reactor/addEntry', () => {
                 {
                     bucket: 'reactor',
                     s3Key: (value: string) => value.match(/.*entry name/) !== null,
-                    creationDateUnix: aroundNowSec
+                    creationDateUnix: th.mysql.aroundNowSec
                 }
             ]
         });

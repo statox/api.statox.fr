@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 import { th } from '../../helpers';
 
@@ -22,7 +21,7 @@ describe('reactor/getEntriesForPublic', () => {
             linkId: 'bbbbbbbb',
             s3Key: 'bar'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: [entry1, entry2],
             S3Files: [
                 {
@@ -83,7 +82,7 @@ describe('reactor/getEntriesForPublic', () => {
             linkId: 'bbbbbbbb',
             s3Key: 'bar'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             Reactor: [entry1, entry2],
             S3Files: [
                 {

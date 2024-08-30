@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { expect } from 'chai';
 import { app } from '../../../../src/app';
-import { mysqlFixture } from '../../../helpers/mysql';
+import { th } from '../../../helpers';
 
 describe('chords/getLinksVisitsCount', () => {
     it('should return the visit counts ordered by descending order', async () => {
@@ -23,7 +23,7 @@ describe('chords/getLinksVisitsCount', () => {
             }
         ];
 
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             ChordFrequency: data
         });
 

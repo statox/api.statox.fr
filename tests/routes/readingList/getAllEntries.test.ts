@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { mysqlFixture } from '../../helpers/mysql';
 import { app } from '../../../src/app';
 import { assert } from 'chai';
+import { th } from '../../helpers';
 
 describe('readingList/getAllEntries', () => {
     it('should retieve all entries', async () => {
@@ -23,7 +23,7 @@ describe('readingList/getAllEntries', () => {
             s3Key: null,
             tags: '["tag1"]'
         };
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             ReadingList: [entryFull, entryLinkOnly],
             S3Files: [
                 {

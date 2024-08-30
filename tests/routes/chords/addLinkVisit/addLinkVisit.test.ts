@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../../helpers/mysql';
 import { assert } from 'chai';
 import { th } from '../../../helpers';
 
@@ -37,18 +36,18 @@ describe('chords/addLinkVisit', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
                     count: 1,
-                    lastAccessDateUnix: aroundNowSec
+                    lastAccessDateUnix: th.mysql.aroundNowSec
                 }
             ]
         });
     });
     it('should update existing entry', async () => {
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
@@ -74,12 +73,12 @@ describe('chords/addLinkVisit', () => {
                 assert.deepEqual(response.body, {});
             });
 
-        await mysqlCheckContains({
+        await th.mysql.mysqlCheckContains({
             ChordFrequency: [
                 {
                     url: 'https://bar.com',
                     count: 3,
-                    lastAccessDateUnix: aroundNowSec
+                    lastAccessDateUnix: th.mysql.aroundNowSec
                 },
                 {
                     url: 'https://foo.com',

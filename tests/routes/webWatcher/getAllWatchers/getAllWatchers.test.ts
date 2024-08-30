@@ -1,8 +1,8 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { mysqlFixture } from '../../../helpers/mysql';
 import { app } from '../../../../src/app';
 import { WatchedContent } from '../../../../src/libs/modules/webWatcher';
+import { th } from '../../../helpers';
 
 describe('webWatcher/getAllWatchers', () => {
     it('should return all the watchers', async () => {
@@ -37,7 +37,7 @@ describe('webWatcher/getAllWatchers', () => {
             }
         ];
 
-        await mysqlFixture({
+        await th.mysql.mysqlFixture({
             WebWatcher: data
         });
 
