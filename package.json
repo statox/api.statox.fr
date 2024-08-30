@@ -11,7 +11,7 @@
         "check": "npm run lint && npm run prettier",
         "prettier": "prettier --check --cache '*.json' 'src/**/*.ts'",
         "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts'",
-        "lint": "eslint  \"src/**/*.[jt]s\"",
+        "lint": "eslint",
         "lint:fix": "npm run lint --fix",
         "heroku:login": "npx heroku login",
         "heroku:deploy": "npm run check && npm run tests:all && git push heroku main",
