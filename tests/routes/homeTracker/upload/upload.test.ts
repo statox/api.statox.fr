@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
 import { slogCheckLog } from '../../../helpers/slog';
+import { elkCheckDocumentCreated } from '../../../helpers/elk';
 
 describe('homeTracker/upload', () => {
     it('should log the sent value', async () => {
@@ -25,7 +26,8 @@ describe('homeTracker/upload', () => {
             })
             .expect(200);
 
-        slogCheckLog('home-tracker', 'Home tracking event', {
+        elkCheckDocumentCreated('data-home-tracker', {
+            message: 'Home tracking event',
             sensorName: 'foo',
 
             batteryCharge: 4.0,
@@ -56,7 +58,8 @@ describe('homeTracker/upload', () => {
             })
             .expect(200);
 
-        slogCheckLog('home-tracker', 'Home tracking event', {
+        elkCheckDocumentCreated('data-home-tracker', {
+            message: 'Home tracking event',
             sensorName: 'foo',
             tempCelsius: 23.5,
             batteryPercent: 100,

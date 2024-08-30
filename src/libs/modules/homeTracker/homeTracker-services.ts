@@ -3,7 +3,7 @@ import { SensorLogData, SensorRawData } from './types';
 import { elk } from '../../databases/elk';
 import { notifySlack } from '../notifier/slack';
 
-export const ingestSensorData = (sensorRawData: SensorRawData) => {
+export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     const {
         batteryCharge,
         batteryPercent,
@@ -151,7 +151,16 @@ export const ingestSensorData = (sensorRawData: SensorRawData) => {
         loggedData.detectedInternalSensorFailure = detectedInternalSensorFailure;
     }
 
-    slog.log('home-tracker', 'Home tracking event', loggedData);
+    await elk.index({
+        index: 'data-home-tracker',
+        document: {
+            '@timestamp': new Date().toISOString(),
+            document: {
+                message: 'Home tracking event',
+                ...loggedData
+            }
+        }
+    });
 };
 
 const missingSensorLogs_alertedSensors = new Set();
@@ -161,7 +170,7 @@ export const doHomeTrackerMonitoring = async () => {
 
     for (const sensorName of monitoredSensorNames) {
         const result = await elk.search<{ sensorName: string }>({
-            index: 'logs-home-tracker-default',
+            index: 'data-home-tracker',
             query: {
                 // TODO check the type issue here
                 // @ts-expect-error: Not sure why the typing is not happy here but the query works

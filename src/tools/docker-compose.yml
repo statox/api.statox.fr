@@ -31,3 +31,39 @@ services:
             - DEFAULT_REGION=eu-west-1
         tmpfs:
             - /tmp/localstack:exec,mode=600
+
+    elk:
+        container_name: apistatox.elk
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+        tmpfs:
+            - /usr/share/elasticsearch/data:rw
+        ports:
+            - '127.0.0.1:29200:9200'
+        environment:
+            - node.name=es01
+            - cluster.name=apistatox
+            - discovery.type=single-node
+            - ELASTIC_PASSWORD=foo
+            - bootstrap.memory_lock=true
+            - xpack.ml.enabled=false
+            - xpack.security.enabled=false
+            - xpack.security.http.ssl.enabled=false
+            - xpack.security.transport.ssl.enabled=false
+            - xpack.license.self_generated.type=basic
+
+    # Uncomment if a Kibana is needed to inspect local ELK
+    # Use http://localhost:25601, no password required
+    # The data view must be recreated manually until I implement automatically recreating it
+    # kibana:
+    #     container_name: apistatox.kibana
+    #     restart: unless-stopped
+    #     image: docker.elastic.co/kibana/kibana:{CHANGEME: USE SAME VERSION AS ELK}
+    #     tmpfs:
+    #         - /usr/share/kibana/data
+    #     ports:
+    #         - '127.0.0.1:25601:5601'
+    #     environment:
+    #         - SERVERNAME=kibana
+    #         - ELASTICSEARCH_HOSTS=http://apistatox.elk:9200
+    #         - ELASTICSEARCH_USERNAME=kibana_system
+    #         - ELASTICSEARCH_PASSWORD=foo
