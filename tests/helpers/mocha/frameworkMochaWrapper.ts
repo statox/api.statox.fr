@@ -1,33 +1,46 @@
+import { TestHelper } from '../TestHelper';
 import { initDb } from '../../../src/libs/databases/db';
-import { restoreAppStub, setupAppStub } from '../app';
-import { createApiKeys, restoreFakeAuth, setupFakeAuth } from '../auth';
-import { mysqlClearAllTables } from '../mysql';
-import { restoreNotifierSlackStub, setupNotifierSlackStub } from '../notifier/slack';
-import { setupS3Spy } from '../s3';
-import { restoreSlogSpy, setupSlogSpy } from '../slog';
+import { testHelper_App } from '../app';
+import { testHelper_Auth } from '../auth';
+import { testHelper_Mysql } from '../mysql';
+import { testHelper_S3 } from '../s3';
+import { testHelper_SlackNotifier } from '../notifier/slack';
+import { testHelper_Slog } from '../slog';
 
-// Used for test of the framework (don't init the app as some mocking is done directly in the test suite)
+const helpers: TestHelper[] = [
+    testHelper_Mysql,
+    testHelper_Auth,
+    testHelper_App,
+    testHelper_SlackNotifier,
+    testHelper_S3,
+    testHelper_Slog
+];
+
+// Used for test of the framework (unlike routes tests don't init
+// the app because we use a mock for the app)
 export const mochaHooks = () => {
     return {
         beforeAll: async () => {
             await initDb();
-            setupFakeAuth();
-            setupAppStub();
+
+            for (const helper of helpers) {
+                await helper.hooks.beforeAll();
+            }
         },
         beforeEach: async () => {
-            setupS3Spy();
-            await mysqlClearAllTables();
-            await createApiKeys();
-            setupNotifierSlackStub();
-            setupSlogSpy();
+            for (const helper of helpers) {
+                await helper.hooks.beforeEach();
+            }
         },
-        afterEach: () => {
-            restoreNotifierSlackStub();
-            restoreSlogSpy();
+        afterEach: async () => {
+            for (const helper of helpers) {
+                await helper.hooks.afterEach();
+            }
         },
-        afterAll: () => {
-            restoreFakeAuth();
-            restoreAppStub();
+        afterAll: async () => {
+            for (const helper of helpers) {
+                await helper.hooks.afterAll();
+            }
         }
     };
 };

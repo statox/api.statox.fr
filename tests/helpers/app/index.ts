@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { TestHelper } from '../TestHelper';
 import { Request, Response } from 'express';
 import * as routes from '../../../src/libs/routes';
 import { GetRoute, PostRoute } from '../../../src/libs/routes/types';
@@ -46,11 +47,19 @@ const testRoutes = [getRoute, postRoute, userAuthenticatedGetRoute, apiiotAuthen
 
 let routesStub: sinon.SinonStub;
 
-export const setupAppStub = () => {
+const setupAppStub = async () => {
     routesStub = sinon.stub(routes, 'routes').value(testRoutes);
     initApp();
 };
 
-export const restoreAppStub = () => {
+const restoreAppStub = async () => {
     routesStub.restore();
 };
+
+export const testHelper_App = new TestHelper({
+    name: 'App',
+    hooks: {
+        beforeAll: setupAppStub,
+        afterAll: restoreAppStub
+    }
+});

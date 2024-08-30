@@ -3,16 +3,25 @@ import { assert } from 'chai';
 import { slog } from '../../../src/libs/modules/logging';
 import { AppLogComponent, LogObject } from '../../../src/libs/modules/logging/slog';
 import { isDebug } from '../../../src/libs/config/env';
+import { TestHelper } from '../TestHelper';
 
 let slogSpy: sinon.SinonSpy;
 
-export const setupSlogSpy = () => {
+const setupSlogSpy = async () => {
     slogSpy = sinon.spy(slog, 'log');
 };
 
-export const restoreSlogSpy = () => {
+const restoreSlogSpy = async () => {
     slogSpy.restore();
 };
+
+export const testHelper_Slog = new TestHelper({
+    name: 'slog',
+    hooks: {
+        beforeEach: setupSlogSpy,
+        afterEach: restoreSlogSpy
+    }
+});
 
 export type TestLogObject = {
     [P in keyof LogObject]?: LogObject[P] | sinon.SinonMatcher;

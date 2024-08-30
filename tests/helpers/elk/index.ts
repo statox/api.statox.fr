@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import { elk } from '../../../src/libs/databases/elk';
 import { isDebug } from '../../../src/libs/config/env';
 import { assert } from 'chai';
+import { TestHelper } from '../TestHelper';
 
 const originalSearch = elk.search;
 
@@ -21,24 +22,34 @@ const fakeSearch = async (...args: Parameters<typeof originalSearch>) => {
     return result;
 };
 
-export const mockELKSearch = () => {
+const mockELKSearch = async () => {
     // @ts-expect-error Type mismatch, check if using a proper sinon.wrap
     // or something similar can fix
     elk.search = fakeSearch;
 };
 
-export const restoreElkSearch = () => {
+const restoreElkSearch = async () => {
     elk.search = originalSearch;
 };
 
 let elkSpy: sinon.SinonSpy;
-export const setupELKSpy = () => {
+const setupELKSpy = async () => {
     elkSpy = sinon.spy(elk, 'index');
 };
 
-export const restoreElkSpy = () => {
+const restoreElkSpy = async () => {
     elkSpy.restore();
 };
+
+export const testHelper_ELK = new TestHelper({
+    name: 'ELK',
+    hooks: {
+        beforeAll: mockELKSearch,
+        beforeEach: setupELKSpy,
+        afterEach: restoreElkSpy,
+        afterAll: restoreElkSearch
+    }
+});
 
 export const elkCheckDocumentCreated = (index: string, document: unknown) => {
     const buildArgs = sinon.match({ index: index });

@@ -2,13 +2,14 @@ import sinon from 'sinon';
 import { NextFunction, Request, Response } from 'express';
 import * as auth from '../../../src/libs/middleware/auth0.middleware';
 import { mysqlFixture } from '../mysql';
+import { TestHelper } from '../TestHelper';
 
 // exported for framework tests
 export let fakeValidateAccessToken: sinon.SinonStub;
 export let fakeCheckRequiredPermissionsHandler: sinon.SinonStub;
 let fakeCheckRequiredPermissions: sinon.SinonStub;
 
-export const setupFakeAuth = () => {
+const setupFakeAuth = async () => {
     fakeValidateAccessToken = sinon
         .stub(auth, 'validateAccessToken')
         .callsFake((_req: Request, _res: Response, next: NextFunction) => {
@@ -28,12 +29,12 @@ export const setupFakeAuth = () => {
         .returns(fakeCheckRequiredPermissionsHandler);
 };
 
-export const restoreFakeAuth = () => {
+const restoreFakeAuth = async () => {
     fakeValidateAccessToken.restore();
     fakeCheckRequiredPermissions.restore();
 };
 
-export const createApiKeys = async () => {
+const createApiKeys = async () => {
     await mysqlFixture({
         ApiKeys: [
             {
@@ -44,3 +45,12 @@ export const createApiKeys = async () => {
         ]
     });
 };
+
+export const testHelper_Auth = new TestHelper({
+    name: 'Auth',
+    hooks: {
+        beforeAll: setupFakeAuth,
+        beforeEach: createApiKeys,
+        afterAll: restoreFakeAuth
+    }
+});

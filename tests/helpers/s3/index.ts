@@ -3,10 +3,18 @@ import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sd
 import { assert } from 'chai';
 import 'aws-sdk-client-mock-jest';
 import { s3Mock } from '../../../src/libs/databases/s3';
+import { TestHelper } from '../TestHelper';
 
-export const setupS3Spy = () => {
+const setupS3Spy = async () => {
     s3Mock.reset();
 };
+
+export const testHelper_S3 = new TestHelper({
+    name: 'S3',
+    hooks: {
+        beforeEach: setupS3Spy
+    }
+});
 
 type S3CheckNbCallsParams = { nbCalls: number };
 type S3CheckCallArsParams = {

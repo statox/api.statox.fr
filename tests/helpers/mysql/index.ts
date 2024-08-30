@@ -1,3 +1,4 @@
+import { TestHelper } from '../TestHelper';
 import { mysqlCheckContains } from './mysqlCheckContains';
 import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain';
 import { mysqlCheckTableLength } from './mysqlCheckTableLength';
@@ -11,8 +12,14 @@ export {
     mysqlCheckContains,
     mysqlCheckDoesNotContain,
     mysqlCheckTableLength,
-    mysqlClearAllTables,
     mysqlDumpTables,
     mysqlFixture,
     nowSec
 };
+
+export const testHelper_Mysql = new TestHelper({
+    name: 'MySQL',
+    hooks: {
+        beforeEach: mysqlClearAllTables
+    }
+});

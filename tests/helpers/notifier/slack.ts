@@ -2,18 +2,27 @@ import sinon from 'sinon';
 import { assert } from 'chai';
 import { slackNotifier } from '../../../src/libs/modules/notifier';
 import { isDebug } from '../../../src/libs/config/env';
+import { TestHelper } from '../TestHelper';
 
 let slackStub: sinon.SinonStub;
 
-export const setupNotifierSlackStub = () => {
+const setupNotifierSlackStub = async () => {
     // We might need something more subtle but for now I just want to bypass
     // the call to the webhook during the tests so .resolves(null) is good enough
     slackStub = sinon.stub(slackNotifier, 'notifySlack').resolves(undefined);
 };
 
-export const restoreNotifierSlackStub = () => {
+const restoreNotifierSlackStub = async () => {
     slackStub.restore();
 };
+
+export const testHelper_SlackNotifier = new TestHelper({
+    name: 'Slack',
+    hooks: {
+        beforeEach: setupNotifierSlackStub,
+        afterEach: restoreNotifierSlackStub
+    }
+});
 
 export const slackCheckNotification = (params: {
     message?: string;
