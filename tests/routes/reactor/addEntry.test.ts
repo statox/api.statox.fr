@@ -2,7 +2,7 @@ import request from 'supertest';
 import { assert } from 'chai';
 import { app } from '../../../src/app';
 import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { testHelper_S3 } from '../../helpers/s3';
 
 describe('reactor/addEntry', () => {
     it('should fail on duplicate entry', async () => {
@@ -42,7 +42,7 @@ describe('reactor/addEntry', () => {
             ]
         });
 
-        s3CheckCall({ nbCalls: 0 });
+        testHelper_S3.checkCall({ nbCalls: 0 });
     });
 
     it('should create new entry and upload the file to S3', async () => {
@@ -54,8 +54,8 @@ describe('reactor/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        s3CheckCall({ nbCalls: 1 });
-        s3CheckCall({
+        testHelper_S3.checkCall({ nbCalls: 1 });
+        testHelper_S3.checkCall({
             commandType: 'PutObject',
             input: {
                 Bucket: 'reactor',
@@ -94,8 +94,8 @@ describe('reactor/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        s3CheckCall({ nbCalls: 1 });
-        s3CheckCall({
+        testHelper_S3.checkCall({ nbCalls: 1 });
+        testHelper_S3.checkCall({
             commandType: 'PutObject',
             input: {
                 Bucket: 'reactor',

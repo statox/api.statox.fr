@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { s3CheckCall } from '../../../helpers/s3';
-import { slogCheckLog } from '../../../helpers/slog';
+import { testHelper_S3 } from '../../../helpers/s3';
+import { testHelper_Slog } from '../../../helpers/slog';
 
 describe('chords/updateAll', () => {
     it('should work', async () => {
@@ -21,9 +21,9 @@ describe('chords/updateAll', () => {
             })
             .expect(200);
 
-        slogCheckLog('chords', 'Updating chords', { nbChords: 1 });
-        s3CheckCall({ nbCalls: 1 });
-        s3CheckCall({
+        testHelper_Slog.checkLog('chords', 'Updating chords', { nbChords: 1 });
+        testHelper_S3.checkCall({ nbCalls: 1 });
+        testHelper_S3.checkCall({
             commandType: 'PutObject',
             input: { Bucket: 'songbook', ContentType: 'application/json' }
         });

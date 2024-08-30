@@ -7,7 +7,7 @@ import {
     mysqlCheckTableLength,
     mysqlFixture
 } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { testHelper_S3 } from '../../helpers/s3';
 
 describe('clipboard/addEntry', () => {
     // TODO Have a proper s3 mock so that we can test that the transaction
@@ -60,7 +60,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            s3CheckCall({ nbCalls: 0 });
+            testHelper_S3.checkCall({ nbCalls: 0 });
             await mysqlCheckTableLength('S3Files', 0);
         });
 
@@ -100,7 +100,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            s3CheckCall({ nbCalls: 0 });
+            testHelper_S3.checkCall({ nbCalls: 0 });
             await mysqlCheckTableLength('S3Files', 0);
         });
     });
@@ -129,7 +129,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            s3CheckCall({ nbCalls: 0 });
+            testHelper_S3.checkCall({ nbCalls: 0 });
             await mysqlCheckTableLength('S3Files', 0);
         });
 
@@ -158,7 +158,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            s3CheckCall({ nbCalls: 0 });
+            testHelper_S3.checkCall({ nbCalls: 0 });
             await mysqlCheckTableLength('S3Files', 0);
         });
 
@@ -172,8 +172,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(200);
 
-            s3CheckCall({ nbCalls: 1 });
-            s3CheckCall({
+            testHelper_S3.checkCall({ nbCalls: 1 });
+            testHelper_S3.checkCall({
                 commandType: 'PutObject',
                 input: {
                     Bucket: 'clipboard',
@@ -210,8 +210,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(200);
 
-            s3CheckCall({ nbCalls: 1 });
-            s3CheckCall({
+            testHelper_S3.checkCall({ nbCalls: 1 });
+            testHelper_S3.checkCall({
                 commandType: 'PutObject',
                 input: {
                     Bucket: 'clipboard',
@@ -248,8 +248,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/glider.png')
                 .expect(200);
 
-            s3CheckCall({ nbCalls: 1 });
-            s3CheckCall({
+            testHelper_S3.checkCall({ nbCalls: 1 });
+            testHelper_S3.checkCall({
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/png' }
             });
@@ -281,8 +281,8 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/burns.gif')
                 .expect(200);
 
-            s3CheckCall({ nbCalls: 1 });
-            s3CheckCall({
+            testHelper_S3.checkCall({ nbCalls: 1 });
+            testHelper_S3.checkCall({
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/gif' }
             });

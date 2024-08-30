@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { aroundNowSec, mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
-import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
-import { slackCheckNoNotifications, slackCheckNotification } from '../../helpers/notifier/slack';
+import { testHelper_SlackNotifier } from '../../helpers/notifier/slack';
+import { testHelper_Slog } from '../../helpers/slog';
 
 describe('periodic task - webWatcher', () => {
     let stub: sinon.SinonStub;
@@ -48,13 +48,13 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Web check 1 - Has changed',
             watcherName: 'Web check 1',
             status: 'Example Page',
             previousStatus: ''
         });
-        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Web check 2 - Has changed',
             watcherName: 'Web check 2',
             status: 'A header',
@@ -88,8 +88,14 @@ describe('periodic task - webWatcher', () => {
             ]
         });
 
-        slackCheckNotification({ message: 'Web check 1 - Has changed', directMention: true });
-        slackCheckNotification({ message: 'Web check 2 - Has changed', directMention: true });
+        testHelper_SlackNotifier.checkNotification({
+            message: 'Web check 1 - Has changed',
+            directMention: true
+        });
+        testHelper_SlackNotifier.checkNotification({
+            message: 'Web check 2 - Has changed',
+            directMention: true
+        });
     });
 
     it('should detect a change, notify and record the change - for HASH Watchers', async () => {
@@ -122,13 +128,13 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Hash check 1 - Has changed',
             watcherName: 'Hash check 1',
             status: '965324907ec9f9d6ae72a8415dc127e853e746635b64fb8f2ac15427c3d2933c',
             previousStatus: ''
         });
-        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Hash check 2 - Has changed',
             watcherName: 'Hash check 2',
             status: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
@@ -158,8 +164,14 @@ describe('periodic task - webWatcher', () => {
             ]
         });
 
-        slackCheckNotification({ message: 'Hash check 1 - Has changed', directMention: true });
-        slackCheckNotification({ message: 'Hash check 2 - Has changed', directMention: true });
+        testHelper_SlackNotifier.checkNotification({
+            message: 'Hash check 1 - Has changed',
+            directMention: true
+        });
+        testHelper_SlackNotifier.checkNotification({
+            message: 'Hash check 2 - Has changed',
+            directMention: true
+        });
     });
 
     it('should respect the check interval and not check too often', async () => {
@@ -182,7 +194,7 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckNoLogs();
+        testHelper_Slog.checkNoLogs();
 
         await mysqlCheckContains({
             WebWatcher: [
@@ -202,7 +214,7 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
-        slackCheckNoNotifications();
+        testHelper_SlackNotifier.checkNoNotifications();
     });
 
     it('should update last check time even when no changed happened in the page', async () => {
@@ -224,7 +236,7 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('web-watcher', 'WebWatcher content not changed', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content not changed', {
             watcherName: 'Web check 1',
             status: 'Example Page'
         });
@@ -248,7 +260,7 @@ describe('periodic task - webWatcher', () => {
             ]
         });
 
-        slackCheckNoNotifications();
+        testHelper_SlackNotifier.checkNoNotifications();
     });
 
     it('should update error date and message when failure happens', async () => {
@@ -270,7 +282,7 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('web-watcher', 'Failed to run watcher', {
+        testHelper_Slog.checkLog('web-watcher', 'Failed to run watcher', {
             watcherName: 'Web check 1',
             error: sinon.match((error) => {
                 return error.message === "'invalid @# > selector . adsf' is not a valid selector";
@@ -296,7 +308,7 @@ describe('periodic task - webWatcher', () => {
             ]
         });
 
-        slackCheckNotification({
+        testHelper_SlackNotifier.checkNotification({
             message: 'FAILED TO RUN WebWatcher - Web check 1',
             directMention: true
         });
@@ -332,16 +344,16 @@ describe('periodic task - webWatcher', () => {
 
         await doWebWatcher();
 
-        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+        testHelper_Slog.checkLog('web-watcher', 'WebWatcher content updated', {
             notification: 'Web check 1 - Has changed',
             watcherName: 'Web check 1',
             status: 'Example Page',
             previousStatus: ''
         });
-        slogCheckLog('web-watcher', 'Failed to run watcher', {
+        testHelper_Slog.checkLog('web-watcher', 'Failed to run watcher', {
             watcherName: 'Incorrect check'
         });
-        slackCheckNotification({
+        testHelper_SlackNotifier.checkNotification({
             message: 'FAILED TO RUN WebWatcher - Incorrect check',
             directMention: true
         });

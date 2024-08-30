@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import request from 'supertest';
 import { app } from '../../src/app';
-import { slogCheckLog } from '../helpers/slog';
 import { ValidationError } from 'express-json-validator-middleware';
+import { testHelper_Slog } from '../helpers/slog';
 
 describe('JSON schema validation middleware', () => {
     it('should accept a correct input', async () => {
@@ -11,7 +11,7 @@ describe('JSON schema validation middleware', () => {
 
     it('should reject an incorrect type', async () => {
         await request(app).post('/postRoute').send({ param1: 1 }).expect(400);
-        slogCheckLog('middleware', 'Caught error', {
+        testHelper_Slog.checkLog('middleware', 'Caught error', {
             error: sinon.match((error) => {
                 // Cant use assert in a matcher because it is called for several logs even ones without the error
                 const isValidationError = error instanceof ValidationError;
@@ -26,7 +26,7 @@ describe('JSON schema validation middleware', () => {
 
     it('should reject a missing parameter - 1', async () => {
         await request(app).post('/postRoute').send({ foo: 'pouet' }).expect(400);
-        slogCheckLog('middleware', 'Caught error', {
+        testHelper_Slog.checkLog('middleware', 'Caught error', {
             error: sinon.match((error) => {
                 // Cant use assert in a matcher because it is called for several logs even ones without the error
                 const isValidationError = error instanceof ValidationError;
@@ -41,7 +41,7 @@ describe('JSON schema validation middleware', () => {
 
     it('should reject a missing parameter - 2', async () => {
         await request(app).post('/postRoute').send().expect(400);
-        slogCheckLog('middleware', 'Caught error', {
+        testHelper_Slog.checkLog('middleware', 'Caught error', {
             error: sinon.match((error) => {
                 // Cant use assert in a matcher because it is called for several logs even ones without the error
                 const isValidationError = error instanceof ValidationError;

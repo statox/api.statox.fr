@@ -1,8 +1,8 @@
 import sinon from 'sinon';
-import { slogCheckLog } from '../../helpers/slog';
 import { doSingleStationCheck } from '../../../src/libs/modules/meteofrance';
 import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector';
 import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config';
+import { testHelper_Slog } from '../../helpers/slog';
 
 describe('periodic task - meteofrance', () => {
     let stubFailureDelayMs: sinon.SinonStub;
@@ -52,9 +52,9 @@ describe('periodic task - meteofrance', () => {
     it('should get an observation and log it after 2 failures', async () => {
         await doSingleStationCheck({ id: '75104001', nom: 'TOUR ST-JACQUES' });
 
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 0 });
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 1 });
-        slogCheckLog('meteo-france', 'New observation', {
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 0 });
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 1 });
+        testHelper_Slog.checkLog('meteo-france', 'New observation', {
             referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
             validityTime: '2024-06-09T14:10:06Z',
@@ -68,7 +68,7 @@ describe('periodic task - meteofrance', () => {
     it('should get an observation and log it but not repeat the log if the timestamp doesnt change on second call', async () => {
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
 
-        slogCheckLog('meteo-france', 'New observation', {
+        testHelper_Slog.checkLog('meteo-france', 'New observation', {
             referenceTime: '2024-06-09T14:12:06Z',
             insertTime: '2024-06-09T14:11:06Z',
             validityTime: '2024-06-09T14:10:06Z',
@@ -84,7 +84,7 @@ describe('periodic task - meteofrance', () => {
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
-        slogCheckLog('meteo-france', 'New observation', {
+        testHelper_Slog.checkLog('meteo-france', 'New observation', {
             validityTime: '2024-06-09T16:10:06Z',
             station: 'LONGCHAMP',
             observationTimestamp: 1717949406000,
@@ -93,7 +93,7 @@ describe('periodic task - meteofrance', () => {
         });
 
         await doSingleStationCheck({ id: '75116008', nom: 'LONGCHAMP' });
-        slogCheckLog('meteo-france', 'Observation timestamp did not change', {
+        testHelper_Slog.checkLog('meteo-france', 'Observation timestamp did not change', {
             previousTimestamp: 1717949406000
         });
     });
@@ -101,16 +101,16 @@ describe('periodic task - meteofrance', () => {
     it('should stop after 5 failed calls', async () => {
         await doSingleStationCheck({ id: '00000000', nom: 'NOT A STATION' });
 
-        slogCheckLog('meteo-france', 'Failed call', {
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', {
             failedCalls: 0,
             stationId: '00000000',
             stationName: 'NOT A STATION'
         });
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 1 });
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 2 });
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 3 });
-        slogCheckLog('meteo-france', 'Failed call', { failedCalls: 4 });
-        slogCheckLog('meteo-france', 'Stop retrying calls', {
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 1 });
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 2 });
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 3 });
+        testHelper_Slog.checkLog('meteo-france', 'Failed call', { failedCalls: 4 });
+        testHelper_Slog.checkLog('meteo-france', 'Stop retrying calls', {
             stationId: '00000000',
             stationName: 'NOT A STATION'
         });

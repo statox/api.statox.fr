@@ -41,34 +41,39 @@ const restoreElkSpy = async () => {
     elkSpy.restore();
 };
 
-export const testHelper_ELK = new TestHelper({
-    name: 'ELK',
-    hooks: {
-        beforeAll: mockELKSearch,
-        beforeEach: setupELKSpy,
-        afterEach: restoreElkSpy,
-        afterAll: restoreElkSearch
+class TestHelper_ELK extends TestHelper {
+    constructor() {
+        super({
+            name: 'ELK',
+            hooks: {
+                beforeAll: mockELKSearch,
+                beforeEach: setupELKSpy,
+                afterEach: restoreElkSpy,
+                afterAll: restoreElkSearch
+            }
+        });
     }
-});
 
-export const elkCheckDocumentCreated = (index: string, document: unknown) => {
-    const buildArgs = sinon.match({ index: index });
-    const calledWithCorrectArgs = elkSpy.calledWithMatch({
-        index,
-        document: { document }
-    });
-    if (!calledWithCorrectArgs) {
-        if (isDebug) {
-            console.log('elk calls:');
-            console.log(JSON.stringify(elkSpy.getCalls(), null, 2));
-            console.log('elk expected args:');
-            console.log(JSON.stringify(buildArgs, null, 2));
-        } else {
-            console.log('elk calls (use debug=true to stringify):');
-            console.log(elkSpy.getCalls());
-            console.log('elk expected:');
-            console.log(buildArgs);
+    checkDocumentCreated = (index: string, document: unknown) => {
+        const buildArgs = sinon.match({ index: index });
+        const calledWithCorrectArgs = elkSpy.calledWithMatch({
+            index,
+            document: { document }
+        });
+        if (!calledWithCorrectArgs) {
+            if (isDebug) {
+                console.log('elk calls:');
+                console.log(JSON.stringify(elkSpy.getCalls(), null, 2));
+                console.log('elk expected args:');
+                console.log(JSON.stringify(buildArgs, null, 2));
+            } else {
+                console.log('elk calls (use debug=true to stringify):');
+                console.log(elkSpy.getCalls());
+                console.log('elk expected:');
+                console.log(buildArgs);
+            }
         }
-    }
-    assert(calledWithCorrectArgs, 'ELK inserted data doesnt match');
-};
+        assert(calledWithCorrectArgs, 'ELK inserted data doesnt match');
+    };
+}
+export const testHelper_ELK = new TestHelper_ELK();

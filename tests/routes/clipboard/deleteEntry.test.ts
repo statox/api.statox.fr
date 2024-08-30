@@ -6,7 +6,7 @@ import {
     mysqlCheckDoesNotContain,
     mysqlFixture
 } from '../../helpers/mysql';
-import { s3CheckCall } from '../../helpers/s3';
+import { testHelper_S3 } from '../../helpers/s3';
 
 describe('clipboard/deleteEntry', () => {
     it('should delete an existing entry', async () => {
@@ -55,7 +55,7 @@ describe('clipboard/deleteEntry', () => {
             ]
         });
 
-        s3CheckCall({ nbCalls: 0 });
+        testHelper_S3.checkCall({ nbCalls: 0 });
     });
 
     it('should delete associated S3 file if it exists', async () => {
@@ -88,8 +88,8 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
-        s3CheckCall({ nbCalls: 1 });
-        s3CheckCall({
+        testHelper_S3.checkCall({ nbCalls: 1 });
+        testHelper_S3.checkCall({
             commandType: 'DeleteObject',
             input: { Bucket: 'clipboard', Key: 'foo.png' }
         });
