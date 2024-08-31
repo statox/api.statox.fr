@@ -1,11 +1,10 @@
 import { elk } from '../../databases/elk';
 import { notifySlack } from '../notifier/slack';
+import { monitoredSensorNames } from './config';
 
 const missingSensorLogs_alertedSensors = new Set();
 
 export const doHomeTrackerMonitoring = async () => {
-    const monitoredSensorNames = ['salon', 'jardiniere'];
-
     for (const sensorName of monitoredSensorNames) {
         const result = await elk.search<{ sensorName: string }>({
             index: 'data-home-tracker',
