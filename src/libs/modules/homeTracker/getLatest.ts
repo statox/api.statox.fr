@@ -82,7 +82,5 @@ export const getLatestData = async () => {
         recordsBySensor[bucket.key] = records.map((d) => d._source);
     }
 
-    // console.log(recordsBySensor);
-    // console.log(JSON.stringify(recordsBySensor.get('salon'), null, 2));
     return { recordsBySensor };
 };

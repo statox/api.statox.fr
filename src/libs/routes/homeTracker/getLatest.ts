@@ -4,7 +4,6 @@ import { getLatestData } from '../../modules/homeTracker';
 
 const handler = async (_req: Request, res: Response) => {
     const data = await getLatestData();
-    console.log({ data });
     res.send(data);
 };
 
