@@ -54,7 +54,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            th.s3.checkCall({ nbCalls: 0 });
+            th.s3.checkNbCalls({ nbCalls: 0 });
             await th.mysql.checkTableLength('S3Files', 0);
         });
 
@@ -94,7 +94,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            th.s3.checkCall({ nbCalls: 0 });
+            th.s3.checkNbCalls({ nbCalls: 0 });
             await th.mysql.checkTableLength('S3Files', 0);
         });
     });
@@ -123,7 +123,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            th.s3.checkCall({ nbCalls: 0 });
+            th.s3.checkNbCalls({ nbCalls: 0 });
             await th.mysql.checkTableLength('S3Files', 0);
         });
 
@@ -152,7 +152,7 @@ describe('clipboard/addEntry', () => {
                 ]
             });
 
-            th.s3.checkCall({ nbCalls: 0 });
+            th.s3.checkNbCalls({ nbCalls: 0 });
             await th.mysql.checkTableLength('S3Files', 0);
         });
 
@@ -166,7 +166,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(200);
 
-            th.s3.checkCall({ nbCalls: 1 });
+            th.s3.checkNbCalls({ nbCalls: 1 });
             th.s3.checkCall({
                 commandType: 'PutObject',
                 input: {
@@ -204,7 +204,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', buffer)
                 .expect(200);
 
-            th.s3.checkCall({ nbCalls: 1 });
+            th.s3.checkNbCalls({ nbCalls: 1 });
             th.s3.checkCall({
                 commandType: 'PutObject',
                 input: {
@@ -242,7 +242,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/glider.png')
                 .expect(200);
 
-            th.s3.checkCall({ nbCalls: 1 });
+            th.s3.checkNbCalls({ nbCalls: 1 });
             th.s3.checkCall({
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/png' }
@@ -275,7 +275,7 @@ describe('clipboard/addEntry', () => {
                 .attach('file', 'tests/assets/burns.gif')
                 .expect(200);
 
-            th.s3.checkCall({ nbCalls: 1 });
+            th.s3.checkNbCalls({ nbCalls: 1 });
             th.s3.checkCall({
                 commandType: 'PutObject',
                 input: { Bucket: 'clipboard', ContentType: 'image/gif' }

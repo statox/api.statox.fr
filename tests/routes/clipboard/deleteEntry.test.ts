@@ -49,7 +49,7 @@ describe('clipboard/deleteEntry', () => {
             ]
         });
 
-        th.s3.checkCall({ nbCalls: 0 });
+        th.s3.checkNbCalls({ nbCalls: 0 });
     });
 
     it('should delete associated S3 file if it exists', async () => {
@@ -82,7 +82,7 @@ describe('clipboard/deleteEntry', () => {
             })
             .expect(200);
 
-        th.s3.checkCall({ nbCalls: 1 });
+        th.s3.checkNbCalls({ nbCalls: 1 });
         th.s3.checkCall({
             commandType: 'DeleteObject',
             input: { Bucket: 'clipboard', Key: 'foo.png' }

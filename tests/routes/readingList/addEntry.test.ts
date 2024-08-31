@@ -16,7 +16,7 @@ describe('readingList/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        th.s3.checkCall({ nbCalls: 1 });
+        th.s3.checkNbCalls({ nbCalls: 1 });
         th.s3.checkCall({
             commandType: 'PutObject',
             input: {

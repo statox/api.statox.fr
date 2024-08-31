@@ -5,36 +5,26 @@ import 'aws-sdk-client-mock-jest';
 import { s3Mock } from '../../../src/libs/databases/s3';
 import { TestHelper } from '../TestHelper';
 
-type S3CheckNbCallsParams = { nbCalls: number };
-type S3CheckCallArsParams = {
-    commandType: 'DeleteObject' | 'PutObject';
-    input: { [key: string]: string };
-};
-type S3CheckCallParams = S3CheckNbCallsParams | S3CheckCallArsParams;
-function isNbCallsCheck(check: S3CheckCallParams): check is S3CheckNbCallsParams {
-    return (check as S3CheckNbCallsParams).nbCalls !== undefined;
-}
-
-const setupS3Spy = async () => {
-    s3Mock.reset();
-};
-
 class TestHelper_S3 extends TestHelper {
     constructor() {
         super({
             name: 'S3',
             hooks: {
-                beforeEach: setupS3Spy
+                beforeEach: async () => {
+                    s3Mock.reset();
+                }
             }
         });
     }
 
-    checkCall = (params: S3CheckCallParams) => {
-        if (isNbCallsCheck(params)) {
-            assert.equal(s3Mock.calls().length, params.nbCalls);
-            return;
-        }
+    checkNbCalls = (params: { nbCalls: number }) => {
+        assert.equal(s3Mock.calls().length, params.nbCalls);
+    };
 
+    checkCall = (params: {
+        commandType: 'DeleteObject' | 'PutObject';
+        input: { [key: string]: string };
+    }) => {
         if (params.commandType === 'DeleteObject') {
             assert.exists(s3Mock.commandCalls(DeleteObjectCommand));
         } else if (params.commandType === 'PutObject') {
@@ -46,7 +36,7 @@ class TestHelper_S3 extends TestHelper {
         if (params.input) {
             const c = s3Mock.calls().pop();
             if (!c) {
-                return sinon.assert.fail();
+                return assert.fail();
             }
 
             for (const key of Object.keys(params.input)) {

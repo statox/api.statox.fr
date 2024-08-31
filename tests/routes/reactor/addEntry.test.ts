@@ -41,7 +41,7 @@ describe('reactor/addEntry', () => {
             ]
         });
 
-        th.s3.checkCall({ nbCalls: 0 });
+        th.s3.checkNbCalls({ nbCalls: 0 });
     });
 
     it('should create new entry and upload the file to S3', async () => {
@@ -53,7 +53,7 @@ describe('reactor/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        th.s3.checkCall({ nbCalls: 1 });
+        th.s3.checkNbCalls({ nbCalls: 1 });
         th.s3.checkCall({
             commandType: 'PutObject',
             input: {
@@ -93,7 +93,7 @@ describe('reactor/addEntry', () => {
             .attach('file', 'tests/assets/glider.png')
             .expect(200);
 
-        th.s3.checkCall({ nbCalls: 1 });
+        th.s3.checkNbCalls({ nbCalls: 1 });
         th.s3.checkCall({
             commandType: 'PutObject',
             input: {
