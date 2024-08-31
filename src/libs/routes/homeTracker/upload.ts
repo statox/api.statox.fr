@@ -8,7 +8,6 @@ const handler = async (req: Request, res: Response) => {
 };
 
 export const route: PostRoute = {
-    // TODO add API key authentication
     method: 'post',
     path: '/homeTracker/upload',
     inputSchema: sensorRawDataInputSchema,
