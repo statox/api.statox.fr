@@ -153,7 +153,7 @@ export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     await elk.index({
         index: 'data-home-tracker',
         document: {
-            '@timestamp': new Date().toISOString(),
+            '@timestamp': Date.now(),
             document: {
                 message: 'Home tracking event',
                 ...loggedData

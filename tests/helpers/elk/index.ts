@@ -32,6 +32,24 @@ const restoreElkSearch = async () => {
     elk.search = originalSearch;
 };
 
+const resetELKIndices = async () => {
+    try {
+        // Cleanup indices in case the previous test added some data
+        await elk.deleteByQuery({
+            index: 'data-home-tracker',
+            query: { match_all: {} }
+        });
+    } catch (error: unknown) {
+        // When the index is empty (which is expected most of the time) ELK we can an error with several failures with status 409
+        if (
+            (error as { meta: { body: { failures: { status: number }[] } } }).meta?.body
+                ?.failures?.[0]?.status !== 409
+        ) {
+            throw error;
+        }
+    }
+};
+
 let elkSpy: sinon.SinonSpy;
 const setupELKSpy = async () => {
     elkSpy = sinon.spy(elk, 'index');
@@ -47,7 +65,10 @@ class TestHelper_ELK extends TestHelper {
             name: 'ELK',
             hooks: {
                 beforeAll: mockELKSearch,
-                beforeEach: setupELKSpy,
+                beforeEach: async () => {
+                    await resetELKIndices();
+                    setupELKSpy();
+                },
                 afterEach: restoreElkSpy,
                 afterAll: restoreElkSearch
             }
