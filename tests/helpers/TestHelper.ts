@@ -1,5 +1,3 @@
-import { isDebug } from '../../src/libs/config/env';
-
 const defaultHook = () => Promise.resolve();
 
 // TODO: We can probably get the same typing as sinon
@@ -13,8 +11,6 @@ export class TestHelper {
         afterEach: Hook;
         afterAll: Hook;
     };
-
-    // TODO add the check functions
 
     constructor(params: {
         name: string;
@@ -36,9 +32,9 @@ export class TestHelper {
 
     hookWrapper = (step: string, hook: Hook) => {
         return async () => {
-            if (isDebug) {
-                console.log('Helper', this.name, 'step', step);
-            }
+            // if (isDebug) {
+            //     console.log('Helper', this.name, 'step', step);
+            // }
             return hook();
         };
     };
