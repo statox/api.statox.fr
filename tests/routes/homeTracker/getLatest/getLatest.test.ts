@@ -49,22 +49,10 @@ describe('homeTracker/getLatest', () => {
                 const { recordsBySensor } = response.body;
                 assert.lengthOf(Object.keys(recordsBySensor), 2);
 
-                assert.deepEqual(recordsBySensor['salon'][0].document, {
-                    message: 'Home tracking event',
-                    ...salon1
-                });
-                assert.deepEqual(recordsBySensor['salon'][1].document, {
-                    message: 'Home tracking event',
-                    ...salon2
-                });
-                assert.deepEqual(recordsBySensor['jardiniere'][0].document, {
-                    message: 'Home tracking event',
-                    ...jardiniere1
-                });
-                assert.deepEqual(recordsBySensor['jardiniere'][1].document, {
-                    message: 'Home tracking event',
-                    ...jardiniere2
-                });
+                assert.deepEqual(recordsBySensor['salon'][0].document, salon1);
+                assert.deepEqual(recordsBySensor['salon'][1].document, salon2);
+                assert.deepEqual(recordsBySensor['jardiniere'][0].document, jardiniere1);
+                assert.deepEqual(recordsBySensor['jardiniere'][1].document, jardiniere2);
             });
     });
 });

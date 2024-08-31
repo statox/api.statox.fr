@@ -26,7 +26,6 @@ describe('homeTracker/upload', () => {
             .expect(200);
 
         th.elk.checkDocumentCreated('data-home-tracker', {
-            message: 'Home tracking event',
             sensorName: 'foo',
 
             batteryCharge: 4.0,
@@ -58,7 +57,6 @@ describe('homeTracker/upload', () => {
             .expect(200);
 
         th.elk.checkDocumentCreated('data-home-tracker', {
-            message: 'Home tracking event',
             sensorName: 'foo',
             tempCelsius: 23.5,
             batteryPercent: 100,

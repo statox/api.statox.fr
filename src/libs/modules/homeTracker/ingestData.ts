@@ -155,7 +155,6 @@ export const ingestSensorData = async (sensorRawData: SensorRawData) => {
         document: {
             '@timestamp': Date.now(),
             document: {
-                message: 'Home tracking event',
                 ...loggedData
             }
         }
