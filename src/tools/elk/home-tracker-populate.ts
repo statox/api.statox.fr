@@ -104,7 +104,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 27.47,
                 humidity: 62.99,
                 batteryCharge: 3.571,
-                batteryPercent: 27.07
+                batteryPercent: 27.07,
+                internalTempCelsius: 20,
+                internalHumidity: 50
             }
         },
         {
@@ -114,7 +116,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 27.14,
                 humidity: 65.87,
                 batteryCharge: 3.571,
-                batteryPercent: 27.07
+                batteryPercent: 27.07,
+                internalTempCelsius: 21,
+                internalHumidity: 51
             }
         },
         {
@@ -124,7 +128,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 26.98,
                 humidity: 66.99,
                 batteryCharge: 3.577,
-                batteryPercent: 27.71
+                batteryPercent: 27.71,
+                internalTempCelsius: 21,
+                internalHumidity: 51
             }
         },
         {
@@ -134,7 +140,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 26.64,
                 humidity: 68.46,
                 batteryCharge: 3.571,
-                batteryPercent: 27.07
+                batteryPercent: 27.07,
+                internalTempCelsius: 20,
+                internalHumidity: 50
             }
         },
         {
@@ -144,7 +152,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 26.33,
                 humidity: 70.57,
                 batteryCharge: 3.564,
-                batteryPercent: 26.42
+                batteryPercent: 26.42,
+                internalTempCelsius: 20,
+                internalHumidity: 50
             }
         },
         {
@@ -154,7 +164,9 @@ If so you need to edit this function and remove the guard against non-local url
                 tempCelsius: 26.44,
                 humidity: 70.52,
                 batteryCharge: 3.571,
-                batteryPercent: 27.07
+                batteryPercent: 27.07,
+                internalTempCelsius: 20,
+                internalHumidity: 50
             }
         }
     ];
