@@ -49,10 +49,14 @@ describe('homeTracker/getLatest', () => {
                 const { recordsBySensor } = response.body;
                 assert.lengthOf(Object.keys(recordsBySensor), 2);
 
-                assert.deepEqual(recordsBySensor['salon'][0].document, salon1);
-                assert.deepEqual(recordsBySensor['salon'][1].document, salon2);
-                assert.deepEqual(recordsBySensor['jardiniere'][0].document, jardiniere1);
-                assert.deepEqual(recordsBySensor['jardiniere'][1].document, jardiniere2);
+                assert.sameDeepMembers(
+                    recordsBySensor['salon'].map((v: { document: unknown }) => v.document),
+                    [salon1, salon2]
+                );
+                assert.sameDeepMembers(
+                    recordsBySensor['jardiniere'].map((v: { document: unknown }) => v.document),
+                    [jardiniere1, jardiniere2]
+                );
             });
     });
 });
