@@ -23,7 +23,7 @@ if (isProd) {
     });
 }
 
-const clientTargetsLocalEnv = () => {
+export const elkClientTargetsLocalEnv = () => {
     const clientConnectionUrl = elk.connectionPool.connections[0].url.href;
     const localURLs = ['http://127.0.0.1:29200/'];
 
@@ -31,7 +31,7 @@ const clientTargetsLocalEnv = () => {
 };
 
 const deleteExistingDataStream = async () => {
-    if (!clientTargetsLocalEnv()) {
+    if (!elkClientTargetsLocalEnv()) {
         console.log(`
 You are trying to delete the data stream and index template "data-home-tracker" from a non-local ELK cluster.
 This will result in the lost of all the sensor data on the cluster.
@@ -49,7 +49,7 @@ If so you need to edit this function and remove the guard against non-local url
 };
 
 const createDataStream = async () => {
-    if (!clientTargetsLocalEnv()) {
+    if (!elkClientTargetsLocalEnv()) {
         console.log(`
     You are trying to create a data stream and index template "data-home-tracker" on a non-local ELK cluster.
     You probably don't need to do that since it was done once and you don't need to recreate them unless something went really wrong.

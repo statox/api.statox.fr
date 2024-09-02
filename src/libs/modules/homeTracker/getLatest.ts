@@ -48,6 +48,13 @@ export const getLatestData = async () => {
                 '@timestamp': 'desc'
             }
         ],
+        query: {
+            range: {
+                '@timestamp': {
+                    gte: Date.now() - 24 * 60 * 60 * 1000
+                }
+            }
+        },
         aggs: {
             sensorName: {
                 // Make buckets based on the sensorName, we have to use the keyword indexed field
@@ -58,7 +65,7 @@ export const getLatestData = async () => {
                     // This top_docs aggregation is what makes we get hits in the aggregation results
                     top_docs: {
                         top_hits: {
-                            size: 10
+                            size: 100
                         }
                     }
                 }
