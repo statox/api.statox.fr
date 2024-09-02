@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { getLatestData, ingestSensorData } from '../../../../src/libs/modules/homeTracker';
+import { ingestSensorData } from '../../../../src/libs/modules/homeTracker';
 import { assert } from 'chai';
 
 describe('homeTracker/getLatest', () => {
@@ -38,12 +38,11 @@ describe('homeTracker/getLatest', () => {
         await ingestSensorData(salon2);
         await ingestSensorData(jardiniere2);
 
-        await getLatestData();
-
         await request(app)
-            .get('/homeTracker/getLatest')
+            .post('/homeTracker/getLatest')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer fakeaccesskeyfortests')
+            .send({ timeWindow: '3h' })
             .expect(200)
             .then((response) => {
                 const { recordsBySensor } = response.body;
