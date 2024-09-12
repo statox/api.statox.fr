@@ -42,10 +42,31 @@ If so you need to edit this function and remove the guard against non-local url
         throw new Error('DANGEROUS_DELETE_OPERATION_ON_NON_LOCAL_ELK');
     }
 
-    console.log('ELK init - delete existing data stream data-home-tracker');
-    await elk.indices.deleteDataStream({ name: 'data-home-tracker' });
-    console.log('ELK init - delete existing index template data-home-tracker');
-    await elk.indices.deleteIndexTemplate({ name: 'data-home-tracker' });
+    try {
+        console.log('ELK init - delete existing data stream data-home-tracker');
+        await elk.indices.deleteDataStream({ name: 'data-home-tracker' });
+    } catch (error) {
+        const errorMessage = (error as Error).message;
+        if (
+            errorMessage.includes('resource_not_found_exception') ||
+            errorMessage.includes('index_not_found_exception')
+        ) {
+            console.log('data stream data-home-tracker doesnt exist, skip');
+        } else {
+            throw error;
+        }
+    }
+
+    try {
+        console.log('ELK init - delete existing index template data-home-tracker');
+        await elk.indices.deleteIndexTemplate({ name: 'data-home-tracker' });
+    } catch (error) {
+        if ((error as Error).message.includes('index_template_missing_exception')) {
+            console.log('index template data-home-tracker doesnt exist, skip');
+        } else {
+            throw error;
+        }
+    }
 };
 
 const createDataStream = async () => {
@@ -83,7 +104,7 @@ const createDataStream = async () => {
         }
     });
 
-    console.log('ELK init - creating data stream');
+    console.log('ELK init - create data stream');
     await elk.indices.createDataStream({ name: 'data-home-tracker' });
 };
 
