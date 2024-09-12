@@ -1,6 +1,7 @@
 import { Client } from '@elastic/elasticsearch';
 import { ELK_API_ENDPOINT, ELK_API_KEY } from '../config/elk';
-import { isProd } from '../config/env';
+import { isProd, isTests } from '../config/env';
+import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate';
 
 export let elk: Client;
 
@@ -116,4 +117,10 @@ export const initELK = async () => {
 
     await deleteExistingDataStream();
     await createDataStream();
+
+    if (!isTests) {
+        // TODO: Maybe add more data. Potential problem: Creating too much data could slow down startup
+        // but since this is run only when starting the app locally it might not be an issue
+        await populateFakeHomeTrackerData();
+    }
 };

@@ -171,8 +171,8 @@ If so you need to edit this function and remove the guard against non-local url
         }
     ];
 
-    console.log(`Adding ${recordsToCreate.length} records to EKL`);
-    const result = await Promise.all(
+    console.log(`HomeTracker - Adding ${recordsToCreate.length} records to EKL`);
+    await Promise.all(
         recordsToCreate.map((record) =>
             elk.index({
                 index: 'data-home-tracker',
@@ -180,8 +180,5 @@ If so you need to edit this function and remove the guard against non-local url
             })
         )
     );
-    console.log('DONE');
-    console.log(result);
-
-    // const result = elk.search({ index: 'data-home-tracker', query: { match_all: {} } });
+    console.log('HomeTracker - Done adding records to ELK');
 };
