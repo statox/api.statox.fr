@@ -6,55 +6,163 @@ interface SensorRecord {
     document: SensorLogData;
 }
 
+interface HomeTrackerTimeData {
+    tempCelsius?: {
+        [sensorName: string]: number;
+    };
+    internalTempCelsius?: {
+        [sensorName: string]: number;
+    };
+    batteryCharge?: {
+        [sensorName: string]: number;
+    };
+    humidity?: {
+        [sensorName: string]: number;
+    };
+    internalHumidity?: {
+        [sensorName: string]: number;
+    };
+    pressurehPa?: {
+        [sensorName: string]: number;
+    };
+}
+
+interface HomeTrackerHistogramData {
+    [timestamp: number]: HomeTrackerTimeData;
+}
+
 export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d') => {
     let earliestTS: number;
 
-    if (window === '3h') {
-        earliestTS = Date.now() - 3 * 60 * 60 * 1000;
-    } else if (window === '12h') {
-        earliestTS = Date.now() - 12 * 60 * 60 * 1000;
-    } else if (window === '1d') {
-        earliestTS = Date.now() - 24 * 60 * 60 * 1000;
-    } else if (window === '3d') {
-        earliestTS = Date.now() - 3 * 24 * 60 * 60 * 1000;
-    } else if (window === '7d') {
-        earliestTS = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    } else {
-        earliestTS = Date.now() - 24 * 60 * 60 * 1000;
-    }
+    const oneHour = 60 * 60 * 1000;
+    const oneDay = 24 * oneHour;
 
-    const recordsBySensor: {
-        [sensorName: string]: SensorRecord[];
-    } = {};
+    if (window === '3h') {
+        earliestTS = Date.now() - 3 * oneHour;
+    } else if (window === '12h') {
+        earliestTS = Date.now() - 12 * oneHour;
+    } else if (window === '1d') {
+        earliestTS = Date.now() - 24 * oneHour;
+    } else if (window === '3d') {
+        earliestTS = Date.now() - 3 * oneDay;
+    } else if (window === '7d') {
+        earliestTS = Date.now() - 7 * oneDay;
+    } else {
+        // should use some kind of assert.never() instead of default value
+        earliestTS = Date.now() - oneDay;
+    }
 
     const result = await elk.search<SensorRecord>({
         index: 'data-home-tracker',
         // We don't need results in hits as the results we want are in the aggregation, hence size 0
-        size: 1000,
-        // We need the most recent documents for each sensor
-        sort: [
-            {
-                '@timestamp': 'desc'
-            }
-        ],
+        size: 0,
         query: {
             range: {
                 '@timestamp': {
                     gte: earliestTS
                 }
             }
+        },
+        aggregations: {
+            // We have to aggregate by date first to get the same buckets for all sensors
+            byDate: {
+                // TODO might need to add some boundaries param like "extended_bounds" in case data is missing
+                auto_date_histogram: {
+                    field: '@timestamp',
+                    buckets: 10 // TODO might want to make the number of buckets parametrized
+                },
+                aggregations: {
+                    bySensor: {
+                        terms: {
+                            field: 'document.sensorName.keyword'
+                        },
+                        aggregations: {
+                            tempCelsius: {
+                                avg: { field: 'document.tempCelsius' }
+                            },
+                            internalTempCelsius: {
+                                avg: { field: 'document.internalTempCelsius' }
+                            },
+                            humidity: {
+                                avg: { field: 'document.humidity' }
+                            },
+                            internalHumidity: {
+                                avg: { field: 'document.internalHumidity' }
+                            },
+                            pressurehPa: {
+                                avg: { field: 'document.pressurehPa' }
+                            },
+                            batteryCharge: {
+                                avg: { field: 'document.batteryCharge' }
+                            }
+                        }
+                    }
+                }
+            }
         }
     });
 
-    for (const record of result.hits.hits) {
-        const sensor = record._source?.document.sensorName || 'N/A';
-        if (!recordsBySensor[sensor]) {
-            recordsBySensor[sensor] = [];
+    // @ts-expect-error Not sure why the `.buckets` member is not in the typing
+    const timeBuckets = result.aggregations?.byDate.buckets || [];
+
+    const sensorNames: Set<string> = new Set();
+    const histogramData: HomeTrackerHistogramData = {};
+
+    for (const timeBucket of timeBuckets) {
+        const timeRecord: HomeTrackerTimeData = {};
+
+        for (const sensorBucket of timeBucket.bySensor.buckets) {
+            const sensorName = sensorBucket.key;
+
+            sensorNames.add(sensorName);
+
+            const tempCelsius = sensorBucket.tempCelsius.value;
+            if (tempCelsius) {
+                if (!timeRecord.tempCelsius) {
+                    timeRecord.tempCelsius = {};
+                }
+                timeRecord.tempCelsius[sensorName] = tempCelsius;
+            }
+            const internalTempCelsius = sensorBucket.internalTempCelsius.value;
+            if (internalTempCelsius) {
+                if (!timeRecord.internalTempCelsius) {
+                    timeRecord.internalTempCelsius = {};
+                }
+                timeRecord.internalTempCelsius[sensorName] = internalTempCelsius;
+            }
+            const batteryCharge = sensorBucket.batteryCharge.value;
+            if (batteryCharge) {
+                if (!timeRecord.batteryCharge) {
+                    timeRecord.batteryCharge = {};
+                }
+                timeRecord.batteryCharge[sensorName] = batteryCharge;
+            }
+            const humidity = sensorBucket.humidity.value;
+            if (humidity) {
+                if (!timeRecord.humidity) {
+                    timeRecord.humidity = {};
+                }
+                timeRecord.humidity[sensorName] = humidity;
+            }
+            const internalHumidity = sensorBucket.internalHumidity.value;
+            if (internalHumidity) {
+                if (!timeRecord.internalHumidity) {
+                    timeRecord.internalHumidity = {};
+                }
+                timeRecord.internalHumidity[sensorName] = internalHumidity;
+            }
+            const pressurehPa = sensorBucket.pressurehPa.value;
+            if (pressurehPa) {
+                if (!timeRecord.pressurehPa) {
+                    timeRecord.pressurehPa = {};
+                }
+                timeRecord.pressurehPa[sensorName] = pressurehPa;
+            }
         }
-        if (record && record._source) {
-            recordsBySensor[sensor].push(record._source);
-        }
+
+        const ts = Math.floor(timeBucket.key / 1000);
+        histogramData[ts] = timeRecord;
     }
 
-    return { recordsBySensor };
+    return { histogramData, sensorNames: [...sensorNames] };
 };
