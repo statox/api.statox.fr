@@ -1,51 +1,61 @@
 import request from 'supertest';
 import { app } from '../../../../src/app';
-import { ingestSensorData } from '../../../../src/libs/modules/homeTracker';
 import { assert } from 'chai';
 import { th } from '../../../helpers';
+import { DateTime } from 'luxon';
 
 describe('homeTracker/getLatest', () => {
-    // TODO find a way to ingest data a different time (i.e. create an ELK fixture) and
-    // add tests on the creation of the time buckets
     it('should return correct data', async () => {
-        const jardiniere1 = {
-            sensorName: 'jardiniere',
-            batteryCharge: 4,
-            batteryPercent: 100,
-            humidity: 30,
-            tempCelsius: 22
-        };
-        const jardiniere2 = {
-            sensorName: 'jardiniere',
-            batteryCharge: 4,
-            batteryPercent: 100,
-            humidity: 30,
-            tempCelsius: 22
-        };
-        const salon1 = {
-            sensorName: 'salon',
-            batteryCharge: 4,
-            batteryPercent: 100,
-            humidity: 30,
-            internalHumidity: 40,
-            tempCelsius: 21,
-            internalTempCelsius: 25,
-            pressurePa: 101400
-        };
-        const salon2 = {
-            sensorName: 'salon',
-            batteryCharge: 4,
-            batteryPercent: 100,
-            humidity: 30,
-            internalHumidity: 40,
-            tempCelsius: 22,
-            internalTempCelsius: 25,
-            pressurePa: 101600
-        };
-        await ingestSensorData(jardiniere1);
-        await ingestSensorData(salon1);
-        await ingestSensorData(salon2);
-        await ingestSensorData(jardiniere2);
+        await th.elk.fixture({
+            'data-home-tracker': [
+                {
+                    '@timestamp': DateTime.now().toMillis(),
+                    document: {
+                        sensorName: 'salon',
+                        batteryCharge: 4,
+                        batteryPercent: 100,
+                        humidity: 30,
+                        internalHumidity: 40,
+                        tempCelsius: 21,
+                        internalTempCelsius: 25,
+                        pressurehPa: 1014
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().toMillis(),
+                    document: {
+                        sensorName: 'salon',
+                        batteryCharge: 4,
+                        batteryPercent: 100,
+                        humidity: 30,
+                        internalHumidity: 40,
+                        tempCelsius: 22,
+                        internalTempCelsius: 25,
+                        pressurehPa: 1016
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().toMillis(),
+                    document: {
+                        sensorName: 'jardiniere',
+                        batteryCharge: 4,
+                        batteryPercent: 100,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().toMillis(),
+                    document: {
+                        sensorName: 'jardiniere',
+                        batteryCharge: 4,
+                        batteryPercent: 100,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                }
+            ]
+        });
 
         await request(app)
             .post('/homeTracker/getLatest')

@@ -3,6 +3,7 @@ import { elk } from '../../../src/libs/databases/elk';
 import { isDebug } from '../../../src/libs/config/env';
 import { assert } from 'chai';
 import { TestHelper } from '../TestHelper';
+import { ELKFixture } from './types';
 
 const originalSearch = elk.search;
 
@@ -18,8 +19,7 @@ const fakeSearch = async (...args: Parameters<typeof originalSearch>) => {
     await elk.indices.refresh({ index: 'data-home-tracker' });
 
     // Call the original function
-    const result = await originalSearch.call(elk, ...args);
-    return result;
+    return await originalSearch.call(elk, ...args);
 };
 
 const mockELKSearch = async () => {
@@ -74,6 +74,18 @@ class TestHelper_ELK extends TestHelper {
             }
         });
     }
+
+    fixture = async (fixture: ELKFixture) => {
+        for (const index of Object.keys(fixture)) {
+            const documents = fixture[index];
+
+            if (!documents.length) {
+                continue;
+            }
+
+            await Promise.all(documents.map((document) => elk.index({ index, document })));
+        }
+    };
 
     checkDocumentCreated = (index: string, document: unknown) => {
         const buildArgs = sinon.match({ index: index });
