@@ -84,6 +84,7 @@ class TestHelper_ELK extends TestHelper {
             }
 
             await Promise.all(documents.map((document) => elk.index({ index, document })));
+            await elk.indices.refresh({ index });
         }
     };
 

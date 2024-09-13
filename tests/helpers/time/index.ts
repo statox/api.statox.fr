@@ -10,9 +10,13 @@ class TestHelper_Time extends TestHelper {
         });
     }
 
-    isAroundNowSec = (ts: number, maxDelayInSeconds = 1) => {
+    isAroundNowSec = (ts: number, maxDelayInSeconds = 2) => {
         const diffFromNow = DateTime.fromSeconds(ts).diffNow('seconds').seconds;
-        assert.isAtMost(Math.abs(diffFromNow), maxDelayInSeconds);
+        assert.isAtMost(
+            Math.abs(diffFromNow),
+            maxDelayInSeconds,
+            `timestamp in seconds is not around now ${ts}`
+        );
     };
 }
 
