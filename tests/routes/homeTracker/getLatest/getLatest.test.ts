@@ -5,7 +5,7 @@ import { th } from '../../../helpers';
 import { DateTime } from 'luxon';
 
 describe('homeTracker/getLatest', () => {
-    it('should return correct data', async () => {
+    it('should average the data in the same bucket', async () => {
         await th.elk.fixture({
             'data-home-tracker': [
                 {
@@ -96,6 +96,50 @@ describe('homeTracker/getLatest', () => {
                         salon: 1015
                     }
                 });
+            });
+    });
+
+    it('should create buckets based on the time', async () => {
+        await th.elk.fixture({
+            // Create logs every 5 minutes for the past 4 hours
+            'data-home-tracker': new Array(4 * 6 * 2)
+                .fill(0)
+                .map((_, i) =>
+                    DateTime.now()
+                        .minus({ minutes: 5 * i })
+                        .toMillis()
+                )
+                .map((ts) => {
+                    return {
+                        '@timestamp': ts,
+                        document: {
+                            sensorName: 'salon',
+                            batteryCharge: 2,
+                            humidity: 30,
+                            tempCelsius: 20
+                        }
+                    };
+                })
+        });
+
+        await request(app)
+            .post('/homeTracker/getLatest')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer fakeaccesskeyfortests')
+            .send({ timeWindow: '3h' })
+            .expect(200)
+            .then((response) => {
+                const { histogramData } = response.body;
+
+                assert.lengthOf(Object.keys(histogramData), 18);
+
+                // Check that the date of the earliest bucket is roughly 3 hours in the past
+                // even if existing data earlier than that
+                const minTS = Math.min(...Object.keys(histogramData).map(Number));
+                const minDate = DateTime.fromSeconds(minTS);
+                const diff = DateTime.now().diff(minDate, 'minutes').minutes;
+                assert.isAtMost(diff, 3 * 60 + 30);
+                assert.isAtLeast(diff, 3 * 60 - 30);
             });
     });
 });

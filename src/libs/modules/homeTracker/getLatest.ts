@@ -40,7 +40,7 @@ export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d') =
 
     if (window === '3h') {
         earliestTS = Date.now() - 3 * oneHour;
-        nbBuckets = 30;
+        nbBuckets = 18;
     } else if (window === '12h') {
         earliestTS = Date.now() - 12 * oneHour;
         nbBuckets = 72;
