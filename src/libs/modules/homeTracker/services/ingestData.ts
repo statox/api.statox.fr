@@ -1,6 +1,6 @@
-import { slog } from '../logging';
-import { SensorLogData, SensorRawData } from './types';
-import { elk } from '../../databases/elk';
+import { slog } from '../../logging';
+import { SensorLogData, SensorRawData } from '../types';
+import { elk } from '../../../databases/elk';
 
 export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     const {
