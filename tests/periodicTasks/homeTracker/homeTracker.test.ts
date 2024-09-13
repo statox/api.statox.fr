@@ -1,21 +1,69 @@
-import { doHomeTrackerMonitoring, ingestSensorData } from '../../../src/libs/modules/homeTracker';
+import { DateTime } from 'luxon';
+import { doHomeTrackerMonitoring } from '../../../src/libs/modules/homeTracker';
 import { th } from '../../helpers';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
     it('Should create a notification for missing sensor data, and should notify only once', async () => {
-        await ingestSensorData({
-            sensorName: 'salon',
-            batteryCharge: 4.2,
-            batteryPercent: 100,
-            humidity: 30,
-            tempCelsius: 21
-        });
-        await ingestSensorData({
-            sensorName: 'salon',
-            batteryCharge: 4.2,
-            batteryPercent: 100,
-            humidity: 30,
-            tempCelsius: 22
+        await th.elk.fixture({
+            'data-home-tracker': [
+                // Salon: 2 very recent logs, should not alert
+                {
+                    '@timestamp': DateTime.now().toMillis(),
+                    document: {
+                        sensorName: 'salon',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 21
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().minus({ minutes: 10 }).toMillis(),
+                    document: {
+                        sensorName: 'salon',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                },
+                // Chambre: 2 logs in the past 30 minutes, should not alert
+                {
+                    '@timestamp': DateTime.now().minus({ minutes: 20 }).toMillis(),
+                    document: {
+                        sensorName: 'chambre',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 21
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().minus({ minutes: 29 }).toMillis(),
+                    document: {
+                        sensorName: 'chambre',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                },
+                // jardiniere: only one log in the past 30 minutes and one older one, should alert
+                {
+                    '@timestamp': DateTime.now().minus({ minutes: 1 }).toMillis(),
+                    document: {
+                        sensorName: 'jardiniere',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                },
+                {
+                    '@timestamp': DateTime.now().minus({ hours: 1 }).toMillis(),
+                    document: {
+                        sensorName: 'jardiniere',
+                        batteryCharge: 4,
+                        humidity: 30,
+                        tempCelsius: 22
+                    }
+                }
+            ]
         });
 
         await doHomeTrackerMonitoring();
