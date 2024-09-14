@@ -11,6 +11,7 @@ import { route as Clipboard_getPublicEntries } from './clipboard/getPublicEntrie
 import { route as Clipboard_staticView } from './clipboard/staticView';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime';
 import { route as HomeTracker_getLatest } from './homeTracker/getLatest';
+import { route as HomeTracker_listSensors } from './homeTracker/listSensors';
 import { route as HomeTracker_upload } from './homeTracker/upload';
 import { route as Reactor_addEntry } from './reactor/addEntry';
 import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic';
@@ -34,6 +35,7 @@ export const routes: Route[] = [
     Clipboard_staticView,
     Health_GetRemoteTime,
     HomeTracker_getLatest,
+    HomeTracker_listSensors,
     HomeTracker_upload,
     Reactor_addEntry,
     Reactor_getEntriesForPublic,
