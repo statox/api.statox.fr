@@ -91,3 +91,14 @@ export const createWatcher = async (newWatcherParams: NewWatcherParams) => {
 export const deleteWatcher = async (watcherId: number) => {
     await db.query(`DELETE FROM WebWatcher WHERE id = ?`, watcherId);
 };
+
+export const disableWatcher = async (watcherId: number) => {
+    await db.query(
+        'UPDATE WebWatcher SET archivalDateUnix = UNIX_TIMESTAMP() WHERE id = ?',
+        watcherId
+    );
+};
+
+export const enableWatcher = async (watcherId: number) => {
+    await db.query('UPDATE WebWatcher SET archivalDateUnix = null WHERE id = ?', watcherId);
+};

@@ -21,6 +21,7 @@ import { route as ReadingList_getAllEntries } from './readingList/getAllEntries'
 import { route as WebWatcher_createWatcher } from './webWatcher/createWatcher';
 import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher';
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers';
+import { route as WebWatcher_toggleWatcherEnabled } from './webWatcher/toggleWatcherEnabled';
 
 export const routes: Route[] = [
     Chords_addLinkVisit,
@@ -44,5 +45,6 @@ export const routes: Route[] = [
     ReadingList_getAllEntries,
     WebWatcher_createWatcher,
     WebWatcher_deleteWatcher,
-    WebWatcher_getAllWatcher
+    WebWatcher_getAllWatcher,
+    WebWatcher_toggleWatcherEnabled
 ];
