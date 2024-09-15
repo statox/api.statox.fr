@@ -14,10 +14,35 @@ export const getWatchedContent = async () => {
             lastContent,
             lastCheckDateUnix,
             lastUpdateDateUnix,
+            archivalDateUnix,
             checkIntervalSeconds,
             lastErrorDateUnix,
             lastErrorMessage
         FROM WebWatcher
+        `
+    );
+    return content;
+};
+
+export const getEnabledWatchedContent = async () => {
+    const [content] = await db.query<WatchedContent[]>(
+        `SELECT
+            id,
+            name,
+            notificationMessage,
+            url,
+            watchType,
+            cssSelector,
+            lastContent,
+            lastCheckDateUnix,
+            lastUpdateDateUnix,
+            archivalDateUnix,
+            checkIntervalSeconds,
+            lastErrorDateUnix,
+            lastErrorMessage
+        FROM WebWatcher
+        WHERE
+            archivalDateUnix IS NULL
         `
     );
     return content;

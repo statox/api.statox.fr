@@ -215,6 +215,51 @@ describe('periodic task - webWatcher', () => {
         th.slack.checkNoNotifications();
     });
 
+    it('should not run disabled checks', async () => {
+        await th.mysql.fixture({
+            WebWatcher: [
+                {
+                    name: 'Web check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'CSS',
+                    cssSelector: '#the-title',
+                    lastContent: '',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    archivalDateUnix: 10,
+                    checkIntervalSeconds: 0
+                }
+            ]
+        });
+
+        await doWebWatcher();
+
+        th.slog.checkNoLogs();
+
+        await th.mysql.checkContains({
+            WebWatcher: [
+                {
+                    id: 1,
+                    name: 'Web check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'CSS',
+                    cssSelector: '#the-title',
+                    lastContent: '',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    archivalDateUnix: 10,
+                    checkIntervalSeconds: 0,
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
+                }
+            ]
+        });
+
+        th.slack.checkNoNotifications();
+    });
+
     it('should update last check time even when no changed happened in the page', async () => {
         await th.mysql.fixture({
             WebWatcher: [

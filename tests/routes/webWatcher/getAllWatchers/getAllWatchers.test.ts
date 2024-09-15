@@ -17,6 +17,7 @@ describe('webWatcher/getAllWatchers', () => {
                 lastContent: 'old value',
                 lastCheckDateUnix: 0,
                 lastUpdateDateUnix: 0,
+                archivalDateUnix: 10,
                 checkIntervalSeconds: 0,
                 lastErrorDateUnix: 10,
                 lastErrorMessage: 'foo'
@@ -31,6 +32,7 @@ describe('webWatcher/getAllWatchers', () => {
                 lastContent: '',
                 lastCheckDateUnix: 0,
                 lastUpdateDateUnix: 0,
+                archivalDateUnix: null,
                 checkIntervalSeconds: 0,
                 lastErrorDateUnix: null,
                 lastErrorMessage: null

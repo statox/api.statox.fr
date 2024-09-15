@@ -10,7 +10,7 @@ import {
     isHASHWatcherContent,
     WatchedContent
 } from './types';
-import { getWatchedContent } from './watchers';
+import { getEnabledWatchedContent } from './watchers';
 
 const { JSDOM } = jsdom;
 
@@ -131,7 +131,7 @@ const getHASHWatcherContent = async (c: HASHWatchedContent) => {
 };
 
 export const doWebWatcher = async () => {
-    const contentsToCheck = await getWatchedContent();
+    const contentsToCheck = await getEnabledWatchedContent();
 
     for (const content of contentsToCheck) {
         try {

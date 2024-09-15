@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS `WebWatcher` (
     `lastContent`varchar(400) NOT NULL DEFAULT '',
     `lastCheckDateUnix` int(11) unsigned NOT NULL DEFAULT 0,
     `lastUpdateDateUnix` int(11) unsigned NOT NULL DEFAULT 0,
+    `archivalDateUnix` int(11) default NULL,
     `checkIntervalSeconds` int(11) unsigned NOT NULL,
     `lastErrorDateUnix` int(11) unsigned,
     `lastErrorMessage` varchar(400),
