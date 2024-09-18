@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { elk } from '../../../databases/elk';
 import { SensorLogData } from '../types';
 
@@ -31,7 +32,7 @@ interface HomeTrackerHistogramData {
     [timestamp: number]: HomeTrackerTimeData;
 }
 
-export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d') => {
+export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1m') => {
     let earliestTS: number;
     let nbBuckets: number;
 
@@ -53,6 +54,12 @@ export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d') =
     } else if (window === '7d') {
         earliestTS = Date.now() - 7 * oneDay;
         nbBuckets = 200;
+    } else if (window === '2w') {
+        earliestTS = DateTime.now().minus({ weeks: 2 }).toMillis();
+        nbBuckets = 120;
+    } else if (window === '1m') {
+        earliestTS = DateTime.now().minus({ months: 1 }).toMillis();
+        nbBuckets = 124;
     } else {
         // should use some kind of assert.never() instead of default value
         earliestTS = Date.now() - oneDay;
