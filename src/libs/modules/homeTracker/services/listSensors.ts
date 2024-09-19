@@ -15,9 +15,10 @@ const colorsOfKnownSensors: {
     'dev-salon': { r: 140, g: 0, b: 60 },
     chambre: { r: 0, g: 80, b: 140 },
     jardiniere: { r: 0, g: 140, b: 0 },
-    salon: { r: 140, g: 0, b: 60 }
+    salon: { r: 140, g: 0, b: 60 },
+    sdb: { r: 110, g: 110, b: 20 }
 };
-const defaultColor = { r: 140, g: 0, b: 50 };
+const defaultColor = { r: 250, g: 0, b: 250 };
 
 export const listSensors = async () => {
     // Aggregate by sensor name first to get all the various sensors
