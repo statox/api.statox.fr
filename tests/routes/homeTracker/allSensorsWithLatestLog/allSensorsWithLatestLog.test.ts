@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { th } from '../../../helpers';
 import { DateTime } from 'luxon';
 
-describe('homeTracker/listSensors', () => {
+describe('/homeTracker/allSensorsWithLatestLog', () => {
     it('Should return one entry by sensor with the last log', async () => {
         const nowMillis = DateTime.now().toMillis();
         const tenMinutesAgoMillis = DateTime.now().minus({ minutes: 10 }).toMillis();
@@ -52,7 +52,7 @@ describe('homeTracker/listSensors', () => {
         });
 
         await request(app)
-            .get('/homeTracker/sensors')
+            .get('/homeTracker/allSensorsWithLatestLog')
             .expect(200)
             .then((response) => {
                 const { sensors } = response.body;

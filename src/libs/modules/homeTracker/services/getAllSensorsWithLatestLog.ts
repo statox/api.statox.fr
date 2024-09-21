@@ -20,7 +20,7 @@ const colorsOfKnownSensors: {
 };
 const defaultColor = { r: 250, g: 0, b: 250 };
 
-export const listSensors = async () => {
+export const getAllSensorsWithLatestLog = async () => {
     // Aggregate by sensor name first to get all the various sensors
     // then only keep the last log for each sensor
     // TODO maybe add a filter e.g. on the last 2 hours to have a meaningful
