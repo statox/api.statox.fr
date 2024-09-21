@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { th } from '../../../helpers';
 import { DateTime } from 'luxon';
 
-describe('homeTracker/getLatest', () => {
+describe('homeTracker/histogramData', () => {
     it('should average the data in the same bucket', async () => {
         await th.elk.fixture({
             'data-home-tracker': [
@@ -58,7 +58,7 @@ describe('homeTracker/getLatest', () => {
         });
 
         await request(app)
-            .post('/homeTracker/getLatest')
+            .post('/homeTracker/histogramData')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({ timeWindow: '3h' })
@@ -123,7 +123,7 @@ describe('homeTracker/getLatest', () => {
         });
 
         await request(app)
-            .post('/homeTracker/getLatest')
+            .post('/homeTracker/histogramData')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({ timeWindow: '3h' })

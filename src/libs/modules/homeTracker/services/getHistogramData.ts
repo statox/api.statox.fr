@@ -32,7 +32,7 @@ interface HomeTrackerHistogramData {
     [timestamp: number]: HomeTrackerTimeData;
 }
 
-export const getLatestData = async (window: '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1m') => {
+export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1m') => {
     let earliestTS: number;
     let nbBuckets: number;
 

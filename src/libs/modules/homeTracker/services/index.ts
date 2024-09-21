@@ -1,4 +1,4 @@
 export { getAllSensorsWithLatestLog } from './getAllSensorsWithLatestLog';
-export { getLatestData } from './getLatest';
+export { getHistogramData } from './getHistogramData';
 export { ingestSensorData } from './ingestData';
 export { doHomeTrackerMonitoring } from './monitorSensors';
