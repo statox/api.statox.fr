@@ -94,7 +94,17 @@ const createDataStream = async () => {
         },
         template: {
             mappings: {
-                // TODO properly type document fields
+                // TODO map all existing properties?
+                // For now adding only the one which cause issue in tests (e.g. first test create pressurehPa as integer, second test uses float, elk errors out)
+                properties: {
+                    document: {
+                        properties: {
+                            pressurehPa: {
+                                type: 'float'
+                            }
+                        }
+                    }
+                }
             },
             settings: {
                 index: {
