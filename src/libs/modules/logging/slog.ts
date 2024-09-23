@@ -27,6 +27,7 @@ type LoggableProperties =
           error?: Error;
           executionTimeMs?: number;
           failedCalls?: number;
+          forecast?: string;
           insertTime?: string;
           invalidField?: string;
           invalidValueStr?: string;
@@ -41,7 +42,10 @@ type LoggableProperties =
           path?: string;
           port?: number;
           precipitationMM?: number;
-          pressureSeaLevelPa?: number;
+          pressureLatest?: number;
+          pressureMax?: number;
+          pressureMin?: number;
+          pressureOldest?: number;
           previousStatus?: string;
           previousTimestamp?: number;
           referenceTime?: string;
@@ -56,10 +60,12 @@ type LoggableProperties =
           status?: string;
           taskName?: string;
           timestamp?: number;
+          trend?: string;
           validityTime?: string;
           visitedUrl?: string;
           watcherName?: string;
           xRequestInfo?: xRequestInfo;
+          zValue?: number;
       }
     | SensorLogData
     | SensorErrorData;
@@ -79,6 +85,7 @@ export type AppLogComponent =
     | 'reactor'
     | 'readingList'
     | 's3Files'
+    | 'weather-forecast'
     | 'web-watcher';
 
 export const log = (component: AppLogComponent, message: string, data?: LogObject) => {
