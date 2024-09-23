@@ -39,6 +39,7 @@ const resetELKIndices = async () => {
             index: 'data-home-tracker',
             query: { match_all: {} }
         });
+        await elk.indices.refresh({ index: 'data-home-tracker' });
     } catch (error: unknown) {
         // When the index is empty (which is expected most of the time) ELK we can an error with several failures with status 409
         if (
