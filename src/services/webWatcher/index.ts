@@ -16,7 +16,6 @@ export interface WatchedContent extends RowDataPacket {
     notificationMessage: string;
     url: string;
     watchType: WatchType;
-    cssSelector: string;
     lastContent: string;
     lastCheckDateUnix: number;
     lastUpdateDateUnix: number;
@@ -27,6 +26,7 @@ export interface WatchedContent extends RowDataPacket {
 
 export interface CSSWatchedContent extends WatchedContent {
     watchType: 'CSS';
+    cssSelector: string;
 }
 
 export interface HASHWatchedContent extends WatchedContent {
@@ -75,12 +75,19 @@ interface NewWatcherParams {
     notificationMessage: string;
     url: string;
     watchType: WatchType;
-    cssSelector: string;
+    cssSelector?: string;
     checkIntervalSeconds: number;
 }
+
 export const createWatcher = async (newWatcherParams: NewWatcherParams) => {
-    const { name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds } =
-        newWatcherParams;
+    const {
+        name,
+        notificationMessage,
+        url,
+        watchType,
+        cssSelector = '',
+        checkIntervalSeconds
+    } = newWatcherParams;
 
     try {
         await db.query(
