@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { mysqlCheckContains, mysqlDumpTables, mysqlFixture } from '../../helpers/mysql';
+import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/services/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 
@@ -11,12 +11,13 @@ describe('periodic task - webWatcher', () => {
             '<html><head><title id="the-title">Example Page</title></head><body><h1>A header</h1></body></html>';
         stub.withArgs('https://foo.com').resolves(new Response(body));
         stub.withArgs('https://bar.com').resolves(new Response(body));
+        stub.withArgs('https://fizz.com').resolves(new Response('foobar'));
     });
     afterEach(() => {
         stub.restore();
     });
 
-    it('should detect a change, notify and record the change', async () => {
+    it('should detect a change, notify and record the change - for CSS Watchers', async () => {
         await mysqlFixture({
             WebWatcher: [
                 {
@@ -59,7 +60,6 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
-        await mysqlDumpTables('WebWatcher');
         await mysqlCheckContains({
             WebWatcher: [
                 {
@@ -85,6 +85,85 @@ describe('periodic task - webWatcher', () => {
                 {
                     id: 2,
                     lastContent: 'A header',
+                    lastCheckDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                    lastUpdateDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                    lastErrorDateUnix: null,
+                    lastErrorMessage: null
+                }
+            ]
+        });
+    });
+
+    it('should detect a change, notify and record the change - for HASH Watchers', async () => {
+        await mysqlFixture({
+            WebWatcher: [
+                {
+                    name: 'Hash check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'HASH',
+                    cssSelector: '',
+                    lastContent: '',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0
+                },
+                {
+                    name: 'Hash check 2',
+                    notificationMessage: 'Has changed',
+                    url: 'https://fizz.com',
+                    watchType: 'HASH',
+                    cssSelector: '',
+                    lastContent: 'old value',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0
+                }
+            ]
+        });
+
+        await doWebWatcher();
+
+        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+            notification: 'Hash check 1 - Has changed',
+            watcherName: 'Hash check 1',
+            status: '965324907ec9f9d6ae72a8415dc127e853e746635b64fb8f2ac15427c3d2933c',
+            previousStatus: ''
+        });
+        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+            notification: 'Hash check 2 - Has changed',
+            watcherName: 'Hash check 2',
+            status: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
+            previousStatus: 'old value'
+        });
+
+        await mysqlCheckContains({
+            WebWatcher: [
+                {
+                    id: 1,
+                    name: 'Hash check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'HASH',
+                    lastContent: '965324907ec9f9d6ae72a8415dc127e853e746635b64fb8f2ac15427c3d2933c',
+                    lastCheckDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                    lastUpdateDateUnix: {
+                        aroundTimestamp: 'NOW()',
+                        precision: '1 SECOND'
+                    },
+                }
+                {
+                    id: 2,
+                    lastContent: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
                     lastCheckDateUnix: {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
@@ -238,6 +317,47 @@ describe('periodic task - webWatcher', () => {
                     lastErrorMessage: "'invalid @# > selector . adsf' is not a valid selector"
                 }
             ]
+        });
+    });
+
+    it('should continue with other checks if one has an unsupported type in DB', async () => {
+        await mysqlFixture({
+            WebWatcher: [
+                {
+                    name: 'Incorrect check',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'NOT SUPPORTED',
+                    cssSelector: '',
+                    lastContent: '',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0
+                },
+                {
+                    name: 'Web check 1',
+                    notificationMessage: 'Has changed',
+                    url: 'https://foo.com',
+                    watchType: 'CSS',
+                    cssSelector: '#the-title',
+                    lastContent: '',
+                    lastCheckDateUnix: 0,
+                    lastUpdateDateUnix: 0,
+                    checkIntervalSeconds: 0
+                },
+            ]
+        });
+
+        await doWebWatcher();
+
+        slogCheckLog('web-watcher', 'WebWatcher content updated', {
+            notification: 'Web check 1 - Has changed',
+            watcherName: 'Web check 1',
+            status: 'Example Page',
+            previousStatus: ''
+        });
+        slogCheckLog('web-watcher', 'Failed to run watcher', {
+            watcherName: 'Incorrect check'
         });
     });
 });
