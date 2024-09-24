@@ -12,21 +12,21 @@ export const mochaHooks = () => {
         beforeAll: async () => {
             await initDb();
             setupFakeAuth();
-            setupNotifierSlackStub();
             initApp();
         },
         beforeEach: async () => {
             setupS3Spy();
             await mysqlClearAllTables();
             await createApiKeys();
+            setupNotifierSlackStub();
             setupSlogSpy();
         },
         afterEach: () => {
+            restoreNotifierSlackStub();
             restoreSlogSpy();
         },
         afterAll: () => {
             restoreFakeAuth();
-            restoreNotifierSlackStub();
         }
     };
 };

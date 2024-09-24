@@ -143,7 +143,7 @@ const recordContentChecked = async (c: WatchedContent) => {
 };
 
 const recordContentCheckFailed = async (c: WatchedContent, error: Error) => {
-    notifySlack({ message: 'FAILED TO RUN WebWatcher - ' + c.name, directMention: true });
+    notifySlack({ message: 'FAILED TO RUN WebWatcher - ' + c.name, directMention: true, error });
 
     return db.query(
         `

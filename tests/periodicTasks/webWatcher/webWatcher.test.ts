@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/services/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
+import { slackCheckNoNotifications, slackCheckNotification } from '../../helpers/notifier/slack';
 
 describe('periodic task - webWatcher', () => {
     let stub: sinon.SinonStub;
@@ -98,6 +99,9 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
+
+        slackCheckNotification({ message: 'Web check 1 - Has changed', directMention: true });
+        slackCheckNotification({ message: 'Web check 2 - Has changed', directMention: true });
     });
 
     it('should detect a change, notify and record the change - for HASH Watchers', async () => {
@@ -159,8 +163,8 @@ describe('periodic task - webWatcher', () => {
                     lastUpdateDateUnix: {
                         aroundTimestamp: 'NOW()',
                         precision: '1 SECOND'
-                    },
-                }
+                    }
+                },
                 {
                     id: 2,
                     lastContent: 'c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2',
@@ -177,6 +181,9 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
+
+        slackCheckNotification({ message: 'Hash check 1 - Has changed', directMention: true });
+        slackCheckNotification({ message: 'Hash check 2 - Has changed', directMention: true });
     });
 
     it('should respect the check interval and not check too often', async () => {
@@ -219,6 +226,7 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
+        slackCheckNoNotifications();
     });
 
     it('should update last check time even when no changed happened in the page', async () => {
@@ -266,6 +274,8 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
+
+        slackCheckNoNotifications();
     });
 
     it('should update error date and message when failure happens', async () => {
@@ -318,6 +328,11 @@ describe('periodic task - webWatcher', () => {
                 }
             ]
         });
+
+        slackCheckNotification({
+            message: 'FAILED TO RUN WebWatcher - Web check 1',
+            directMention: true
+        });
     });
 
     it('should continue with other checks if one has an unsupported type in DB', async () => {
@@ -344,7 +359,7 @@ describe('periodic task - webWatcher', () => {
                     lastCheckDateUnix: 0,
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0
-                },
+                }
             ]
         });
 
@@ -358,6 +373,10 @@ describe('periodic task - webWatcher', () => {
         });
         slogCheckLog('web-watcher', 'Failed to run watcher', {
             watcherName: 'Incorrect check'
+        });
+        slackCheckNotification({
+            message: 'FAILED TO RUN WebWatcher - Incorrect check',
+            directMention: true
         });
     });
 });
