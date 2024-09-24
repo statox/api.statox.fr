@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
+import { mysqlCheckContains, mysqlDumpTables, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/services/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 
@@ -59,6 +59,7 @@ describe('periodic task - webWatcher', () => {
             previousStatus: 'old value'
         });
 
+        await mysqlDumpTables('WebWatcher');
         await mysqlCheckContains({
             WebWatcher: [
                 {
