@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `WebWatcher` (
     `name` varchar(400) NOT NULL,
     `notificationMessage` varchar(400) NOT NULL,
     `url`varchar(400) NOT NULL,
+    `watchType` varchar(80) NOT NULL,
     `cssSelector`varchar(400) NOT NULL,
     `lastContent`varchar(400) NOT NULL DEFAULT '',
     `lastCheckDateUnix` int(11) unsigned NOT NULL DEFAULT 0,
@@ -12,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `WebWatcher` (
     `lastErrorMessage` varchar(400),
     PRIMARY KEY (`id`),
     UNIQUE KEY `name_uniq` (`name`),
-    UNIQUE KEY `url_selector_uniq` (`url`, `cssSelector`)
+    UNIQUE KEY `url_selector_uniq` (`url`, `cssSelector`),
+    UNIQUE KEY `url_type_uniq` (`url`, `watchType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- INSERT INTO WebWatcher

@@ -11,6 +11,7 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
             name,
             notificationMessage,
             url,
+            watchType: 'CSS',
             cssSelector,
             checkIntervalSeconds
         });

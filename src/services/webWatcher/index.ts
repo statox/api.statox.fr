@@ -4,11 +4,16 @@ import { db } from '../env-helpers/db';
 import { slog } from '../logging';
 import { notifySlack } from '../notifier/slack';
 
+type WatchType =
+    | 'CSS' // Watch a HTML page and use a css query to check its changing content
+    | 'HASH'; // Watch any plain text and hash it completely
+
 export interface WatchedContent extends RowDataPacket {
     id: number;
     name: string;
     notificationMessage: string;
     url: string;
+    watchType: WatchType;
     cssSelector: string;
     lastContent: string;
     lastCheckDateUnix: number;
@@ -27,6 +32,7 @@ export const getWatchedContent = async () => {
             name,
             notificationMessage,
             url,
+            watchType,
             cssSelector,
             lastContent,
             lastCheckDateUnix,
@@ -50,17 +56,20 @@ interface NewWatcherParams {
     name: string;
     notificationMessage: string;
     url: string;
+    watchType: WatchType;
     cssSelector: string;
     checkIntervalSeconds: number;
 }
 export const createWatcher = async (newWatcherParams: NewWatcherParams) => {
-    const { name, notificationMessage, url, cssSelector, checkIntervalSeconds } = newWatcherParams;
+    const { name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds } =
+        newWatcherParams;
+
     try {
         await db.query(
             `INSERT INTO WebWatcher
-            (name, notificationMessage, url, cssSelector, checkIntervalSeconds)
-            VALUES (?, ?, ?, ?, ?)`,
-            [name, notificationMessage, url, cssSelector, checkIntervalSeconds]
+            (name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds]
         );
     } catch (error) {
         if ((error as QueryError).code === 'ER_DUP_ENTRY') {
