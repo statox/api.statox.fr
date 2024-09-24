@@ -23,6 +23,18 @@ export interface WatchedContent extends RowDataPacket {
     lastErrorMessage: string;
 }
 
+export interface CSSWatchedContent extends WatchedContent {
+    watchType: 'CSS';
+}
+
+export interface HASHWatchedContent extends WatchedContent {
+    watchType: 'HASH';
+}
+
+function isCSSWatcherContent(c: WatchedContent): c is CSSWatchedContent {
+    return c.watchType === 'CSS';
+}
+
 const { JSDOM } = jsdom;
 
 export const getWatchedContent = async () => {
@@ -139,39 +151,49 @@ const recordContentCheckFailed = async (c: WatchedContent, error: Error) => {
 
 const checkWatchedContent = async (c: WatchedContent) => {
     try {
-        const { lastCheckDateUnix, checkIntervalSeconds, cssSelector, lastContent, url } = c;
+        const { lastCheckDateUnix, lastContent, checkIntervalSeconds } = c;
 
         if (Date.now() / 1000 < lastCheckDateUnix + checkIntervalSeconds) {
             return;
         }
 
-        const page = await fetch(url);
-        const text = await page.text();
+        let newContent = '';
+        if (isCSSWatcherContent(c)) {
+            newContent = await getCSSWatcherContent(c);
+        }
 
-        const dom = new JSDOM(text);
-        const doc = dom.window.document;
-
-        const childElement = doc.querySelector(cssSelector);
-        const childElementText = childElement?.textContent ?? 'N/A';
-        const contentClean = childElementText.replaceAll('\n', '');
-
-        if (contentClean !== lastContent) {
+        if (newContent !== lastContent) {
             return recordContentChanged({
                 c,
-                newContent: contentClean,
+                newContent,
                 previousContent: lastContent
             });
         }
 
         slog.log('web-watcher', 'WebWatcher content not changed', {
             watcherName: c.name,
-            status: contentClean
+            status: newContent
         });
-        return recordContentChecked(c);
+        return await recordContentChecked(c);
     } catch (error) {
         await recordContentCheckFailed(c, error as Error);
         throw error;
     }
+};
+
+const getCSSWatcherContent = async (c: CSSWatchedContent) => {
+    const { cssSelector, url } = c;
+
+    const page = await fetch(url);
+    const text = await page.text();
+
+    const dom = new JSDOM(text);
+    const doc = dom.window.document;
+
+    const childElement = doc.querySelector(cssSelector);
+    const childElementText = childElement?.textContent ?? 'N/A';
+    const contentClean = childElementText.replaceAll('\n', '');
+    return contentClean;
 };
 
 export const doWebWatcher = async () => {
