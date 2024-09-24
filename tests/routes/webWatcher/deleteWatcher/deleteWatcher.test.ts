@@ -12,6 +12,7 @@ describe('webWatcher/deleteWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: '',
                     lastCheckDateUnix: 0,

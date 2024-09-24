@@ -3,7 +3,7 @@ import { mysqlCheckContains, mysqlFixture } from '../../helpers/mysql';
 import { doWebWatcher } from '../../../src/services/webWatcher';
 import { slogCheckLog, slogCheckNoLogs } from '../../helpers/slog';
 
-describe('periodic task - WebWatcher', () => {
+describe('periodic task - webWatcher', () => {
     let stub: sinon.SinonStub;
     beforeEach(() => {
         stub = sinon.stub(globalThis, 'fetch');
@@ -23,6 +23,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: '',
                     lastCheckDateUnix: 0,
@@ -33,6 +34,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 2',
                     notificationMessage: 'Has changed',
                     url: 'https://bar.com',
+                    watchType: 'CSS',
                     cssSelector: 'body > h1:nth-child(1)',
                     lastContent: 'old value',
                     lastCheckDateUnix: 0,
@@ -64,6 +66,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
                     lastCheckDateUnix: {
@@ -104,6 +107,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: '',
                     lastCheckDateUnix: oneHourAgo,
@@ -124,6 +128,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: '',
                     lastCheckDateUnix: oneHourAgo,
@@ -143,6 +148,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
                     lastCheckDateUnix: 0,
@@ -166,6 +172,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: '#the-title',
                     lastContent: 'Example Page',
                     lastCheckDateUnix: {
@@ -188,6 +195,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: 'invalid @# > selector . adsf',
                     lastContent: 'Example Page',
                     lastCheckDateUnix: 0,
@@ -213,6 +221,7 @@ describe('periodic task - WebWatcher', () => {
                     name: 'Web check 1',
                     notificationMessage: 'Has changed',
                     url: 'https://foo.com',
+                    watchType: 'CSS',
                     cssSelector: 'invalid @# > selector . adsf',
                     lastContent: 'Example Page',
                     lastCheckDateUnix: {
