@@ -4,78 +4,216 @@ import { app } from '../../../../src/app';
 import { mysqlCheckContains, mysqlCheckTableLength, mysqlFixture } from '../../../helpers/mysql';
 
 describe('webWatcher/createWatcher', () => {
-    it('should fail on duplicate entry', async () => {
-        await mysqlFixture({
-            WebWatcher: [
-                {
-                    id: 1,
-                    name: 'Web check 1',
-                    notificationMessage: 'Has changed',
-                    url: 'https://foo.com',
-                    watchType: 'CSS',
-                    cssSelector: '#the-title',
-                    lastContent: '',
-                    lastCheckDateUnix: 0,
-                    lastUpdateDateUnix: 0,
-                    checkIntervalSeconds: 0
-                }
-            ]
-        });
-
-        await request(app)
-            .post('/webWatcher/createWatcher')
-            .set('Accept', 'application/json')
-            .send({
-                name: 'Web check 1',
-                notificationMessage: 'New message',
-                url: 'https://bar.com',
-                cssSelector: '#the-title',
-                checkIntervalSeconds: 900
-            })
-            .expect(400)
-            .then((response) => {
-                assert.deepEqual(response.body, { message: 'ENTRY_ALREADY_EXISTS' });
+    describe('should fail', () => {
+        it('on duplicate entry', async () => {
+            await mysqlFixture({
+                WebWatcher: [
+                    {
+                        id: 1,
+                        name: 'Web check 1',
+                        notificationMessage: 'Has changed',
+                        url: 'https://foo.com',
+                        watchType: 'CSS',
+                        cssSelector: '#the-title',
+                        lastContent: '',
+                        lastCheckDateUnix: 0,
+                        lastUpdateDateUnix: 0,
+                        checkIntervalSeconds: 0
+                    }
+                ]
             });
 
-        await mysqlCheckTableLength('WebWatcher', 1);
-    });
-
-    it('should create a new watcher', async () => {
-        await mysqlFixture({
-            WebWatcher: []
-        });
-
-        await request(app)
-            .post('/webWatcher/createWatcher')
-            .set('Accept', 'application/json')
-            .send({
-                name: 'Web check 1',
-                notificationMessage: 'New message',
-                url: 'https://bar.com',
-                cssSelector: '#the-title',
-                checkIntervalSeconds: 900
-            })
-            .expect(200)
-            .then((response) => {
-                assert.deepEqual(response.body, {});
-            });
-
-        await mysqlCheckTableLength('WebWatcher', 1);
-        await mysqlCheckContains({
-            WebWatcher: [
-                {
-                    id: 1,
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
                     name: 'Web check 1',
                     notificationMessage: 'New message',
                     url: 'https://bar.com',
                     watchType: 'CSS',
                     cssSelector: '#the-title',
-                    lastContent: '',
-                    lastCheckDateUnix: 0,
-                    lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 900
-                }
-            ]
+                })
+                .expect(400)
+                .then((response) => {
+                    assert.deepEqual(response.body, { message: 'ENTRY_ALREADY_EXISTS' });
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 1);
+        });
+        it('on CSS check without css selector', async () => {
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Web check 1',
+                    notificationMessage: 'New message',
+                    url: 'https://bar.com',
+                    watchType: 'CSS',
+                    checkIntervalSeconds: 900
+                })
+                .expect(400)
+                .then((response) => {
+                    //TODO Fix returned error for JSONSchema and fix check
+                    assert.match(
+                        JSON.stringify(response.body),
+                        new RegExp("must have required property 'cssSelector'")
+                    );
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 0);
+        });
+        it('on HASH check with css selector', async () => {
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Web check 1',
+                    notificationMessage: 'New message',
+                    url: 'https://bar.com',
+                    watchType: 'HASH',
+                    cssSelector: 'foo > bar',
+                    checkIntervalSeconds: 900
+                })
+                .expect(400)
+                .then((response) => {
+                    //TODO Fix returned error for JSONSchema and fix check
+                    assert.match(
+                        JSON.stringify(response.body),
+                        new RegExp('must NOT have additional properties')
+                    );
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 0);
+        });
+    });
+
+    describe('should suceed', () => {
+        it('creating a new CSS watcher', async () => {
+            await mysqlFixture({
+                WebWatcher: []
+            });
+
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Web check 1',
+                    notificationMessage: 'New message',
+                    url: 'https://bar.com',
+                    watchType: 'CSS',
+                    cssSelector: '#the-title',
+                    checkIntervalSeconds: 900
+                })
+                .expect(200)
+                .then((response) => {
+                    assert.deepEqual(response.body, {});
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 1);
+            await mysqlCheckContains({
+                WebWatcher: [
+                    {
+                        id: 1,
+                        name: 'Web check 1',
+                        notificationMessage: 'New message',
+                        url: 'https://bar.com',
+                        watchType: 'CSS',
+                        cssSelector: '#the-title',
+                        lastContent: '',
+                        lastCheckDateUnix: 0,
+                        lastUpdateDateUnix: 0,
+                        checkIntervalSeconds: 900
+                    }
+                ]
+            });
+        });
+
+        it('creating a new HASH watcher', async () => {
+            await mysqlFixture({
+                WebWatcher: []
+            });
+
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Hash check 1',
+                    notificationMessage: 'New message',
+                    url: 'https://bar.com',
+                    watchType: 'HASH',
+                    checkIntervalSeconds: 900
+                })
+                .expect(200)
+                .then((response) => {
+                    assert.deepEqual(response.body, {});
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 1);
+            await mysqlCheckContains({
+                WebWatcher: [
+                    {
+                        id: 1,
+                        name: 'Hash check 1',
+                        notificationMessage: 'New message',
+                        url: 'https://bar.com',
+                        watchType: 'HASH',
+                        cssSelector: '',
+                        lastContent: '',
+                        lastCheckDateUnix: 0,
+                        lastUpdateDateUnix: 0,
+                        checkIntervalSeconds: 900
+                    }
+                ]
+            });
+        });
+
+        it('accepting both a HASH and CSS watcher on the same URL', async () => {
+            await mysqlFixture({
+                WebWatcher: [
+                    {
+                        id: 1,
+                        name: 'Web check 1',
+                        notificationMessage: 'Has changed',
+                        url: 'https://foo.com',
+                        watchType: 'CSS',
+                        cssSelector: '#the-title',
+                        lastContent: '',
+                        lastCheckDateUnix: 0,
+                        lastUpdateDateUnix: 0,
+                        checkIntervalSeconds: 0
+                    }
+                ]
+            });
+
+            await request(app)
+                .post('/webWatcher/createWatcher')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Hash check 1',
+                    notificationMessage: 'New message',
+                    url: 'https://foo.com',
+                    watchType: 'HASH',
+                    checkIntervalSeconds: 900
+                })
+                .expect(200)
+                .then((response) => {
+                    assert.deepEqual(response.body, {});
+                });
+
+            await mysqlCheckTableLength('WebWatcher', 2);
+            await mysqlCheckContains({
+                WebWatcher: [
+                    {
+                        id: 2,
+                        name: 'Hash check 1',
+                        notificationMessage: 'New message',
+                        url: 'https://foo.com',
+                        watchType: 'HASH',
+                        cssSelector: ''
+                    }
+                ]
+            });
         });
     });
 });
