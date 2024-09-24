@@ -3,7 +3,9 @@ import jsdom from 'jsdom';
 import { db } from '../env-helpers/db';
 import { slog } from '../logging';
 import { notifySlack } from '../notifier/slack';
+import { createHash } from 'node:crypto';
 
+// TODO: Maybe add a JSON type with a json path selector
 type WatchType =
     | 'CSS' // Watch a HTML page and use a css query to check its changing content
     | 'HASH'; // Watch any plain text and hash it completely
@@ -33,6 +35,10 @@ export interface HASHWatchedContent extends WatchedContent {
 
 function isCSSWatcherContent(c: WatchedContent): c is CSSWatchedContent {
     return c.watchType === 'CSS';
+}
+
+function isHASHWatcherContent(c: WatchedContent): c is HASHWatchedContent {
+    return c.watchType === 'HASH';
 }
 
 const { JSDOM } = jsdom;
@@ -137,6 +143,8 @@ const recordContentChecked = async (c: WatchedContent) => {
 };
 
 const recordContentCheckFailed = async (c: WatchedContent, error: Error) => {
+    notifySlack({ message: 'FAILED TO RUN WebWatcher - ' + c.name, directMention: true });
+
     return db.query(
         `
         UPDATE WebWatcher
@@ -160,6 +168,10 @@ const checkWatchedContent = async (c: WatchedContent) => {
         let newContent = '';
         if (isCSSWatcherContent(c)) {
             newContent = await getCSSWatcherContent(c);
+        } else if (isHASHWatcherContent(c)) {
+            newContent = await getHASHWatcherContent(c);
+        } else {
+            throw new Error('unexpected watcher type: ' + c.watchType);
         }
 
         if (newContent !== lastContent) {
@@ -194,6 +206,15 @@ const getCSSWatcherContent = async (c: CSSWatchedContent) => {
     const childElementText = childElement?.textContent ?? 'N/A';
     const contentClean = childElementText.replaceAll('\n', '');
     return contentClean;
+};
+
+const getHASHWatcherContent = async (c: HASHWatchedContent) => {
+    const page = await fetch(c.url);
+    const text = await page.text();
+
+    const hash = createHash('sha256');
+    hash.update(text);
+    return hash.digest('hex');
 };
 
 export const doWebWatcher = async () => {
