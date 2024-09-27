@@ -9,9 +9,8 @@ export const doHomeTrackerMonitoring = async () => {
         const result = await elk.search<{ sensorName: string }>({
             index: 'data-home-tracker',
             query: {
-                // TODO check the type issue here
-                // @ts-expect-error: Not sure why the typing is not happy here but the query works
                 bool: {
+                    should: [],
                     must: [
                         {
                             term: {

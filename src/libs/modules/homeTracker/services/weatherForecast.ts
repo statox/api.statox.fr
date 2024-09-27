@@ -158,7 +158,7 @@ const lookupForecast = (params: { pressurehPa: number; trend: Trend }) => {
         throw new Error('OUT_OF_RANGE_Z_VALUE');
     }
 
-    return table.get(Z);
+    return table.get(Z)!;
 };
 
 export const zambrettiForecaster = async () => {
