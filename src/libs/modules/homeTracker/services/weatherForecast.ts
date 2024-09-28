@@ -55,33 +55,40 @@ const trendParams: Record<Trend, { constant: number; coef: number; table: Lookup
     falling: { constant: 127, coef: 0.12, table: fallingLookupTable }
 };
 
+interface PressureRecord {
+    timestamp: number;
+    pressurehPa: number;
+}
+
 const get3hoursOfPressure = async () => {
-    const result = await elk.search<{
+    const oldestQuery = await elk.search<{
         '@timestamp': number;
         document: {
             pressurehPa: number;
         };
     }>({
-        size: 20,
+        size: 1,
         sort: [
             {
-                '@timestamp': 'asc'
+                '@timestamp': {
+                    order: 'asc'
+                }
             }
         ],
         query: {
             bool: {
                 should: [],
-                filter: [
-                    {
-                        range: {
-                            '@timestamp': {
-                                gte: 'now-3h/m'
-                            }
-                        }
-                    },
+                must: [
                     {
                         exists: {
                             field: 'document.pressurehPa'
+                        }
+                    },
+                    {
+                        range: {
+                            '@timestamp': {
+                                gte: 'now-180m/m'
+                            }
                         }
                     }
                 ]
@@ -90,21 +97,69 @@ const get3hoursOfPressure = async () => {
         _source: ['@timestamp', 'document.pressurehPa']
     });
 
-    if (!result.hits.hits.length || result.hits.hits.length < 2) {
-        throw new Error('MISSING_DATA');
+    const latestQuery = await elk.search<{
+        '@timestamp': number;
+        document: {
+            pressurehPa: number;
+        };
+    }>({
+        size: 1,
+        sort: [
+            {
+                '@timestamp': {
+                    order: 'desc'
+                }
+            }
+        ],
+        query: {
+            bool: {
+                should: [],
+                must: [
+                    {
+                        exists: {
+                            field: 'document.pressurehPa'
+                        }
+                    },
+                    {
+                        range: {
+                            '@timestamp': {
+                                gte: 'now-20m/m'
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        _source: ['@timestamp', 'document.pressurehPa']
+    });
+
+    if (!oldestQuery.hits.hits.length || oldestQuery.hits.hits.length !== 1) {
+        throw new Error('MISSING_HISTORIC_DATA');
+    }
+    if (!latestQuery.hits.hits.length || latestQuery.hits.hits.length !== 1) {
+        throw new Error('MISSING_RECENT_DATA');
     }
 
-    const oldest = result.hits.hits[0]._source?.document.pressurehPa || -1;
-    const latest =
-        result.hits.hits[result.hits.hits.length - 1]._source?.document.pressurehPa || -1;
-    const min = Math.min(...result.hits.hits.map((h) => h._source?.document.pressurehPa || -1));
-    const max = Math.max(...result.hits.hits.map((h) => h._source?.document.pressurehPa || -1));
+    const oldest = oldestQuery.hits.hits[0]._source;
+    const latest = latestQuery.hits.hits[0]._source;
 
-    if (latest < 0 || oldest < 0 || min < 0 || max < 0) {
+    if (!oldest || !latest) {
         throw new Error('INVALID_DATA');
     }
+    if (oldest['@timestamp'] === latest['@timestamp']) {
+        throw new Error('NOT_ENOUGH_DATA');
+    }
 
-    return { latest, oldest, min, max };
+    return {
+        latest: {
+            timestamp: latest['@timestamp'],
+            pressurehPa: latest.document.pressurehPa
+        },
+        oldest: {
+            timestamp: oldest['@timestamp'],
+            pressurehPa: oldest.document.pressurehPa
+        }
+    };
 };
 
 /*
@@ -117,12 +172,7 @@ const get3hoursOfPressure = async () => {
  * Rising  | Between 947 hPa and 1030 hPa | Rise of 1.6 hPa in 3 hours
  */
 type Trend = 'falling' | 'rising' | 'steady';
-const computeTrend = (params: {
-    latest: number;
-    oldest: number;
-    min: number;
-    max: number;
-}): Trend => {
+const computeTrend = (params: { latest: PressureRecord; oldest: PressureRecord }): Trend => {
     // The Github repo sassoftware/iot-zambretti-weather-forcasting describes the trend detection
     // by using several event of interests and detecting if one it greater than 1.6 or not and whatnot
     //
@@ -130,12 +180,12 @@ const computeTrend = (params: {
     // and the pressure now, we'll see if it's useful to have something smarter later
     const { latest, oldest } = params;
 
-    const diff = Math.abs(oldest - latest);
+    const diff = Math.abs(oldest.pressurehPa - latest.pressurehPa);
 
     if (diff < 1.6) {
         return 'steady';
     }
-    if (oldest > latest) {
+    if (oldest.pressurehPa > latest.pressurehPa) {
         return 'falling';
     }
     return 'rising';
@@ -165,19 +215,18 @@ export const zambrettiForecaster = async () => {
     try {
         const pressureStats = await get3hoursOfPressure();
         const trend = computeTrend(pressureStats);
-        const forecast = lookupForecast({ pressurehPa: pressureStats.latest, trend });
+        const forecast = lookupForecast({ pressurehPa: pressureStats.latest.pressurehPa, trend });
 
         slog.log('weather-forecast', 'zambrettiForecaster - got forecast', {
             forecast,
-            pressureLatest: pressureStats.latest,
-            pressureMax: pressureStats.max,
-            pressureMin: pressureStats.min,
-            pressureOldest: pressureStats.oldest,
+            pressureLatest: pressureStats.latest.pressurehPa,
+            timestampLatest: pressureStats.latest.timestamp,
+            pressureOldest: pressureStats.oldest.pressurehPa,
+            timestampOldest: pressureStats.oldest.timestamp,
             trend
         });
         return { pressureTrend: trend, forecast };
     } catch (error) {
-        // TODO handle error
         slog.log(
             'weather-forecast',
             'zambrettiForecaster - Got an error while computing forecast',
@@ -186,6 +235,7 @@ export const zambrettiForecaster = async () => {
             }
         );
 
-        throw error;
+        // TODO Better error handling with specific error messages to client
+        return { pressureTrend: 'unknown', forecast: 'ERROR - couldnt determine forecast' };
     }
 };

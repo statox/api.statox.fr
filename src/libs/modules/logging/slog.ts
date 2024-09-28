@@ -43,8 +43,6 @@ type LoggableProperties =
           port?: number;
           precipitationMM?: number;
           pressureLatest?: number;
-          pressureMax?: number;
-          pressureMin?: number;
           pressureOldest?: number;
           previousStatus?: string;
           previousTimestamp?: number;
@@ -60,6 +58,8 @@ type LoggableProperties =
           status?: string;
           taskName?: string;
           timestamp?: number;
+          timestampLatest?: number;
+          timestampOldest?: number;
           trend?: string;
           validityTime?: string;
           visitedUrl?: string;

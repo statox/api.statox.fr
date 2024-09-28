@@ -42,7 +42,7 @@ describe('homeTracker/weatherForecast', () => {
         });
         it('steady 1015hpa', async () => {
             const pressureHistory: PressureHistoryFixture[] = [
-                { pressurehPa: 1015, tsDiff: { hours: 2, minutes: 55 } },
+                { pressurehPa: 1016, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1015, tsDiff: { minutes: 5 } }
             ];
 
@@ -63,7 +63,7 @@ describe('homeTracker/weatherForecast', () => {
         });
         it('steady 1020hpa', async () => {
             const pressureHistory: PressureHistoryFixture[] = [
-                { pressurehPa: 1020, tsDiff: { hours: 2, minutes: 55 } },
+                { pressurehPa: 1019, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1020, tsDiff: { minutes: 5 } }
             ];
 
@@ -123,6 +123,141 @@ describe('homeTracker/weatherForecast', () => {
                         forecast: 'Rain at Times, Worse Later'
                     });
                 });
+        });
+
+        it('rising with fluctuation 1020hpa', async () => {
+            const pressureHistory: PressureHistoryFixture[] = [
+                { pressurehPa: 1018, tsDiff: { hours: 2, minutes: 55 } },
+                { pressurehPa: 1018.5, tsDiff: { hours: 2, minutes: 45 } },
+                { pressurehPa: 1019, tsDiff: { hours: 2, minutes: 35 } },
+                { pressurehPa: 1019.5, tsDiff: { hours: 2, minutes: 25 } },
+                { pressurehPa: 1020, tsDiff: { hours: 2, minutes: 15 } },
+                { pressurehPa: 1020.5, tsDiff: { hours: 2, minutes: 5 } },
+                { pressurehPa: 1022, tsDiff: { hours: 1, minutes: 55 } },
+                { pressurehPa: 1020.5, tsDiff: { hours: 1, minutes: 45 } },
+                { pressurehPa: 1019, tsDiff: { hours: 1, minutes: 35 } },
+                { pressurehPa: 1017.5, tsDiff: { hours: 1, minutes: 25 } },
+                { pressurehPa: 1016, tsDiff: { hours: 1, minutes: 15 } },
+                { pressurehPa: 1015, tsDiff: { hours: 1, minutes: 5 } },
+                { pressurehPa: 1016, tsDiff: { minutes: 55 } },
+                { pressurehPa: 1016, tsDiff: { minutes: 45 } },
+                { pressurehPa: 1017, tsDiff: { minutes: 35 } },
+                { pressurehPa: 1018, tsDiff: { minutes: 25 } },
+                { pressurehPa: 1019, tsDiff: { minutes: 15 } },
+                { pressurehPa: 1020, tsDiff: { minutes: 5 } }
+            ];
+
+            await th.elk.fixture({
+                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+            });
+            await request(app)
+                .get('/homeTracker/getWeatherForecast')
+                .expect(200)
+                .then((response) => {
+                    const { forecast } = response.body;
+
+                    assert.deepEqual(forecast, {
+                        pressureTrend: 'rising',
+                        forecast: 'Fine Weather'
+                    });
+                });
+        });
+    });
+
+    describe('Should detect invalid data', () => {
+        it('Only one log in the last 3 hours', async () => {
+            const pressureHistory: PressureHistoryFixture[] = [
+                { pressurehPa: 800, tsDiff: { hours: 3, minutes: 30 } },
+                { pressurehPa: 1005, tsDiff: { minutes: 5 } }
+            ];
+
+            await th.elk.fixture({
+                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+            });
+            await request(app)
+                .get('/homeTracker/getWeatherForecast')
+                .expect(200)
+                .then((response) => {
+                    const { forecast } = response.body;
+
+                    assert.deepEqual(forecast, {
+                        pressureTrend: 'unknown',
+                        forecast: 'ERROR - couldnt determine forecast'
+                    });
+                });
+
+            th.slog.checkLog(
+                'weather-forecast',
+                'zambrettiForecaster - Got an error while computing forecast',
+                {
+                    error: {
+                        message: 'NOT_ENOUGH_DATA'
+                    }
+                }
+            );
+        });
+        it('Only logs more than 3 hours', async () => {
+            const pressureHistory: PressureHistoryFixture[] = [
+                { pressurehPa: 650, tsDiff: { hours: 3, minutes: 50 } },
+                { pressurehPa: 750, tsDiff: { hours: 3, minutes: 40 } },
+                { pressurehPa: 850, tsDiff: { hours: 3, minutes: 30 } }
+            ];
+
+            await th.elk.fixture({
+                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+            });
+            await request(app)
+                .get('/homeTracker/getWeatherForecast')
+                .expect(200)
+                .then((response) => {
+                    const { forecast } = response.body;
+
+                    assert.deepEqual(forecast, {
+                        pressureTrend: 'unknown',
+                        forecast: 'ERROR - couldnt determine forecast'
+                    });
+                });
+
+            th.slog.checkLog(
+                'weather-forecast',
+                'zambrettiForecaster - Got an error while computing forecast',
+                {
+                    error: {
+                        message: 'MISSING_HISTORIC_DATA'
+                    }
+                }
+            );
+        });
+        it('No recent logs less than 20 minutes ago', async () => {
+            const pressureHistory: PressureHistoryFixture[] = [
+                { pressurehPa: 800, tsDiff: { hours: 2, minutes: 50 } },
+                { pressurehPa: 1005, tsDiff: { minutes: 25 } }
+            ];
+
+            await th.elk.fixture({
+                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+            });
+            await request(app)
+                .get('/homeTracker/getWeatherForecast')
+                .expect(200)
+                .then((response) => {
+                    const { forecast } = response.body;
+
+                    assert.deepEqual(forecast, {
+                        pressureTrend: 'unknown',
+                        forecast: 'ERROR - couldnt determine forecast'
+                    });
+                });
+
+            th.slog.checkLog(
+                'weather-forecast',
+                'zambrettiForecaster - Got an error while computing forecast',
+                {
+                    error: {
+                        message: 'MISSING_RECENT_DATA'
+                    }
+                }
+            );
         });
     });
 });
