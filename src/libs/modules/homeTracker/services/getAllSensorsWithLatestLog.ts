@@ -28,11 +28,6 @@ export const getAllSensorsWithLatestLog = async () => {
     const result = await elk.search({
         index: 'data-home-tracker',
         size: 0,
-        sort: [
-            {
-                '@timestamp': 'desc'
-            }
-        ],
         aggregations: {
             sensorName: {
                 terms: {
@@ -41,7 +36,12 @@ export const getAllSensorsWithLatestLog = async () => {
                 aggregations: {
                     lastLog: {
                         top_hits: {
-                            size: 1
+                            size: 1,
+                            sort: [
+                                {
+                                    '@timestamp': 'desc'
+                                }
+                            ]
                         }
                     }
                 }

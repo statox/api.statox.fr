@@ -26,8 +26,8 @@ describe('homeTracker/allSensorsWithLatestLog', () => {
                     document: {
                         sensorName: 'salon',
                         batteryCharge: 4,
-                        humidity: 30,
-                        tempCelsius: 21
+                        humidity: 0,
+                        tempCelsius: 0
                     }
                 },
                 {
@@ -44,8 +44,8 @@ describe('homeTracker/allSensorsWithLatestLog', () => {
                     document: {
                         sensorName: 'jardiniere',
                         batteryCharge: 4,
-                        humidity: 30,
-                        tempCelsius: 21
+                        humidity: 0,
+                        tempCelsius: 0
                     }
                 }
             ]
