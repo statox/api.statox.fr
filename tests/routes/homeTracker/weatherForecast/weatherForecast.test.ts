@@ -24,10 +24,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1006.179, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1005.853, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -36,7 +37,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'steady',
-                        forecast: 'Fairly Fine, Showers Likely'
+                        forecast: 'Fairly Fine, Showers Likely',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1006.179
+                            },
+                            latest: {
+                                timestampMs: logs[1]['@timestamp'],
+                                pressurehPa: 1005.853
+                            }
+                        }
                     });
                 });
         });
@@ -45,10 +56,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1016, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1015, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -57,7 +69,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'steady',
-                        forecast: 'Fine, Possibly Showers'
+                        forecast: 'Fine, Possibly Showers',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1016
+                            },
+                            latest: {
+                                timestampMs: logs[1]['@timestamp'],
+                                pressurehPa: 1015
+                            }
+                        }
                     });
                 });
         });
@@ -66,10 +88,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1019, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1020, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -78,7 +101,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'steady',
-                        forecast: 'Fine Weather'
+                        forecast: 'Fine Weather',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1019
+                            },
+                            latest: {
+                                timestampMs: logs[1]['@timestamp'],
+                                pressurehPa: 1020
+                            }
+                        }
                     });
                 });
         });
@@ -87,10 +120,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1002, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 1005, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -99,7 +133,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'rising',
-                        forecast: 'Fairly Fine, Possibly Showers Early'
+                        forecast: 'Fairly Fine, Possibly Showers Early',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1002
+                            },
+                            latest: {
+                                timestampMs: logs[1]['@timestamp'],
+                                pressurehPa: 1005
+                            }
+                        }
                     });
                 });
         });
@@ -108,10 +152,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1000, tsDiff: { hours: 2, minutes: 55 } },
                 { pressurehPa: 995, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -120,7 +165,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'falling',
-                        forecast: 'Rain at Times, Worse Later'
+                        forecast: 'Rain at Times, Worse Later',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1000
+                            },
+                            latest: {
+                                timestampMs: logs[1]['@timestamp'],
+                                pressurehPa: 995
+                            }
+                        }
                     });
                 });
         });
@@ -146,10 +201,11 @@ describe('homeTracker/weatherForecast', () => {
                 { pressurehPa: 1019, tsDiff: { minutes: 15 } },
                 { pressurehPa: 1020, tsDiff: { minutes: 5 } }
             ];
-
+            const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
             await th.elk.fixture({
-                'data-home-tracker': pressureHistoryFixtureToELKFixture(pressureHistory)
+                'data-home-tracker': logs
             });
+
             await request(app)
                 .get('/homeTracker/getWeatherForecast')
                 .expect(200)
@@ -158,7 +214,17 @@ describe('homeTracker/weatherForecast', () => {
 
                     assert.deepEqual(forecast, {
                         pressureTrend: 'rising',
-                        forecast: 'Fine Weather'
+                        forecast: 'Fine Weather',
+                        dataPoints: {
+                            oldest: {
+                                timestampMs: logs[0]['@timestamp'],
+                                pressurehPa: 1018
+                            },
+                            latest: {
+                                timestampMs: logs[logs.length - 1]['@timestamp'],
+                                pressurehPa: 1020
+                            }
+                        }
                     });
                 });
         });

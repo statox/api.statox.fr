@@ -56,7 +56,7 @@ const trendParams: Record<Trend, { constant: number; coef: number; table: Lookup
 };
 
 interface PressureRecord {
-    timestamp: number;
+    timestampMs: number;
     pressurehPa: number;
 }
 
@@ -152,11 +152,11 @@ const get3hoursOfPressure = async () => {
 
     return {
         latest: {
-            timestamp: latest['@timestamp'],
+            timestampMs: latest['@timestamp'],
             pressurehPa: latest.document.pressurehPa
         },
         oldest: {
-            timestamp: oldest['@timestamp'],
+            timestampMs: oldest['@timestamp'],
             pressurehPa: oldest.document.pressurehPa
         }
     };
@@ -220,12 +220,14 @@ export const zambrettiForecaster = async () => {
         slog.log('weather-forecast', 'zambrettiForecaster - got forecast', {
             forecast,
             pressureLatest: pressureStats.latest.pressurehPa,
-            timestampLatest: pressureStats.latest.timestamp,
+            timestampLatest: pressureStats.latest.timestampMs,
             pressureOldest: pressureStats.oldest.pressurehPa,
-            timestampOldest: pressureStats.oldest.timestamp,
+            timestampOldest: pressureStats.oldest.timestampMs,
             trend
         });
-        return { pressureTrend: trend, forecast };
+        // Including dataPoints for debugging purposes
+        // TODO Remove dataPoints when I'm convinced everything works well
+        return { pressureTrend: trend, forecast, dataPoints: pressureStats };
     } catch (error) {
         slog.log(
             'weather-forecast',
