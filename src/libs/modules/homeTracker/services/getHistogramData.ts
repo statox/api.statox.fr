@@ -32,14 +32,19 @@ interface HomeTrackerHistogramData {
     [timestamp: number]: HomeTrackerTimeData;
 }
 
-export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1m') => {
+export const getHistogramData = async (
+    window: '30m' | '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1M' | '2M' | '6M' | 'alltime'
+) => {
     let earliestTS: number;
-    let nbBuckets: number;
+    let nbBuckets: number | undefined = undefined;
 
     const oneHour = 60 * 60 * 1000;
     const oneDay = 24 * oneHour;
 
-    if (window === '3h') {
+    if (window === '30m') {
+        earliestTS = DateTime.now().minus({ minutes: 30 }).toMillis();
+        nbBuckets = 30;
+    } else if (window === '3h') {
         earliestTS = Date.now() - 3 * oneHour;
         nbBuckets = 18;
     } else if (window === '12h') {
@@ -57,9 +62,19 @@ export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d'
     } else if (window === '2w') {
         earliestTS = DateTime.now().minus({ weeks: 2 }).toMillis();
         nbBuckets = 120;
-    } else if (window === '1m') {
+    } else if (window === '1M') {
         earliestTS = DateTime.now().minus({ months: 1 }).toMillis();
         nbBuckets = 124;
+    } else if (window === '2M') {
+        earliestTS = DateTime.now().minus({ months: 2 }).toMillis();
+        nbBuckets = 248;
+    } else if (window === '6M') {
+        earliestTS = DateTime.now().minus({ months: 6 }).toMillis();
+        nbBuckets = 180;
+    } else if (window === 'alltime') {
+        const startDateTime = DateTime.fromObject({ year: 2024, month: 8, day: 30 });
+        earliestTS = startDateTime.toMillis();
+        nbBuckets = Math.max(startDateTime.diffNow('days').get('days'), 200);
     } else {
         // should use some kind of assert.never() instead of default value
         earliestTS = Date.now() - oneDay;
@@ -83,7 +98,7 @@ export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d'
                 // TODO might need to add some boundaries param like "extended_bounds" in case data is missing
                 auto_date_histogram: {
                     field: '@timestamp',
-                    buckets: nbBuckets // TODO might want to make the number of buckets parametrized
+                    buckets: nbBuckets
                 },
                 aggregations: {
                     bySensor: {

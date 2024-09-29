@@ -17,7 +17,7 @@ export const route: PostRoute = {
         properties: {
             timeWindow: {
                 type: 'string',
-                enum: ['3h', '12h', '1d', '3d', '7d', '2w', '1m']
+                enum: ['30m', '3h', '12h', '1d', '3d', '7d', '2w', '1M', '2M', '6M', 'alltime']
             }
         }
     },
