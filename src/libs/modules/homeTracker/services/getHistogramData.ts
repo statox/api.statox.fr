@@ -34,36 +34,27 @@ interface HomeTrackerHistogramData {
 
 export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d' | '2w' | '1m') => {
     let earliestTS: number;
-    let nbBuckets: number;
 
     const oneHour = 60 * 60 * 1000;
     const oneDay = 24 * oneHour;
 
     if (window === '3h') {
         earliestTS = Date.now() - 3 * oneHour;
-        nbBuckets = 18;
     } else if (window === '12h') {
         earliestTS = Date.now() - 12 * oneHour;
-        nbBuckets = 72;
     } else if (window === '1d') {
         earliestTS = Date.now() - 24 * oneHour;
-        nbBuckets = 48;
     } else if (window === '3d') {
         earliestTS = Date.now() - 3 * oneDay;
-        nbBuckets = 72;
     } else if (window === '7d') {
         earliestTS = Date.now() - 7 * oneDay;
-        nbBuckets = 200;
     } else if (window === '2w') {
         earliestTS = DateTime.now().minus({ weeks: 2 }).toMillis();
-        nbBuckets = 120;
     } else if (window === '1m') {
         earliestTS = DateTime.now().minus({ months: 1 }).toMillis();
-        nbBuckets = 124;
     } else {
         // should use some kind of assert.never() instead of default value
         earliestTS = Date.now() - oneDay;
-        nbBuckets = 48;
     }
 
     const result = await elk.search<SensorRecord>({
@@ -82,8 +73,7 @@ export const getHistogramData = async (window: '3h' | '12h' | '1d' | '3d' | '7d'
             byDate: {
                 // TODO might need to add some boundaries param like "extended_bounds" in case data is missing
                 auto_date_histogram: {
-                    field: '@timestamp',
-                    buckets: nbBuckets // TODO might want to make the number of buckets parametrized
+                    field: '@timestamp'
                 },
                 aggregations: {
                     bySensor: {
