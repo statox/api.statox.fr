@@ -131,7 +131,7 @@ describe('homeTracker/histogramData', () => {
             .then((response) => {
                 const { histogramData } = response.body;
 
-                assert.lengthOf(Object.keys(histogramData), 6);
+                assert.lengthOf(Object.keys(histogramData), 18);
 
                 // Check that the date of the earliest bucket is roughly 3 hours in the past
                 // even if existing data earlier than that
