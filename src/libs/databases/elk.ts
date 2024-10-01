@@ -2,6 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import { ELK_API_ENDPOINT, ELK_API_KEY } from '../config/elk';
 import { isProd, isTests } from '../config/env';
 import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate';
+import { data_home_tracker_indexTemplate } from './data/data-home-tracker-index-template';
 
 export let elk: Client;
 
@@ -74,34 +75,7 @@ const createIndexTemplate = async () => {
 
     await elk.indices.putIndexTemplate({
         name: 'data-home-tracker',
-        priority: 500,
-        index_patterns: 'data-home-tracker*',
-        data_stream: {},
-        allow_auto_create: true,
-        _meta: {
-            description: 'Backing indexes of the data-home-tracker datastream'
-        },
-        template: {
-            mappings: {
-                // TODO map all existing properties?
-                // For now adding only the one which cause issue in tests (e.g. first test create pressurehPa as integer, second test uses float, elk errors out)
-                properties: {
-                    document: {
-                        properties: {
-                            pressurehPa: {
-                                type: 'float'
-                            }
-                        }
-                    }
-                }
-            },
-            settings: {
-                index: {
-                    number_of_shards: '1',
-                    number_of_replicas: '0'
-                }
-            }
-        }
+        ...data_home_tracker_indexTemplate
     });
 };
 
