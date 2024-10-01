@@ -17,7 +17,7 @@ fi
 echo "$MYSQL_CMD"
 
 try_connect(){
-    echo 'Try to connect'
+    echo 'Try to connect to mysql'
     echo 'SHOW DATABASES' | eval "$MYSQL_CMD" &>/dev/null
 }
 
