@@ -110,5 +110,21 @@ class TestHelper_ELK extends TestHelper {
         }
         assert(calledWithCorrectArgs, 'ELK inserted data doesnt match');
     };
+
+    dumpIndex = async (index: string, size: number = 1000) => {
+        try {
+            const docs = await elk.search({ index, size });
+            console.log(`Content of ${index}`);
+            console.log('number of documents', docs.hits.total);
+            console.log(JSON.stringify(docs.hits.hits, null, 2));
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            if (errorMessage.includes('index_not_found_exception')) {
+                console.log(`index ${index} does not exists`);
+            } else {
+                throw error;
+            }
+        }
+    };
 }
 export const testHelper_ELK = new TestHelper_ELK();
