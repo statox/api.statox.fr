@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { elk } from '../../../src/libs/databases/elk';
+import { elk, resetDataStreamForTests } from '../../../src/libs/databases/elk';
 import { isDebug } from '../../../src/libs/config/env';
 import { assert } from 'chai';
 import { TestHelper } from '../TestHelper';
@@ -32,25 +32,6 @@ const restoreElkSearch = async () => {
     elk.search = originalSearch;
 };
 
-const resetELKIndices = async () => {
-    try {
-        // Cleanup indices in case the previous test added some data
-        await elk.deleteByQuery({
-            index: 'data-home-tracker',
-            query: { match_all: {} }
-        });
-        await elk.indices.refresh({ index: 'data-home-tracker' });
-    } catch (error: unknown) {
-        // When the index is empty (which is expected most of the time) ELK we can an error with several failures with status 409
-        if (
-            (error as { meta: { body: { failures: { status: number }[] } } }).meta?.body
-                ?.failures?.[0]?.status !== 409
-        ) {
-            throw error;
-        }
-    }
-};
-
 let elkSpy: sinon.SinonSpy;
 const setupELKSpy = async () => {
     elkSpy = sinon.spy(elk, 'index');
@@ -66,10 +47,7 @@ class TestHelper_ELK extends TestHelper {
             name: 'ELK',
             hooks: {
                 beforeAll: mockELKSearch,
-                beforeEach: async () => {
-                    await resetELKIndices();
-                    setupELKSpy();
-                },
+                beforeEach: setupELKSpy,
                 afterEach: restoreElkSpy,
                 afterAll: restoreElkSearch
             }
@@ -109,6 +87,27 @@ class TestHelper_ELK extends TestHelper {
             }
         }
         assert(calledWithCorrectArgs, 'ELK inserted data doesnt match');
+    };
+
+    flush = async () => {
+        // IMPORTANT Do not put that in the global mocha `beforeEach` hook /!\
+        //
+        // Elasticsearch "near real time" nature makes that we can't delete the indices
+        // with a query: When doing so we don't have a way to wait for the deletion to
+        // be commited (I tried playing with indices.refresh/indices.flush/the wait_for
+        // parameter of elk.search... couldn't make it work)
+        // So we end up with flaky tests because sometimes there is still data from
+        // previous tests in the indices.
+        //
+        // The solution is to delete the indices and recreate them, but doing that in
+        // `beforeEach` is very costly (at the time of writing with 69 tests the average
+        // time goes from 2.4s to 4.4 s)
+        //
+        // Instead we choose to have this flush utile which has to be used manually in the
+        // tests which require the ELK indices to be cleaned up (at the time of writing with
+        // 13 tests executin flush the average time is 3.1s) this still slows down the test
+        // suites but at least it won't grow linearly with the test suite of the app
+        await resetDataStreamForTests();
     };
 
     dumpIndex = async (index: string, size: number = 1000) => {

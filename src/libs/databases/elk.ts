@@ -31,20 +31,28 @@ export const elkClientTargetsLocalEnv = () => {
     return localURLs.includes(clientConnectionUrl);
 };
 
-const deleteExistingDataStream = async () => {
+const deleteIndexTemplate = async () => {
     if (!elkClientTargetsLocalEnv()) {
-        console.log(`
-You are trying to delete the data stream and index template "data-home-tracker" from a non-local ELK cluster.
-This will result in the lost of all the sensor data on the cluster.
-
-Are you REALLY SURE that's what you want to do?
-If so you need to edit this function and remove the guard against non-local url
-        `);
-        throw new Error('DANGEROUS_DELETE_OPERATION_ON_NON_LOCAL_ELK');
+        throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
     try {
-        console.log('ELK init - delete existing data stream data-home-tracker');
+        await elk.indices.deleteIndexTemplate({ name: 'data-home-tracker' });
+    } catch (error) {
+        if ((error as Error).message.includes('index_template_missing_exception')) {
+            console.log('index template data-home-tracker doesnt exist, skip');
+        } else {
+            throw error;
+        }
+    }
+};
+
+const deleteDataStream = async () => {
+    if (!elkClientTargetsLocalEnv()) {
+        throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
+    }
+
+    try {
         await elk.indices.deleteDataStream({ name: 'data-home-tracker' });
     } catch (error) {
         const errorMessage = (error as Error).message;
@@ -57,32 +65,13 @@ If so you need to edit this function and remove the guard against non-local url
             throw error;
         }
     }
-
-    try {
-        console.log('ELK init - delete existing index template data-home-tracker');
-        await elk.indices.deleteIndexTemplate({ name: 'data-home-tracker' });
-    } catch (error) {
-        if ((error as Error).message.includes('index_template_missing_exception')) {
-            console.log('index template data-home-tracker doesnt exist, skip');
-        } else {
-            throw error;
-        }
-    }
 };
 
-const createDataStream = async () => {
+const createIndexTemplate = async () => {
     if (!elkClientTargetsLocalEnv()) {
-        console.log(`
-    You are trying to create a data stream and index template "data-home-tracker" on a non-local ELK cluster.
-    You probably don't need to do that since it was done once and you don't need to recreate them unless something went really wrong.
-
-    Are you REALLY SURE that's what you want to do?
-    If so you need to edit this function and remove the guard against non-local url
-            `);
-        throw new Error('DANGEROUS_DELETE_OPERATION_ON_NON_LOCAL_ELK');
+        throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
-    console.log('ELK init - create index template data-home-tracker*');
     await elk.indices.putIndexTemplate({
         name: 'data-home-tracker',
         priority: 500,
@@ -114,23 +103,53 @@ const createDataStream = async () => {
             }
         }
     });
+};
 
-    console.log('ELK init - create data stream');
+const createDataStream = async () => {
+    if (!elkClientTargetsLocalEnv()) {
+        throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
+    }
+
     await elk.indices.createDataStream({ name: 'data-home-tracker' });
+};
+
+export const resetDataStreamForTests = async () => {
+    await deleteDataStream();
+    await createDataStream();
 };
 
 export const initELK = async () => {
     if (isProd) {
-        console.log('dont init local ELK we are in prod');
+        console.log('ELK init - dont init local ELK we are in prod');
         return;
     }
 
-    await deleteExistingDataStream();
-    await createDataStream();
+    try {
+        console.log('ELK init - delete data stream');
+        await deleteDataStream();
+        console.log('ELK init - delete index template');
+        await deleteIndexTemplate();
+        console.log('ELK init - create index template');
+        await createIndexTemplate();
+        console.log('ELK init - create data stream');
+        await createDataStream();
 
-    if (!isTests) {
-        // TODO: Maybe add more data. Potential problem: Creating too much data could slow down startup
-        // but since this is run only when starting the app locally it might not be an issue
-        await populateFakeHomeTrackerData();
+        if (!isTests) {
+            // TODO: Maybe add more data. Potential problem: Creating too much data could slow down startup
+            // but since this is run only when starting the app locally it might not be an issue
+            console.log('ELK init - populate home-tracker data');
+            await populateFakeHomeTrackerData();
+        }
+    } catch (error) {
+        if ((error as Error).name === 'DANGEROUS_OPERATION_ON_NON_LOCAL_ELK') {
+            console.log(`
+    You are trying to create a data stream and index template "data-home-tracker" on a non-local ELK cluster.
+    You probably don't need to do that since it was done once and you don't need to recreate them unless something went really wrong.
+
+    Are you REALLY SURE that's what you want to do?
+    If so you need to edit this function and remove the guard against non-local url
+            `);
+        }
+        throw error;
     }
 };

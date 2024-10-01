@@ -18,6 +18,8 @@ const pressureHistoryFixtureToELKFixture = (pressureHistory: PressureHistoryFixt
     });
 
 describe('homeTracker/weatherForecast', () => {
+    beforeEach('Flush ELK', th.elk.flush);
+
     describe('Should predict weather', () => {
         it('steady 1005hpa', async () => {
             const pressureHistory: PressureHistoryFixture[] = [

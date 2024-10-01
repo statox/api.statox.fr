@@ -4,6 +4,7 @@ import { th } from '../../helpers';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
     it('Should create a notification for missing sensor data, and should notify only once', async () => {
+        await th.elk.flush();
         await th.elk.fixture({
             'data-home-tracker': [
                 // Salon: 2 very recent logs, should not alert

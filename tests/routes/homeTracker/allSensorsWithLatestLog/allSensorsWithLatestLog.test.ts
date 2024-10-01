@@ -10,6 +10,7 @@ describe('homeTracker/allSensorsWithLatestLog', () => {
         const tenMinutesAgoMillis = DateTime.now().minus({ minutes: 10 }).toMillis();
         const twentyMinutesAgoMillis = DateTime.now().minus({ minutes: 20 }).toMillis();
 
+        await th.elk.flush();
         await th.elk.fixture({
             'data-home-tracker': [
                 {

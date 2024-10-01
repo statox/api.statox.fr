@@ -5,6 +5,8 @@ import { th } from '../../../helpers';
 import { DateTime } from 'luxon';
 
 describe('homeTracker/histogramData', () => {
+    beforeEach('Flush ELK', th.elk.flush);
+
     it('should average the data in the same bucket', async () => {
         await th.elk.fixture({
             'data-home-tracker': [
