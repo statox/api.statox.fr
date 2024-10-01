@@ -100,8 +100,11 @@ jobs:
       - name: Build app
         run: npm run postinstall
 
-      - name: Init db
+      - name: Init mysql
         run: ./src/tools/init-db.sh
+
+      - name: Init elk
+        run: ./src/tools/init-elk.sh
 
       - name: Run tests
         run: npm run tests:all
