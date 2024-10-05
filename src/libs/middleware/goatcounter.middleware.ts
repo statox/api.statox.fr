@@ -16,6 +16,19 @@ export const goatCounterHandler = async (req: Request, _res: Response, next: Nex
         hits: [{ path: req.path }]
     };
 
+    /*
+     * This is buggy:
+     * Without an await if the fetch fails the try..catch will not get the error
+     * so we'll get an uncaught.
+     *
+     * I disabled the middleware during a goat counter outage which broke the whole API
+     * (because of the uncaughts) now that ELK is running I don't think I need the
+     * goatcoutner analytics.
+     *
+     * IF I re-enable one day I'll probably need to
+     * - Make the goatCounterHandler() not async so that the middleware doesn't block
+     * - Put the fetch in another function and wait for it in this function with the try...catch
+     */
     try {
         fetch(goatCounterUrl, {
             method: 'POST',

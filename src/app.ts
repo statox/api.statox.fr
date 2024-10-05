@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { Validator } from 'express-json-validator-middleware';
 import { checkRequiredPermissions, validateAccessToken } from './libs/middleware/auth0.middleware';
 import { errorHandler } from './libs/middleware/errors.middleware';
-import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
+// import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
 import { isProd } from './libs/config/env';
 import { loggingHandler } from './libs/middleware/logging.middleware';
 import { multipartHandler } from './libs/middleware/multipart.middleware';
@@ -37,7 +37,7 @@ export const initApp = () => {
     app.engine('mustache', mustacheExpress());
 
     app.use(loggingHandler);
-    app.use(goatCounterHandler);
+    // app.use(goatCounterHandler);
     app.use(multipartHandler);
 
     for (const route of routes) {
