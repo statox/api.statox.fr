@@ -39,3 +39,20 @@ export interface Station {
     id: string;
     nom: string;
 }
+
+export interface MeteoFranceLogData {
+    station: string;
+    observationTimestamp: number;
+
+    insertTime?: string;
+    referenceTime?: string;
+    validityTime?: string;
+
+    humidity?: number;
+    meanWindDirectionDegrees?: number;
+    meanWindSpeedMS?: number;
+    precipitationMM?: number;
+    pressureSeaLevelhPa?: number;
+    pressurehPa?: number;
+    tempCelsius?: number;
+}
