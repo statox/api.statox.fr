@@ -3,6 +3,7 @@ import { ELK_API_ENDPOINT, ELK_API_KEY } from '../config/elk';
 import { isProd, isTests } from '../config/env';
 import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate';
 import { data_home_tracker_indexTemplate } from './data/data-home-tracker-index-template';
+import { logs_meteo_france_indexTemplate } from './data/logs-meteo-france-index-template';
 
 export let elk: Client;
 
@@ -25,6 +26,11 @@ if (isProd) {
     });
 }
 
+const datastreams = [
+    { name: 'logs-meteo-france', template: logs_meteo_france_indexTemplate },
+    { name: 'data-home-tracker', template: data_home_tracker_indexTemplate }
+];
+
 export const elkClientTargetsLocalEnv = () => {
     const clientConnectionUrl = elk.connectionPool.connections[0].url.href;
     const localURLs = ['http://127.0.0.1:29200/'];
@@ -32,13 +38,15 @@ export const elkClientTargetsLocalEnv = () => {
     return localURLs.includes(clientConnectionUrl);
 };
 
-const deleteIndexTemplate = async () => {
+const deleteIndexTemplates = async () => {
     if (!elkClientTargetsLocalEnv()) {
         throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
     try {
-        await elk.indices.deleteIndexTemplate({ name: 'data-home-tracker' });
+        for (const ds of datastreams) {
+            await elk.indices.deleteIndexTemplate({ name: ds.name });
+        }
     } catch (error) {
         if ((error as Error).message.includes('index_template_missing_exception')) {
             console.log('index template data-home-tracker doesnt exist, skip');
@@ -48,13 +56,15 @@ const deleteIndexTemplate = async () => {
     }
 };
 
-const deleteDataStream = async () => {
+const deleteDataStreams = async () => {
     if (!elkClientTargetsLocalEnv()) {
         throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
     try {
-        await elk.indices.deleteDataStream({ name: 'data-home-tracker' });
+        for (const ds of datastreams) {
+            await elk.indices.deleteDataStream({ name: ds.name });
+        }
     } catch (error) {
         const errorMessage = (error as Error).message;
         if (
@@ -68,28 +78,32 @@ const deleteDataStream = async () => {
     }
 };
 
-const createIndexTemplate = async () => {
+const createIndexTemplates = async () => {
     if (!elkClientTargetsLocalEnv()) {
         throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
-    await elk.indices.putIndexTemplate({
-        name: 'data-home-tracker',
-        ...data_home_tracker_indexTemplate
-    });
+    for (const ds of datastreams) {
+        await elk.indices.putIndexTemplate({
+            name: ds.name,
+            ...ds.template
+        });
+    }
 };
 
-const createDataStream = async () => {
+const createDataStreams = async () => {
     if (!elkClientTargetsLocalEnv()) {
         throw new Error('DANGEROUS_OPERATION_ON_NON_LOCAL_ELK');
     }
 
-    await elk.indices.createDataStream({ name: 'data-home-tracker' });
+    for (const ds of datastreams) {
+        await elk.indices.createDataStream({ name: ds.name });
+    }
 };
 
 export const resetDataStreamForTests = async () => {
-    await deleteDataStream();
-    await createDataStream();
+    await deleteDataStreams();
+    await createDataStreams();
 };
 
 export const initELK = async () => {
@@ -100,13 +114,13 @@ export const initELK = async () => {
 
     try {
         console.log('ELK init - delete data stream');
-        await deleteDataStream();
+        await deleteDataStreams();
         console.log('ELK init - delete index template');
-        await deleteIndexTemplate();
+        await deleteIndexTemplates();
         console.log('ELK init - create index template');
-        await createIndexTemplate();
+        await createIndexTemplates();
         console.log('ELK init - create data stream');
-        await createDataStream();
+        await createDataStreams();
 
         if (!isTests) {
             // TODO: Maybe add more data. Potential problem: Creating too much data could slow down startup
