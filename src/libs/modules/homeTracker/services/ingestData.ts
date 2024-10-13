@@ -1,6 +1,7 @@
 import { slog } from '../../logging';
 import { SensorLogData, SensorRawData } from '../types';
 import { elk } from '../../../databases/elk';
+import { notifySlack } from '../../notifier/slack';
 
 export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     const {
@@ -150,13 +151,26 @@ export const ingestSensorData = async (sensorRawData: SensorRawData) => {
         loggedData.detectedInternalSensorFailure = detectedInternalSensorFailure;
     }
 
-    await elk.index({
-        index: 'data-home-tracker',
+    const newDocument = {
+        '@timestamp': Date.now(),
         document: {
-            '@timestamp': Date.now(),
-            document: {
-                ...loggedData
-            }
+            ...loggedData
         }
-    });
+    };
+
+    try {
+        await elk.index({
+            index: 'data-home-tracker',
+            document: newDocument
+        });
+    } catch (error) {
+        // TODO Add tests for this behavior
+        notifySlack({
+            message: 'error ingesting home tracker data',
+            error: error as Error
+        });
+        notifySlack({
+            message: `missing data: ${JSON.stringify(newDocument)}`
+        });
+    }
 };
