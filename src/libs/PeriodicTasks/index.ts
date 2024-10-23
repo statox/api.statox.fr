@@ -15,7 +15,7 @@ const tasks = [
     new PeriodicTask({
         taskName: 'Web Watcher',
         task: doWebWatcher,
-        intervalMinutes: 1
+        intervalMinutes: 15
     }),
     new PeriodicTask({
         taskName: 'Meteo France',
