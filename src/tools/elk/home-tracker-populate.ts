@@ -171,7 +171,7 @@ If so you need to edit this function and remove the guard against non-local url
         }
     ];
 
-    console.log(`HomeTracker - Adding ${recordsToCreate.length} records to EKL`);
+    console.log(`HomeTracker - Adding ${recordsToCreate.length} records to ELK`);
     await Promise.all(
         recordsToCreate.map((record) =>
             elk.index({
