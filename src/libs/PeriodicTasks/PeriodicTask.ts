@@ -22,9 +22,13 @@ export class PeriodicTask {
 
     start() {
         // Avoid starting all periodic tasks at the app start to spread the load
-        const maxRandomDelayAtStartMin = isProd ? 10 : 0;
+        const maxRandomDelayAtStartMin = isProd ? 2 : 0;
         const randomDelayAtStartMS = Math.random() * maxRandomDelayAtStartMin * 60 * 1000;
 
+        slog.log('periodic-tasks', 'First task run scheduled', {
+            taskName: this.taskName,
+            delayMs: randomDelayAtStartMS
+        });
         setTimeout(() => this.runTask(), randomDelayAtStartMS);
     }
 

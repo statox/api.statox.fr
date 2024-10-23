@@ -23,6 +23,7 @@ type LoggableProperties =
           cfGeoInfo?: CloudflareGeoInfo;
           cfRay?: string;
           code?: number;
+          delayMs?: number;
           entryName?: string;
           error?: Error;
           executionTimeMs?: number;
