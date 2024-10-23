@@ -4,6 +4,7 @@ import { isProd, isTests } from '../config/env';
 import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate';
 import { data_home_tracker_indexTemplate } from './data/data-home-tracker-index-template';
 import { logs_meteo_france_indexTemplate } from './data/logs-meteo-france-index-template';
+import { populateFakeMeteoFranceLogs } from '../../tools/elk/meteo-france-populate';
 
 export let elk: Client;
 
@@ -127,6 +128,8 @@ export const initELK = async () => {
             // but since this is run only when starting the app locally it might not be an issue
             console.log('ELK init - populate home-tracker data');
             await populateFakeHomeTrackerData();
+            console.log('ELK init - populate logs-meteo-france');
+            await populateFakeMeteoFranceLogs();
         }
     } catch (error) {
         if ((error as Error).name === 'DANGEROUS_OPERATION_ON_NON_LOCAL_ELK') {
