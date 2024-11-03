@@ -19,12 +19,11 @@ describe('authentication middlewares', () => {
             sinon.assert.calledOnce(fakeCheckRequiredPermissionsHandler);
         });
     });
-    describe('auth apikey for iot (BYPASSED FOR NOW)', () => {
+    describe('auth apikey for iot', () => {
         it('should reject missing Authorization header', async () => {
-            // await request(app).get('/apiiotAuthenticatedGetRoute').expect(401);
-            await request(app).get('/apiiotAuthenticatedGetRoute').expect(200);
+            await request(app).get('/apiiotAuthenticatedGetRoute').expect(401);
             th.slog.checkLog('auth', 'authIOT rejected', {
-                livemode: false,
+                livemode: true,
                 error: {
                     statusCode: 401,
                     status: 401,
@@ -34,17 +33,29 @@ describe('authentication middlewares', () => {
         });
 
         it('should reject malformed Authorization header', async () => {
-            // await request(app)
-            //     .get('/apiiotAuthenticatedGetRoute')
-            //     .set('Authorization', 'InvalidScheme foobar')
-            //     .expect(401);
-
             await request(app)
                 .get('/apiiotAuthenticatedGetRoute')
                 .set('Authorization', 'InvalidScheme foobar')
-                .expect(200);
+                .expect(401);
+
             th.slog.checkLog('auth', 'authIOT rejected', {
-                livemode: false,
+                livemode: true,
+                error: {
+                    statusCode: 401,
+                    status: 401,
+                    code: 'unauthorized'
+                }
+            });
+        });
+
+        it('should reject unknown API key', async () => {
+            await request(app)
+                .get('/apiiotAuthenticatedGetRoute')
+                .set('Authorization', 'Bearer unknownkey')
+                .expect(403);
+
+            th.slog.checkLog('auth', 'authIOT rejected', {
+                livemode: true,
                 error: {
                     statusCode: 403,
                     status: 403,

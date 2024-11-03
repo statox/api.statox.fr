@@ -7,6 +7,7 @@ describe('homeTracker/upload', () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({
                 sensorName: 'foo',
 
@@ -47,6 +48,7 @@ describe('homeTracker/upload', () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({
                 sensorName: 'foo',
                 tempCelsius: 23.5,
