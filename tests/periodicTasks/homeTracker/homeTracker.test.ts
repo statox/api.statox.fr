@@ -73,10 +73,14 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
             message: 'Missing home tracker data for sensor jardiniere',
             directMention: true
         });
-        th.slack.checkNbNotifications(1);
+        th.slack.checkNotification({
+            message: 'Missing home tracker data for sensor sdb',
+            directMention: true
+        });
+        th.slack.checkNbNotifications(2);
 
         // On second call we shouldn't create another notification for the failing sensor
         await doHomeTrackerMonitoring();
-        th.slack.checkNbNotifications(1);
+        th.slack.checkNbNotifications(2);
     });
 });

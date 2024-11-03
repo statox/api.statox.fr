@@ -1,1 +1,1 @@
-export const monitoredSensorNames = ['chambre', 'salon', 'jardiniere'];
+export const monitoredSensorNames = ['chambre', 'salon', 'jardiniere', 'sdb'];
