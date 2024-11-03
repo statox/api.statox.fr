@@ -22,6 +22,5 @@ export const route: PostRoute = {
         }
     },
     handler,
-    // authentication: 'apikey-iot'
-    authentication: 'none'
+    authentication: 'user'
 };

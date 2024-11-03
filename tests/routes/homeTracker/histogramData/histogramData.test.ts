@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import { th } from '../../../helpers';
 import { DateTime } from 'luxon';
 
-describe('homeTracker/histogramData', () => {
+describe('/homeTracker/histogramData', () => {
     beforeEach('Flush ELK', th.elk.flush);
 
     it('should average the data in the same bucket', async () => {
@@ -62,7 +62,6 @@ describe('homeTracker/histogramData', () => {
         await request(app)
             .post('/homeTracker/histogramData')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({ timeWindow: '3h' })
             .expect(200)
             .then((response) => {
@@ -127,7 +126,6 @@ describe('homeTracker/histogramData', () => {
         await request(app)
             .post('/homeTracker/histogramData')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer fakeaccesskeyfortests')
             .send({ timeWindow: '3h' })
             .expect(200)
             .then((response) => {
