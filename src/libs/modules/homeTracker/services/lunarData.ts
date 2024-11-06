@@ -41,6 +41,17 @@ const lunarPhaseToFrench = (phase: LunarPhase): LunarPhaseFrench => {
     throw new Error('UNKOWN_LUNAR_PHASE');
 };
 
+// From https://en.wikipedia.org/wiki/Lunar_phase#Principal_and_intermediate_phases_of_the_Moon
+const visibilityTimes: Map<LunarPhase, string[]> = new Map();
+visibilityTimes.set(LunarPhase.NEW, ['06:00', '18:00']);
+visibilityTimes.set(LunarPhase.WAXING_CRESCENT, ['09:00', '21:00']);
+visibilityTimes.set(LunarPhase.FIRST_QUARTER, ['12:00', '00:00']);
+visibilityTimes.set(LunarPhase.WAXING_GIBBOUS, ['15:00', '03:00']);
+visibilityTimes.set(LunarPhase.FULL, ['18:00', '06:00']);
+visibilityTimes.set(LunarPhase.WANING_GIBBOUS, ['21:00', '09:00']);
+visibilityTimes.set(LunarPhase.LAST_QUARTER, ['00:00', '12:00']);
+visibilityTimes.set(LunarPhase.WANING_CRESCENT, ['03:00', '15:00']);
+
 export const getCurrentLunarState = async () => {
     // Using Luxon to easily mock the date in tests
     const now = DateTime.now().toJSDate();
@@ -51,11 +62,13 @@ export const getCurrentLunarState = async () => {
     const phaseFr = lunarPhaseToFrench(phase);
     const lunarAge = Moon.lunarAge(now);
     const lunarAgePercent = Moon.lunarAgePercent(now);
+    const visibility = visibilityTimes.get(phase);
 
     return {
         lunarAge,
         lunarAgePercent,
         phase,
-        phaseFr
+        phaseFr,
+        visibilityWindow: visibility
     };
 };

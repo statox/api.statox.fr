@@ -19,7 +19,8 @@ describe('/homeTracker/getLunarData', () => {
                     lunarAge: 16.373701132359034,
                     lunarAgePercent: 0.5544658066241368,
                     phase: 'Full',
-                    phaseFr: 'Pleine lune'
+                    phaseFr: 'Pleine lune',
+                    visibilityWindow: ['18:00', '06:00']
                 });
             });
         th.time.restoreDateTimeNow();
