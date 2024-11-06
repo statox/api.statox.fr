@@ -30,7 +30,9 @@ export const initApp = () => {
         })
     );
 
-    app.use(express.json());
+    // Default is 100kb, bumped the limit for chords/updateAll
+    // TODO Maybe rework the endpoint to not get the whole file and decrease the limit again
+    app.use(express.json({ limit: '500kb' }));
 
     app.set('views', './src/views');
     app.set('view engine', 'mustache');
