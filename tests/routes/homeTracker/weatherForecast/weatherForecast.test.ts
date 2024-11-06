@@ -20,6 +20,42 @@ const pressureHistoryFixtureToELKFixture = (pressureHistory: PressureHistoryFixt
 describe('homeTracker/weatherForecast', () => {
     beforeEach('Flush ELK', th.elk.flush);
 
+    it('Should get pressure history properly', async () => {
+        const pressureHistory: PressureHistoryFixture[] = [];
+        for (let offsethours = 0; offsethours <= 24; offsethours++) {
+            for (let offsetminutes = 0; offsetminutes < 60; offsetminutes += 5) {
+                pressureHistory.push({
+                    pressurehPa: 1000 + offsethours,
+                    tsDiff: { hours: offsethours, minutes: offsetminutes }
+                });
+            }
+        }
+
+        const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
+        await th.elk.fixture({
+            'data-home-tracker': logs
+        });
+
+        await request(app)
+            .get('/homeTracker/getWeatherForecast')
+            .expect(200)
+            .then((response) => {
+                const { forecast, pressureHistory } = response.body;
+
+                assert.lengthOf(pressureHistory, 9);
+                assert.deepEqual(
+                    pressureHistory.map(
+                        (v: { timestamp: number; averagePressurehPa: number }) =>
+                            v.averagePressurehPa
+                    ),
+                    [1022, 1020, 1017, 1014, 1011, 1008, 1005, 1002, 1000]
+                );
+
+                assert.equal(forecast.pressureTrend, 'falling');
+                assert.equal(forecast.forecast, 'Rain at Times, Worse Later');
+            });
+    });
+
     describe('Should predict weather', () => {
         it('steady 1005hpa', async () => {
             const pressureHistory: PressureHistoryFixture[] = [
