@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { GetRoute } from '../types';
-import { getCurrentLunarState } from '../../modules/homeTracker';
+import { getCurrentLunarState } from '../../modules/ephemerides';
 
 const handler = async (_req: Request, res: Response) => {
     const currentLunarState = await getCurrentLunarState();
