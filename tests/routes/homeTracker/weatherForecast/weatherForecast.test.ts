@@ -22,13 +22,18 @@ describe('homeTracker/weatherForecast', () => {
 
     it('Should get pressure history properly', async () => {
         const pressureHistory: PressureHistoryFixture[] = [];
-        for (let offsethours = 0; offsethours <= 24; offsethours++) {
-            for (let offsetminutes = 0; offsetminutes < 60; offsetminutes += 5) {
-                pressureHistory.push({
-                    pressurehPa: 1000 + offsethours,
-                    tsDiff: { hours: offsethours, minutes: offsetminutes }
-                });
-            }
+        const hourlyFrequency = 60 / 10; // One record every 10 minutes
+        const nbRecords = hourlyFrequency * 25; // 25 hours of recording (one additional hours to avoid flakyness)
+        const lastRecordOffsetMinutes = 2; // Last record happened 2 minutes ago
+
+        for (let record = 0; record < nbRecords; record++) {
+            const offsetminutes = lastRecordOffsetMinutes + record * 10;
+            const offsetPressure = Math.floor(record / hourlyFrequency); // Increase pressure by 1 every hour
+
+            pressureHistory.push({
+                pressurehPa: 1000 + offsetPressure,
+                tsDiff: { minutes: offsetminutes }
+            });
         }
 
         const logs = pressureHistoryFixtureToELKFixture(pressureHistory);
