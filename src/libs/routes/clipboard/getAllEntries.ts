@@ -5,7 +5,7 @@ import { getAllEntries } from '../../modules/clipboard';
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await getAllEntries();
-        res.json(result);
+        res.send(result);
     } catch (error) {
         next(error);
     }

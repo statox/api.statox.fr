@@ -5,7 +5,7 @@ import { getAllEntries } from '../../modules/readingList';
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const items = await getAllEntries();
-        res.json({ items });
+        res.send({ items });
     } catch (error) {
         next(error);
     }

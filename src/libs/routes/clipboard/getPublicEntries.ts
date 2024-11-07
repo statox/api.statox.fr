@@ -5,7 +5,7 @@ import { getPublicEntries } from '../../modules/clipboard';
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await getPublicEntries();
-        res.json(result);
+        res.send(result);
     } catch (error) {
         next(error);
     }

@@ -4,7 +4,7 @@ import { getWatchedContent } from '../../modules/webWatcher';
 
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        res.json(await getWatchedContent());
+        res.send(await getWatchedContent());
     } catch (error) {
         next(error);
     }

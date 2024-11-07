@@ -5,7 +5,7 @@ import { getLinksVisitsCount } from '../../modules/chords';
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await getLinksVisitsCount();
-        res.json(result);
+        res.send(result);
     } catch (error) {
         next(error);
     }

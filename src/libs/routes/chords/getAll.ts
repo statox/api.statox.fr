@@ -5,7 +5,7 @@ import { GetRoute } from '../types';
 const handler = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const chords = await getAllChords();
-        res.json(chords);
+        res.send(chords);
     } catch (error) {
         next(error);
     }
