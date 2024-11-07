@@ -1,0 +1,10 @@
+{
+    "spec": [
+        "dist/src/packages/**/*.test.js"
+    ],
+    "exit": true,
+    "timeout": 5000,
+    "parallel": false,
+    "jobs": 1,
+    "slow": 2
+}

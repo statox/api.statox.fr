@@ -1,0 +1,14 @@
+{
+  "name": "suncalc",
+  "version": "1.0.0",
+  "description": "A tiny TypeScript library for calculating sun/moon positions and phases.",
+  "main": "index.ts",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "statox",
+  "license": "BSD-2-Clause"
+}

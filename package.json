@@ -24,8 +24,9 @@
         "serve": "nodemon dist/index.js",
         "watch": "rm -fr dist/ && tsc -w",
         "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/routes.json",
-        "tests:all": "npm run tests:framework && npm run tests",
-        "tests:framework": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json"
+        "tests:all": "npm run tests:packages && npm run tests:framework && npm run tests",
+        "tests:framework": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json",
+        "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.679.0",
