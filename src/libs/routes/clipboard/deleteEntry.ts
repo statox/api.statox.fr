@@ -1,17 +1,11 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { deleteEntry } from '../../modules/clipboard';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request) => {
     const { name } = req.body;
-
-    try {
-        await deleteEntry({ name });
-        res.send({});
-    } catch (error) {
-        next(error);
-    }
+    await deleteEntry({ name });
 };
 
 const inputSchema: AllowedSchema = {

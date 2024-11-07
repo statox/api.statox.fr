@@ -1,10 +1,9 @@
-import type { Request, Response } from 'express';
 import { GetRoute } from '../types';
 import { getTodayEphemerides } from '../../modules/ephemerides';
 
-const handler = async (_req: Request, res: Response) => {
+const handler = async () => {
     const ephemerides = getTodayEphemerides();
-    res.send({ ephemerides });
+    return { ephemerides };
 };
 
 export const route: GetRoute = {

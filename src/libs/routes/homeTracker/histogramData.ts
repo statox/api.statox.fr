@@ -1,10 +1,9 @@
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import { PostRoute } from '../types';
 import { getHistogramData } from '../../modules/homeTracker';
 
-const handler = async (req: Request, res: Response) => {
-    const data = await getHistogramData(req.body.timeWindow);
-    res.send(data);
+const handler = async (req: Request) => {
+    return getHistogramData(req.body.timeWindow);
 };
 
 export const route: PostRoute = {

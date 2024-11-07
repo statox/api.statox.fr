@@ -1,14 +1,8 @@
-import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
 import { getAllEntries } from '../../modules/clipboard';
 
-const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-        const result = await getAllEntries();
-        res.send(result);
-    } catch (error) {
-        next(error);
-    }
+const handler = async () => {
+    return getAllEntries();
 };
 
 export const route: GetRoute = {

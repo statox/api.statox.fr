@@ -1,15 +1,10 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { GetRoute } from '../types';
 import { getRedirectForEntry } from '../../modules/reactor/getEntries';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const linkId = req.params.linkId;
-        const s3PresignedUrl = await getRedirectForEntry(linkId);
-        res.redirect(s3PresignedUrl);
-    } catch (error) {
-        next(error);
-    }
+const handler = async (req: Request) => {
+    const linkId = req.params.linkId;
+    return getRedirectForEntry(linkId);
 };
 
 export const route: GetRoute = {

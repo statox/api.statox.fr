@@ -1,20 +1,15 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { File } from 'formidable';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addEntry } from '../../modules/readingList';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request) => {
     const { name, commaSeparatedTags, comment, link } = req.body;
     const tags = commaSeparatedTags.split(',').filter((tag: string) => tag.length);
     const file: File = req.body.file?.pop();
 
-    try {
-        await addEntry({ name, tags, comment, link, file });
-        res.send({});
-    } catch (error) {
-        next(error);
-    }
+    await addEntry({ name, tags, comment, link, file });
 };
 
 const inputSchema: AllowedSchema = {

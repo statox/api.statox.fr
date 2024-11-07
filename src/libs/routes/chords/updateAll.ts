@@ -1,19 +1,13 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { updateChords } from '../../modules/chords/commands';
 import { slog } from '../../modules/logging';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request) => {
     const { chords } = req.body;
     slog.log('chords', 'Updating chords', { nbChords: chords.length });
-
-    try {
-        await updateChords(chords);
-        res.send({});
-    } catch (error) {
-        next(error);
-    }
+    await updateChords(chords);
 };
 
 const inputSchema: AllowedSchema = {

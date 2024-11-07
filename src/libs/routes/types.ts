@@ -1,11 +1,11 @@
 import express from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 
+export type RouteHandler = ((req: express.Request) => Promise<unknown>) | (() => Promise<unknown>);
+
 type BaseRoute = {
     path: string;
-    handler:
-        | ((req: express.Request, res: express.Response) => void)
-        | ((req: express.Request, res: express.Response, next: express.NextFunction) => void);
+    handler: RouteHandler;
     authentication: 'none' | 'user' | 'apikey-iot';
 };
 

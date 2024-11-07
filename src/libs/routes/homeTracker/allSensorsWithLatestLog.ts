@@ -1,10 +1,8 @@
-import type { Request, Response } from 'express';
 import { GetRoute } from '../types';
 import { getAllSensorsWithLatestLog } from '../../modules/homeTracker';
 
-const handler = async (_req: Request, res: Response) => {
-    const data = await getAllSensorsWithLatestLog();
-    res.send(data);
+const handler = async () => {
+    return getAllSensorsWithLatestLog();
 };
 
 export const route: GetRoute = {

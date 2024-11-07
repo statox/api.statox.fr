@@ -1,10 +1,9 @@
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import { PostRoute } from '../types';
 import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker';
 
-const handler = async (req: Request, res: Response) => {
+const handler = async (req: Request) => {
     ingestSensorData(req.body);
-    res.send({});
 };
 
 export const route: PostRoute = {

@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import { TestHelper } from '../TestHelper';
-import { Request, Response } from 'express';
 import * as routes from '../../../src/libs/routes';
 import { GetRoute, PostRoute } from '../../../src/libs/routes/types';
 import { initApp } from '../../../src/app';
@@ -9,21 +8,39 @@ const getRoute: GetRoute = {
     method: 'get',
     authentication: 'none',
     path: '/getroute',
-    handler: (_req: Request, res: Response) => res.end()
+    handler: async () => {}
+};
+
+const getRouteWithResult: GetRoute = {
+    method: 'get',
+    authentication: 'none',
+    path: '/getroutewithresult',
+    handler: async () => {
+        return { foo: 1 };
+    }
+};
+
+const getRouteThatThrows: GetRoute = {
+    method: 'get',
+    authentication: 'none',
+    path: '/getroutethatthrows',
+    handler: async () => {
+        throw new Error('The route threw');
+    }
 };
 
 const userAuthenticatedGetRoute: GetRoute = {
     method: 'get',
     authentication: 'user',
     path: '/userAuthenticatedGetRoute',
-    handler: (_req: Request, res: Response) => res.end()
+    handler: async () => {}
 };
 
 const apiiotAuthenticatedGetRoute: GetRoute = {
     method: 'get',
     authentication: 'apikey-iot',
     path: '/apiiotAuthenticatedGetRoute',
-    handler: (_req: Request, res: Response) => res.end()
+    handler: async () => {}
 };
 
 const postRoute: PostRoute = {
@@ -40,10 +57,17 @@ const postRoute: PostRoute = {
             }
         }
     },
-    handler: (_req: Request, res: Response) => res.end()
+    handler: async () => {}
 };
 
-const testRoutes = [getRoute, postRoute, userAuthenticatedGetRoute, apiiotAuthenticatedGetRoute];
+const testRoutes = [
+    getRoute,
+    getRouteWithResult,
+    getRouteThatThrows,
+    postRoute,
+    userAuthenticatedGetRoute,
+    apiiotAuthenticatedGetRoute
+];
 
 let routesStub: sinon.SinonStub;
 

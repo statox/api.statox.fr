@@ -1,20 +1,15 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { disableWatcher, enableWatcher } from '../../modules/webWatcher';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request) => {
     const { watcherId, setToEnabled } = req.body;
 
-    try {
-        if (setToEnabled) {
-            await enableWatcher(watcherId);
-        } else {
-            await disableWatcher(watcherId);
-        }
-        res.send({});
-    } catch (error) {
-        next(error);
+    if (setToEnabled) {
+        await enableWatcher(watcherId);
+    } else {
+        await disableWatcher(watcherId);
     }
 };
 

@@ -1,9 +1,7 @@
-import type { Request, Response } from 'express';
 import { GetRoute } from '../types';
 
-const handler = (_req: Request, res: Response) => {
-    const o = { time: Date.now() };
-    res.send(o);
+const handler = async () => {
+    return { time: Date.now() };
 };
 
 export const route: GetRoute = {

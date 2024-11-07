@@ -1,14 +1,8 @@
-import type { NextFunction, Request, Response } from 'express';
 import { GetRoute } from '../types';
 import { getLinksVisitsCount } from '../../modules/chords';
 
-const handler = async (_req: Request, res: Response, next: NextFunction) => {
-    try {
-        const result = await getLinksVisitsCount();
-        res.send(result);
-    } catch (error) {
-        next(error);
-    }
+const handler = async () => {
+    return getLinksVisitsCount();
 };
 
 export const route: GetRoute = {

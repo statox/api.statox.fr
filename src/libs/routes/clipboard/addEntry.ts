@@ -1,11 +1,11 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request } from 'express';
 import { File } from 'formidable';
 import { AllowedSchema } from 'express-json-validator-middleware';
 import { PostRoute } from '../types';
 import { addEntry } from '../../modules/clipboard';
 import { FileOrContentRequiredError } from '../errors';
 
-const handler = async (req: Request, res: Response, next: NextFunction) => {
+const handler = async (req: Request) => {
     const { name, content, ttlSeconds: ttlSecondsInput, isPublic: isPublicInput } = req.body;
 
     // We allow multiple types because when uploading a file with multipart/formdata
@@ -17,15 +17,10 @@ const handler = async (req: Request, res: Response, next: NextFunction) => {
     const file: File = req.body.file?.pop();
 
     if (!content && !file) {
-        return next(new FileOrContentRequiredError());
+        throw new FileOrContentRequiredError();
     }
 
-    try {
-        await addEntry({ name, content, ttlSeconds, isPublic, file });
-        res.send({});
-    } catch (error) {
-        next(error);
-    }
+    await addEntry({ name, content, ttlSeconds, isPublic, file });
 };
 
 const inputSchema: AllowedSchema = {
