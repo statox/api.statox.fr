@@ -1,1 +1,1 @@
-export * from './moon';
+export * from './aggregations';

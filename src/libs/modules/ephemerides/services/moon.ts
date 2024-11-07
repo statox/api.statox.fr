@@ -1,5 +1,4 @@
 import { Hemisphere, LunarPhase, Moon, MoonOptions } from 'lunarphase-js';
-import { DateTime } from 'luxon';
 import { LunarPhaseDetails } from '../types';
 
 // Visibility windows coming from
@@ -41,26 +40,24 @@ const lunarPhasesDetails: {
     }
 };
 
-export const getCurrentLunarState = async () => {
-    // Using Luxon to easily mock the date in tests
-    const now = DateTime.now().toJSDate();
+export const getLunarState = (date: Date) => {
     const options: MoonOptions = {
         hemisphere: Hemisphere.NORTHERN
     };
 
-    const lunarAge = Moon.lunarAge(now);
-    const lunarAgePercent = Moon.lunarAgePercent(now);
+    const lunarAge = Moon.lunarAge(date);
+    const lunarAgePercent = Moon.lunarAgePercent(date);
 
-    const phase = Moon.lunarPhase(now, options);
-    const phaseDetails = lunarPhasesDetails[phase];
-    const phaseFr = phaseDetails.frenchName;
+    const moonPhase = Moon.lunarPhase(date, options);
+    const phaseDetails = lunarPhasesDetails[moonPhase];
+    const moonPhaseFr = phaseDetails.frenchName;
     const visibility = phaseDetails.visibilityWindow;
 
     return {
         lunarAge,
         lunarAgePercent,
-        phase,
-        phaseFr,
-        visibilityWindow: visibility
+        moonPhase,
+        moonPhaseFr,
+        moonVisibilityWindow: visibility
     };
 };
