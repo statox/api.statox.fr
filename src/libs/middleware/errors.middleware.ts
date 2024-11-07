@@ -14,6 +14,7 @@ import {
     ItemAlreadyExistsError,
     ItemNotFoundError
 } from '../routes/errors';
+import { OutputValidationError } from './routehandler.middleware';
 
 export const errorHandler = async (
     error: Error,
@@ -23,6 +24,11 @@ export const errorHandler = async (
 ) => {
     slog.log('middleware', 'Caught error', { error });
     notifySlack({ error, directMention: true });
+
+    if (error instanceof OutputValidationError) {
+        response.status(500).json({ message: 'Failed output validation' });
+        return next();
+    }
 
     if (
         error instanceof ItemAlreadyExistsError ||

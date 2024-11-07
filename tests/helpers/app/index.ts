@@ -29,6 +29,24 @@ const getRouteThatThrows: GetRoute = {
     }
 };
 
+const getRouteWithInvalidOutput: GetRoute = {
+    method: 'get',
+    authentication: 'none',
+    path: '/getroutewithinvalidoutput',
+    handler: async () => {
+        return { foo: 1 };
+    },
+    outputSchema: {
+        type: 'object',
+        properties: {
+            bar: {
+                type: 'string'
+            }
+        },
+        additionalProperties: false
+    }
+};
+
 const userAuthenticatedGetRoute: GetRoute = {
     method: 'get',
     authentication: 'user',
@@ -64,6 +82,7 @@ const testRoutes = [
     getRoute,
     getRouteWithResult,
     getRouteThatThrows,
+    getRouteWithInvalidOutput,
     postRoute,
     userAuthenticatedGetRoute,
     apiiotAuthenticatedGetRoute

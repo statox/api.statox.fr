@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../src/app';
 import { assert } from 'chai';
+import { th } from '../helpers';
 
 describe('route handler', () => {
     it('should pass the result of the route to the response', async () => {
@@ -27,6 +28,28 @@ describe('route handler', () => {
             .expect(500)
             .then((response) => {
                 assert.deepEqual(response.body, { message: 'Internal Server Error' });
+            });
+    });
+
+    it('should validate output schema', async () => {
+        await request(app)
+            .get('/getroutewithinvalidoutput')
+            .expect(500)
+            .then((response) => {
+                assert.deepEqual(response.body, { message: 'Failed output validation' });
+                th.slog.checkLog('middleware', 'Failed output validation', {
+                    error: [
+                        {
+                            instancePath: '',
+                            schemaPath: '#/additionalProperties',
+                            keyword: 'additionalProperties',
+                            params: {
+                                additionalProperty: 'foo'
+                            },
+                            message: 'must NOT have additional properties'
+                        }
+                    ]
+                });
             });
     });
 });
