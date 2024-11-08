@@ -8,7 +8,8 @@ const getRoute: GetRoute = {
     method: 'get',
     authentication: 'none',
     path: '/getroute',
-    handler: async () => {}
+    handler: async () => {},
+    outputSchema: { type: 'object', additionalProperties: false }
 };
 
 const getRouteWithResult: GetRoute = {
@@ -17,6 +18,12 @@ const getRouteWithResult: GetRoute = {
     path: '/getroutewithresult',
     handler: async () => {
         return { foo: 1 };
+    },
+    outputSchema: {
+        type: 'object',
+        properties: { foo: { type: 'number' } },
+        required: ['foo'],
+        additionalProperties: false
     }
 };
 
@@ -26,7 +33,8 @@ const getRouteThatThrows: GetRoute = {
     path: '/getroutethatthrows',
     handler: async () => {
         throw new Error('The route threw');
-    }
+    },
+    outputSchema: { type: 'object', additionalProperties: false }
 };
 
 const getRouteWithInvalidOutput: GetRoute = {
@@ -51,14 +59,16 @@ const userAuthenticatedGetRoute: GetRoute = {
     method: 'get',
     authentication: 'user',
     path: '/userAuthenticatedGetRoute',
-    handler: async () => {}
+    handler: async () => {},
+    outputSchema: { type: 'object', additionalProperties: false }
 };
 
 const apiiotAuthenticatedGetRoute: GetRoute = {
     method: 'get',
     authentication: 'apikey-iot',
     path: '/apiiotAuthenticatedGetRoute',
-    handler: async () => {}
+    handler: async () => {},
+    outputSchema: { type: 'object', additionalProperties: false }
 };
 
 const postRoute: PostRoute = {
@@ -75,7 +85,8 @@ const postRoute: PostRoute = {
             }
         }
     },
-    handler: async () => {}
+    handler: async () => {},
+    outputSchema: { type: 'object', additionalProperties: false }
 };
 
 const testRoutes = [

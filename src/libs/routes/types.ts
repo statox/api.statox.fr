@@ -7,7 +7,7 @@ type BaseRoute = {
     path: string;
     handler: RouteHandler;
     authentication: 'none' | 'user' | 'apikey-iot';
-    outputSchema?: AllowedSchema;
+    outputSchema: AllowedSchema;
 };
 
 export type GetRoute = BaseRoute & {
