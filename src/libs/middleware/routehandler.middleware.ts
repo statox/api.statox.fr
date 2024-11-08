@@ -13,7 +13,7 @@ export class OutputValidationError extends Error {
 export const routeHandler = (route: Route) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const routeResult = await route.handler(req);
+            const routeResult = (await route.handler(req)) || {};
 
             // TODO Once outputSchema is required in type Route, remove condition
             // Only do output validation if we are not in prod
@@ -28,7 +28,7 @@ export const routeHandler = (route: Route) => {
             if (route.path === '/r/:linkId') {
                 return res.redirect(routeResult as string);
             }
-            res.send(routeResult || {});
+            res.send(routeResult);
         } catch (error) {
             if (isAjvError(error)) {
                 // @ts-expect-error This won't happen in prod
