@@ -21,5 +21,37 @@ export const route: PostRoute = {
         }
     },
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        properties: {
+            sensorNames: {
+                type: 'array',
+                items: { type: 'string' }
+            },
+            histogramData: {
+                type: 'object',
+                additionalProperties: {
+                    type: 'object',
+                    properties: {
+                        tempCelsius: { type: 'object', additionalProperties: { type: 'number' } },
+                        internalTempCelsius: {
+                            type: 'object',
+                            additionalProperties: { type: 'number' }
+                        },
+                        batteryCharge: { type: 'object', additionalProperties: { type: 'number' } },
+                        humidity: { type: 'object', additionalProperties: { type: 'number' } },
+                        internalHumidity: {
+                            type: 'object',
+                            additionalProperties: { type: 'number' }
+                        },
+                        pressurehPa: { type: 'object', additionalProperties: { type: 'number' } }
+                    },
+                    additionalProperties: false
+                }
+            }
+        },
+        required: ['sensorNames', 'histogramData'],
+        additionalProperties: false
+    }
 };
