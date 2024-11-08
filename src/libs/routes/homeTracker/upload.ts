@@ -11,5 +11,9 @@ export const route: PostRoute = {
     path: '/homeTracker/upload',
     inputSchema: sensorRawDataInputSchema,
     handler,
-    authentication: 'apikey-iot'
+    authentication: 'apikey-iot',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };

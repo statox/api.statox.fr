@@ -43,5 +43,9 @@ export const route: PostRoute = {
     path: '/readingList/addEntry',
     inputSchema,
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };

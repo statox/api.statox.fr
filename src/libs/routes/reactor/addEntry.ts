@@ -38,5 +38,9 @@ export const route: PostRoute = {
     path: '/reactor/addEntry',
     inputSchema,
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };

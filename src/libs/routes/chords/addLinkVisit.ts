@@ -26,5 +26,9 @@ export const route: PostRoute = {
     path: '/chords/addLinkVisit',
     inputSchema,
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };

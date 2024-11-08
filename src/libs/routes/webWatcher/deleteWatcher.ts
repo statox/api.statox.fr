@@ -25,5 +25,9 @@ export const route: PostRoute = {
     path: '/webWatcher/deleteWatcher',
     inputSchema,
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };

@@ -96,5 +96,9 @@ export const route: PostRoute = {
     path: '/webWatcher/createWatcher',
     inputSchema,
     handler,
-    authentication: 'user'
+    authentication: 'user',
+    outputSchema: {
+        type: 'object',
+        additionalProperties: false
+    }
 };
