@@ -11,5 +11,9 @@ export const route: GetRoute = {
     method: 'get',
     path: '/r/:linkId',
     handler,
-    authentication: 'none'
+    authentication: 'none',
+    outputSchema: {
+        type: 'string',
+        description: 'A S3 presigned URL to redirect to'
+    }
 };

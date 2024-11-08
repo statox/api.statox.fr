@@ -23,21 +23,20 @@ const checkChordUrl = async (chord: Chord) => {
 
 const getFailingUrls = async (chords: Chord[]) => {
     // TODO limit calls in parallel like I'd do with async.eachLimit()
-    return Promise.all(chords.map((c) => checkChordUrl(c))).then((result) => {
-        const nbChecks = result.length;
-        const nbSkipped = result.filter((r) => r.status === 'skipped').length;
-        const fails = result.filter((r) => !['ok', 'skipped'].includes(r.status.toString()));
-        const nbFails = fails.length;
-        const timestamp = Date.now();
+    const result = await Promise.all(chords.map((c) => checkChordUrl(c)));
+    const nbChecks = result.length;
+    const nbSkipped = result.filter((r) => r.status === 'skipped').length;
+    const fails = result.filter((r) => !['ok', 'skipped'].includes(r.status.toString()));
+    const nbFails = fails.length;
+    const timestamp = Date.now();
 
-        return {
-            nbChecks,
-            nbSkipped,
-            fails,
-            nbFails,
-            timestamp
-        };
-    });
+    return {
+        nbChecks,
+        nbSkipped,
+        fails,
+        nbFails,
+        timestamp
+    };
 };
 
 export const checkChordsUrl = async () => {
