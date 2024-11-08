@@ -8,5 +8,15 @@ export const route: GetRoute = {
     method: 'get',
     path: '/health/getRemoteTime',
     handler,
-    authentication: 'none'
+    authentication: 'none',
+    outputSchema: {
+        type: 'object',
+        properties: {
+            time: {
+                type: 'number'
+            }
+        },
+        required: ['time'],
+        additionalProperties: false
+    }
 };

@@ -3,9 +3,9 @@ import { app } from '../../../../src/app';
 import { assert } from 'chai';
 
 describe('health/getRemoteTime', () => {
-    it('should return a timestamp close to now', () => {
+    it('should return a timestamp close to now', async () => {
         const now = Date.now();
-        request(app)
+        await request(app)
             .get('/health/getRemoteTime')
             .expect(200)
             .then((response) => {
