@@ -15,9 +15,8 @@ export const routeHandler = (route: Route) => {
         try {
             const routeResult = (await route.handler(req)) || {};
 
-            // TODO Once outputSchema is required in type Route, remove condition
             // Only do output validation if we are not in prod
-            if (!isProd && route.outputSchema) {
+            if (!isProd) {
                 validateAgainstJsonSchema(routeResult, route.outputSchema);
             }
 
