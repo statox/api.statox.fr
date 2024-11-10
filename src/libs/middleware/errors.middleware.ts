@@ -14,7 +14,7 @@ import {
     ItemAlreadyExistsError,
     ItemNotFoundError
 } from '../routes/errors';
-import { OutputValidationError } from './routehandler.middleware';
+import { OutputValidationError } from './apiPipeline.middleware';
 
 export const errorHandler = async (
     error: Error,

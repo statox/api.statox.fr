@@ -14,7 +14,7 @@ import { routes } from './libs/routes';
 import { slog } from './libs/modules/logging';
 import { startPeriodicTasks } from './libs/PeriodicTasks';
 import { validateAPIKeyHeader } from './libs/middleware/authIOT.middleware';
-import { routeHandler } from './libs/middleware/routehandler.middleware';
+import { apiPipeline } from './libs/middleware/apiPipeline.middleware';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -56,7 +56,7 @@ export const initApp = () => {
         if (route.method === 'post') {
             pipeline.push(validate({ body: route.inputSchema }));
         }
-        pipeline.push(routeHandler(route));
+        pipeline.push(apiPipeline(route));
 
         if (route.method === 'get') {
             app.get(route.path, pipeline);

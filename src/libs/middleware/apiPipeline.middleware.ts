@@ -10,7 +10,7 @@ export class OutputValidationError extends Error {
     }
 }
 
-export const routeHandler = (route: Route) => {
+export const apiPipeline = (route: Route) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const routeResult = (await route.handler(req)) || {};
