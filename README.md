@@ -13,17 +13,13 @@ npm run env # Start the docker environment
 npm run watch # Typescript watcher
 npm run serve # Start the server locally on port 3000
 
+# Testing
+npm run tests:all # Run all the test suites including the functional ones and the ones for the framework
+
 # Deploying (Done from dev machine for now)
 npm run heroku:login
 npm run heroku:deploy
 ```
-
-## TODO
-
--   [ ] Tests don't check for tokens. Find a way to test this part
--   [ ] Replace Auth0 with passport.js?
--   [ ] Enforce routes to return at least `{}` instead of nothing (otherwise it breaks apps.statox.fr -only on iOS-). For now returning `{}` is done manually in each endpoints.
--   [ ] Take inspiration from [this best practice guide](https://github.com/testjavascript/nodejs-integration-tests-best-practices) to rework how we call the API in tests, how we create the DB tables, etc...
 
 ## Environment
 
@@ -62,4 +58,23 @@ S3 is too expensive for our usage so we use Cloudflare's R2 with the AWS S3 SDK.
 -   Prod: R2
 
 ## CI
+
 Dependabot is enabled on this repo and [a workflow](./.github/workflow/dependabot-auto-merge.yml) merges its PRs when they don't break anything. I took notes about this [in this blogpost](https://www.statox.fr/posts/2024/04/github_dependabot_auto_merge/)
+
+## TODO
+
+-   [ ] Find another way to track my TODOs because I'll never keep this README up to date.
+    -   Do I really want to have a formal to do list? I have everything in my head anyway and I'm the only one who will ever work on this project.
+-   [ ] Tests don't check for tokens. Find a way to test this part
+-   [ ] Replace Auth0 with passport.js?
+-   [ ] Take inspiration from [this best practice guide](https://github.com/testjavascript/nodejs-integration-tests-best-practices) to rework how we call the API in tests, how we create the DB tables, etc...
+-   [x] Enforce routes to return at least `{}` instead of nothing (otherwise it breaks apps.statox.fr -only on iOS-). For now returning `{}` is done manually in each endpoints.
+-   [ ] Strongly type the routes handler now that we have input and output JSON schemas.
+    -   [ ] Generate a SDK or some typings for apps.statox.fr to avoid duplicating my types manually
+-   [ ] Add caching and rate limiting to the infra.
+    -   Dependency: Adding Redis to my infra is straight forward but I want to add traefik in front of my various containers before moving on with more infra.
+-   [ ] DBs rework? Replace ELK by mongo or whichever nosql for the home tracker feature? Self host Mysql to cut dependency on Jaws?
+-   [ ] Rework logging to inject logger in requests so that it's more automatic to log the requests body (maybe have a system with whitelist of fields to log?)
+    -   Maybe Extract `slog` to its own package
+-   [ ] Update API pipeline for better error handling i.e. rework `errors.middleware.ts` and have the error filtering included in routes configuration.
+-   [ ] CI add a job to improve readability of broken tests.
