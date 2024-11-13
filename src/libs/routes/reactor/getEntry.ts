@@ -1,9 +1,14 @@
+import { Response } from 'express';
 import { FromSchema } from 'json-schema-to-ts';
 import { GetRoute, RouteHandler } from '../types';
 import { getRedirectForEntry } from '../../modules/reactor/getEntries';
 
 const handler: RouteHandler<Input> = async (params) => {
     return getRedirectForEntry(params.input.linkId);
+};
+
+const customResponseHandler = (output: Output, res: Response) => {
+    return res.redirect(output);
 };
 
 type Input = {
@@ -15,10 +20,13 @@ const outputSchema = {
     description: 'A S3 presigned URL to redirect to'
 } as const;
 
-export const route: GetRoute<Input, FromSchema<typeof outputSchema>> = {
+type Output = FromSchema<typeof outputSchema>;
+
+export const route: GetRoute<Input, Output> = {
     method: 'get',
     path: '/r/:linkId',
     handler,
     authentication: 'none',
-    outputSchema
+    outputSchema,
+    customResponseHandler
 };

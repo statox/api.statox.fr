@@ -35,12 +35,10 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 );
             }
 
-            // TODO Find a better way to handle these specific cases
-            if (route.path === '/clipboard/view') {
-                return res.render('clipboard', { entries: routeResult });
-            }
-            if (route.path === '/r/:linkId') {
-                return res.redirect(routeResult as string);
+            // Allow routes to respond with something else that res.send()
+            // (e.g. do a redirect, render html, ...)
+            if (route.customResponseHandler) {
+                return route.customResponseHandler(routeResult, res);
             }
             res.send(routeResult);
         } catch (error) {

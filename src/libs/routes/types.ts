@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { emptyObjectSchema } from './helpers';
 
@@ -14,7 +15,8 @@ type BaseRoute<Input, Output> = {
     handler: RouteHandler<Input>;
     authentication: 'none' | 'user' | 'apikey-iot';
     outputSchema: ApiJsonSchema;
-    overrideTreatResult?: (output: Output) => void;
+    // TODO at one point we might want to wrap the response in a custom object
+    customResponseHandler?: (output: Output, res: Response) => void;
 };
 
 export type GetRoute<Input, Output> = BaseRoute<Input, Output> & {

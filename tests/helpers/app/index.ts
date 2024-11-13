@@ -34,6 +34,18 @@ const getRouteWithResult: GetRoute<
     outputSchema: getRouteWithResultOutputSchema
 };
 
+const getRouteWithCustomOutputHandler: GetRoute<EmptyInput, EmptyOutput> = {
+    method: 'get',
+    authentication: 'none',
+    path: '/getroutewithcustomoutputhandler',
+    handler: async () => {},
+    outputSchema: emptyObjectSchema,
+    customResponseHandler: (_: EmptyOutput, res) => {
+        res.set('Foo', 'bar');
+        res.sendStatus(599);
+    }
+};
+
 const getRouteThatThrows: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'none',
@@ -105,6 +117,7 @@ const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput>
 const testRoutes = [
     getRoute,
     getRouteWithResult,
+    getRouteWithCustomOutputHandler,
     getRouteThatThrows,
     getRouteWithInvalidOutput,
     postRoute,

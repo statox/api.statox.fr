@@ -1,9 +1,14 @@
+import { Response } from 'express';
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyInput, GetRoute } from '../types';
 import { getEntriesForStaticView } from '../../modules/clipboard';
 
 const handler = async () => {
     return getEntriesForStaticView();
+};
+
+const customResponseHandler = (output: Output, res: Response) => {
+    return res.render('clipboard', { entries: output });
 };
 
 const outputSchema = {
@@ -27,10 +32,13 @@ const outputSchema = {
     }
 } as const;
 
-export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
+type Output = FromSchema<typeof outputSchema>;
+
+export const route: GetRoute<EmptyInput, Output> = {
     method: 'get',
     path: '/clipboard/view',
     handler,
     authentication: 'none',
-    outputSchema
+    outputSchema,
+    customResponseHandler
 };
