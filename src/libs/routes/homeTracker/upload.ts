@@ -1,5 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { PostRoute, RouteHandler } from '../types';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types';
+import { emptyObjectSchema } from '../helpers';
 import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker';
 
 const handler: RouteHandler<Input> = async (params) => {
@@ -8,14 +9,11 @@ const handler: RouteHandler<Input> = async (params) => {
 
 type Input = FromSchema<typeof sensorRawDataInputSchema>;
 
-export const route: PostRoute<Input> = {
+export const route: PostRoute<Input, EmptyOutput> = {
     method: 'post',
     path: '/homeTracker/upload',
     inputSchema: sensorRawDataInputSchema,
     handler,
     authentication: 'apikey-iot',
-    outputSchema: {
-        type: 'object',
-        additionalProperties: false
-    }
+    outputSchema: emptyObjectSchema
 };

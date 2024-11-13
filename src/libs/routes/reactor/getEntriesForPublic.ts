@@ -1,31 +1,34 @@
-import { GetRoute } from '../types';
+import { EmptyInput, GetRoute } from '../types';
 import { getEntriesForPublic } from '../../modules/reactor';
+import { FromSchema } from 'json-schema-to-ts';
 
 const handler = async () => {
     return getEntriesForPublic();
 };
 
-export const route: GetRoute = {
+const outputSchema = {
+    type: 'array',
+    items: {
+        type: 'object',
+        properties: {
+            name: { type: 'string' },
+            creationDateUnix: { type: 'number' },
+            s3PresignedUrl: { type: 'string' },
+            uri: { type: 'string' },
+            tags: {
+                type: 'array',
+                items: { type: 'string' }
+            }
+        },
+        required: ['name', 'creationDateUnix', 's3PresignedUrl', 'uri', 'tags'],
+        additionalProperties: false
+    }
+} as const;
+
+export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
     method: 'get',
     path: '/reactor/getEntriesForPublic',
     handler,
     authentication: 'none',
-    outputSchema: {
-        type: 'array',
-        items: {
-            type: 'object',
-            properties: {
-                name: { type: 'string' },
-                creationDateUnix: { type: 'number' },
-                s3PresignedUrl: { type: 'string' },
-                uri: { type: 'string' },
-                tags: {
-                    type: 'array',
-                    items: { type: 'string' }
-                }
-            },
-            required: ['name', 'creationDateUnix', 's3PresignedUrl', 'uri', 'tags'],
-            additionalProperties: false
-        }
-    }
+    outputSchema
 };

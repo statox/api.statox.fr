@@ -1,4 +1,5 @@
-import { GetRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { EmptyInput, GetRoute } from '../types';
 import { getAllEntries } from '../../modules/readingList';
 
 const handler = async () => {
@@ -6,36 +7,38 @@ const handler = async () => {
     return { items };
 };
 
-export const route: GetRoute = {
+const outputSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    id: { type: 'number' },
+                    creationDateUnix: { type: 'number' },
+                    name: { type: 'string' },
+                    comment: { type: 'string' },
+                    link: { type: 'string' },
+                    s3PresignedUrl: { type: 'string' },
+                    tags: {
+                        type: 'array',
+                        items: { type: 'string' }
+                    }
+                },
+                required: ['id', 'name', 'comment', 'creationDateUnix', 'link', 'tags'],
+                additionalProperties: false
+            }
+        }
+    },
+    required: ['items'],
+    additionalProperties: false
+} as const;
+
+export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
     method: 'get',
     path: '/readingList/getAllEntries',
     handler,
     authentication: 'user',
-    outputSchema: {
-        type: 'object',
-        properties: {
-            items: {
-                type: 'array',
-                items: {
-                    type: 'object',
-                    properties: {
-                        id: { type: 'number' },
-                        creationDateUnix: { type: 'number' },
-                        name: { type: 'string' },
-                        comment: { type: 'string' },
-                        link: { type: 'string' },
-                        s3PresignedUrl: { type: 'string' },
-                        tags: {
-                            type: 'array',
-                            items: { type: 'string' }
-                        }
-                    },
-                    required: ['id', 'name', 'comment', 'creationDateUnix', 'link', 'tags'],
-                    additionalProperties: false
-                }
-            }
-        },
-        required: ['items'],
-        additionalProperties: false
-    }
+    outputSchema
 };

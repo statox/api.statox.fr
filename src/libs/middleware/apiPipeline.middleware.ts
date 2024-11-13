@@ -3,6 +3,7 @@ import { isProd } from '../config/env';
 import { Route } from '../routes/types';
 import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv';
 import { slog } from '../modules/logging';
+import { AllowedSchema } from 'express-json-validator-middleware';
 
 export class OutputValidationError extends Error {
     constructor() {
@@ -10,7 +11,7 @@ export class OutputValidationError extends Error {
     }
 }
 
-export const apiPipeline = (route: Route<unknown>) => {
+export const apiPipeline = (route: Route<unknown, unknown>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             let input = null;
@@ -28,7 +29,10 @@ export const apiPipeline = (route: Route<unknown>) => {
 
             // Only do output validation if we are not in prod
             if (!isProd) {
-                validateAgainstJsonSchema(routeResult, route.outputSchema);
+                validateAgainstJsonSchema(
+                    routeResult,
+                    route.outputSchema as unknown as AllowedSchema
+                );
             }
 
             // TODO Find a better way to handle these specific cases

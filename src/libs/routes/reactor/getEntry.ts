@@ -1,3 +1,4 @@
+import { FromSchema } from 'json-schema-to-ts';
 import { GetRoute, RouteHandler } from '../types';
 import { getRedirectForEntry } from '../../modules/reactor/getEntries';
 
@@ -9,13 +10,15 @@ type Input = {
     linkId: string;
 };
 
-export const route: GetRoute<Input> = {
+const outputSchema = {
+    type: 'string',
+    description: 'A S3 presigned URL to redirect to'
+} as const;
+
+export const route: GetRoute<Input, FromSchema<typeof outputSchema>> = {
     method: 'get',
     path: '/r/:linkId',
     handler,
     authentication: 'none',
-    outputSchema: {
-        type: 'string',
-        description: 'A S3 presigned URL to redirect to'
-    }
+    outputSchema
 };

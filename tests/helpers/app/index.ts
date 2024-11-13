@@ -2,74 +2,84 @@ import { FromSchema } from 'json-schema-to-ts';
 import sinon from 'sinon';
 import { TestHelper } from '../TestHelper';
 import * as routes from '../../../src/libs/routes';
-import { GetRoute, PostRoute } from '../../../src/libs/routes/types';
+import { EmptyInput, EmptyOutput, GetRoute, PostRoute } from '../../../src/libs/routes/types';
 import { initApp } from '../../../src/app';
+import { emptyObjectSchema } from '../../../src/libs/routes/helpers';
 
-const getRoute: GetRoute = {
+const getRoute: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'none',
     path: '/getroute',
     handler: async () => {},
-    outputSchema: { type: 'object', additionalProperties: false }
+    outputSchema: emptyObjectSchema
 };
 
-const getRouteWithResult: GetRoute = {
+const getRouteWithResultOutputSchema = {
+    type: 'object',
+    properties: { foo: { type: 'number' } },
+    required: ['foo'],
+    additionalProperties: false
+} as const;
+
+const getRouteWithResult: GetRoute<
+    EmptyInput,
+    FromSchema<typeof getRouteWithResultOutputSchema>
+> = {
     method: 'get',
     authentication: 'none',
     path: '/getroutewithresult',
     handler: async () => {
         return { foo: 1 };
     },
-    outputSchema: {
-        type: 'object',
-        properties: { foo: { type: 'number' } },
-        required: ['foo'],
-        additionalProperties: false
-    }
+    outputSchema: getRouteWithResultOutputSchema
 };
 
-const getRouteThatThrows: GetRoute = {
+const getRouteThatThrows: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'none',
     path: '/getroutethatthrows',
     handler: async () => {
         throw new Error('The route threw');
     },
-    outputSchema: { type: 'object', additionalProperties: false }
+    outputSchema: emptyObjectSchema
 };
 
-const getRouteWithInvalidOutput: GetRoute = {
+const getRouteWithInvalidOutputOutputSchema = {
+    type: 'object',
+    properties: {
+        bar: {
+            type: 'string'
+        }
+    },
+    additionalProperties: false
+} as const;
+const getRouteWithInvalidOutput: GetRoute<
+    EmptyInput,
+    FromSchema<typeof getRouteWithInvalidOutputOutputSchema>
+> = {
     method: 'get',
     authentication: 'none',
     path: '/getroutewithinvalidoutput',
     handler: async () => {
         return { foo: 1 };
     },
-    outputSchema: {
-        type: 'object',
-        properties: {
-            bar: {
-                type: 'string'
-            }
-        },
-        additionalProperties: false
-    }
+    outputSchema: getRouteWithInvalidOutputOutputSchema
 };
 
-const userAuthenticatedGetRoute: GetRoute = {
+const userAuthenticatedGetRoute: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'user',
     path: '/userAuthenticatedGetRoute',
     handler: async () => {},
-    outputSchema: { type: 'object', additionalProperties: false }
+    outputSchema: emptyObjectSchema
 };
 
-const apiiotAuthenticatedGetRoute: GetRoute = {
+const apiiotAuthenticatedGetRoute: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'apikey-iot',
     path: '/apiiotAuthenticatedGetRoute',
     handler: async () => {},
-    outputSchema: { type: 'object', additionalProperties: false }
+    outputSchema: emptyObjectSchema
 };
 
 const postRouteInputSchema = {
@@ -83,13 +93,13 @@ const postRouteInputSchema = {
     }
 } as const;
 
-const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>> = {
+const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
     method: 'post',
     authentication: 'none',
     path: '/postroute',
     inputSchema: postRouteInputSchema,
     handler: async () => {},
-    outputSchema: { type: 'object', additionalProperties: false }
+    outputSchema: emptyObjectSchema
 };
 
 const testRoutes = [

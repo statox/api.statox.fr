@@ -1,24 +1,29 @@
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { JSONSchema } from 'json-schema-to-ts';
+import { FromSchema, JSONSchema } from 'json-schema-to-ts';
+import { emptyObjectSchema } from './helpers';
 
 export type RouteHandler<Input> = (params: { input: Input }) => Promise<unknown>;
 
 export type ApiJsonSchema = JSONSchema;
 
-type BaseRoute<Input> = {
+// TODO: Would it make more sense to have that as a single type? (probably yes)
+export type EmptyInput = FromSchema<typeof emptyObjectSchema>;
+export type EmptyOutput = FromSchema<typeof emptyObjectSchema>;
+
+type BaseRoute<Input, Output> = {
     path: string;
     handler: RouteHandler<Input>;
     authentication: 'none' | 'user' | 'apikey-iot';
-    outputSchema: AllowedSchema;
+    outputSchema: ApiJsonSchema;
+    overrideTreatResult?: (output: Output) => void;
 };
 
-export type GetRoute<Input = null> = BaseRoute<Input> & {
+export type GetRoute<Input, Output> = BaseRoute<Input, Output> & {
     method: 'get';
 };
 
-export type PostRoute<Input> = BaseRoute<Input> & {
+export type PostRoute<Input, Output> = BaseRoute<Input, Output> & {
     method: 'post';
     inputSchema: ApiJsonSchema;
 };
 
-export type Route<Input> = GetRoute<Input> | PostRoute<Input>;
+export type Route<Input, Output> = GetRoute<Input, Output> | PostRoute<Input, Output>;
