@@ -1,10 +1,9 @@
-import type { Request } from 'express';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { disableWatcher, enableWatcher } from '../../modules/webWatcher';
 
-const handler = async (req: Request) => {
-    const { watcherId, setToEnabled } = req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    const { watcherId, setToEnabled } = params.input;
 
     if (setToEnabled) {
         await enableWatcher(watcherId);
@@ -13,7 +12,7 @@ const handler = async (req: Request) => {
     }
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['watcherId', 'setToEnabled'],
     additionalProperties: false,
@@ -27,9 +26,11 @@ const inputSchema: AllowedSchema = {
             description: 'The new enabled status of the watcher'
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/webWatcher/toggleWatcherEnabled',
     inputSchema,

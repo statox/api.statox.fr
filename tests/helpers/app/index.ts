@@ -1,3 +1,4 @@
+import { FromSchema } from 'json-schema-to-ts';
 import sinon from 'sinon';
 import { TestHelper } from '../TestHelper';
 import * as routes from '../../../src/libs/routes';
@@ -71,20 +72,22 @@ const apiiotAuthenticatedGetRoute: GetRoute = {
     outputSchema: { type: 'object', additionalProperties: false }
 };
 
-const postRoute: PostRoute = {
+const postRouteInputSchema = {
+    type: 'object',
+    required: ['param1'],
+    additionalProperties: false,
+    properties: {
+        param1: {
+            type: 'string'
+        }
+    }
+} as const;
+
+const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>> = {
     method: 'post',
     authentication: 'none',
     path: '/postroute',
-    inputSchema: {
-        type: 'object',
-        required: ['param1'],
-        additionalProperties: false,
-        properties: {
-            param1: {
-                type: 'string'
-            }
-        }
-    },
+    inputSchema: postRouteInputSchema,
     handler: async () => {},
     outputSchema: { type: 'object', additionalProperties: false }
 };

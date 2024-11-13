@@ -1,25 +1,29 @@
-import type { Request } from 'express';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { getHistogramData } from '../../modules/homeTracker';
 
-const handler = async (req: Request) => {
-    return getHistogramData(req.body.timeWindow);
+const handler: RouteHandler<Input> = async (params) => {
+    return getHistogramData(params.input.timeWindow);
 };
 
-export const route: PostRoute = {
+const inputSchema = {
+    type: 'object',
+    required: ['timeWindow'],
+    additionalProperties: false,
+    properties: {
+        timeWindow: {
+            type: 'string',
+            enum: ['30m', '3h', '12h', '1d', '3d', '7d', '2w', '1M', '2M', '6M', 'alltime']
+        }
+    }
+} as const;
+
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/homeTracker/histogramData',
-    inputSchema: {
-        type: 'object',
-        required: ['timeWindow'],
-        additionalProperties: false,
-        properties: {
-            timeWindow: {
-                type: 'string',
-                enum: ['30m', '3h', '12h', '1d', '3d', '7d', '2w', '1M', '2M', '6M', 'alltime']
-            }
-        }
-    },
+    inputSchema,
     handler,
     authentication: 'user',
     outputSchema: {

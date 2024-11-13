@@ -1,16 +1,15 @@
-import type { Request } from 'express';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { updateChords } from '../../modules/chords/commands';
 import { slog } from '../../modules/logging';
 
-const handler = async (req: Request) => {
-    const { chords } = req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    const { chords } = params.input;
     slog.log('chords', 'Updating chords', { nbChords: chords.length });
     await updateChords(chords);
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['chords'],
     additionalProperties: false,
@@ -44,9 +43,11 @@ const inputSchema: AllowedSchema = {
             }
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/chords/updateAll',
     inputSchema,

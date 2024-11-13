@@ -1,20 +1,22 @@
-import type { Request } from 'express';
 import { File } from 'formidable';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { addEntry } from '../../modules/clipboard';
 import { FileOrContentRequiredError } from '../errors';
 
-const handler = async (req: Request) => {
-    const { name, content, ttlSeconds: ttlSecondsInput, isPublic: isPublicInput } = req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    const { name, content, isPublic: isPublicInput } = params.input;
 
     // We allow multiple types because when uploading a file with multipart/formdata
     // the fields are not casted by Formidable
     // TODO: Fix that
-    const ttlSeconds = isNaN(ttlSecondsInput) ? undefined : Number(ttlSecondsInput);
+    let ttlSeconds: number | undefined = undefined;
+    if (!isNaN(Number(params.input.ttlSeconds))) {
+        ttlSeconds = Number(params.input.ttlSeconds);
+    }
     const isPublic = typeof isPublicInput === 'string' ? isPublicInput === 'true' : isPublicInput;
 
-    const file: File = req.body.file?.pop();
+    const file: File = params.input.file?.pop() as unknown as File;
 
     if (!content && !file) {
         throw new FileOrContentRequiredError();
@@ -23,7 +25,7 @@ const handler = async (req: Request) => {
     await addEntry({ name, content, ttlSeconds, isPublic, file });
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['name'],
     additionalProperties: false,
@@ -45,9 +47,11 @@ const inputSchema: AllowedSchema = {
             type: ['boolean', 'string']
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/clipboard/addEntry',
     inputSchema,

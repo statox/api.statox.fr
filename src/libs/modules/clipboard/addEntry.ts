@@ -8,7 +8,7 @@ import { ItemAlreadyExistsError } from '../../routes/errors';
 
 type NewEntryParams = {
     name: string;
-    content: string;
+    content?: string;
     ttlSeconds?: number;
     isPublic?: boolean;
     file?: File;

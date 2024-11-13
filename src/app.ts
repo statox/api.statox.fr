@@ -3,7 +3,7 @@ import express from 'express';
 import mustacheExpress from 'mustache-express';
 import { Socket } from 'net';
 import { Server } from 'http';
-import { Validator } from 'express-json-validator-middleware';
+import { AllowedSchema, Validator } from 'express-json-validator-middleware';
 import { checkRequiredPermissions, validateAccessToken } from './libs/middleware/auth0.middleware';
 import { errorHandler } from './libs/middleware/errors.middleware';
 // import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
@@ -54,7 +54,11 @@ export const initApp = () => {
         }
 
         if (route.method === 'post') {
-            pipeline.push(validate({ body: route.inputSchema }));
+            // Weird typing because we are using json-schema-to-ts's JSONSchema to type inputSchema in routes
+            // but validate() expects the AllowedSchemas from express-json-validator-middleware
+            // they just two ways to represent a json schema.
+            // TODO: Reunify this
+            pipeline.push(validate({ body: route.inputSchema as unknown as AllowedSchema }));
         }
         pipeline.push(apiPipeline(route));
 

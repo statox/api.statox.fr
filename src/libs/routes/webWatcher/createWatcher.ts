@@ -1,11 +1,14 @@
-import type { Request } from 'express';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { createWatcher } from '../../modules/webWatcher';
 
-const handler = async (req: Request) => {
-    const { name, notificationMessage, url, watchType, cssSelector, checkIntervalSeconds } =
-        req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    let cssSelector: string | undefined = undefined;
+    const { name, notificationMessage, url, watchType, checkIntervalSeconds } = params.input;
+
+    if (watchType === 'CSS') {
+        cssSelector = params.input.cssSelector;
+    }
 
     await createWatcher({
         name,
@@ -17,7 +20,7 @@ const handler = async (req: Request) => {
     });
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     oneOf: [
         {
             type: 'object',
@@ -89,9 +92,11 @@ const inputSchema: AllowedSchema = {
             }
         }
     ]
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/webWatcher/createWatcher',
     inputSchema,

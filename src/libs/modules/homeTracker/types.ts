@@ -1,4 +1,4 @@
-import { AllowedSchema } from 'express-json-validator-middleware';
+import { ApiJsonSchema } from '../../routes/types';
 
 export interface SensorRawData {
     sensorName: string;
@@ -40,7 +40,7 @@ export interface SensorErrorData {
     invalidValueStr: string;
 }
 
-export const sensorRawDataInputSchema: AllowedSchema = {
+export const sensorRawDataInputSchema = {
     type: 'object',
     required: ['sensorName'],
     additionalProperties: false,
@@ -100,4 +100,4 @@ export const sensorRawDataInputSchema: AllowedSchema = {
             type: 'boolean'
         }
     }
-};
+} as const satisfies ApiJsonSchema;

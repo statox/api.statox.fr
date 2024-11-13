@@ -1,13 +1,15 @@
-import type { Request } from 'express';
-import { GetRoute } from '../types';
+import { GetRoute, RouteHandler } from '../types';
 import { getRedirectForEntry } from '../../modules/reactor/getEntries';
 
-const handler = async (req: Request) => {
-    const linkId = req.params.linkId;
-    return getRedirectForEntry(linkId);
+const handler: RouteHandler<Input> = async (params) => {
+    return getRedirectForEntry(params.input.linkId);
 };
 
-export const route: GetRoute = {
+type Input = {
+    linkId: string;
+};
+
+export const route: GetRoute<Input> = {
     method: 'get',
     path: '/r/:linkId',
     handler,

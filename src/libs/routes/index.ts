@@ -25,7 +25,8 @@ import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher';
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers';
 import { route as WebWatcher_toggleWatcherEnabled } from './webWatcher/toggleWatcherEnabled';
 
-export const routes: Route[] = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const routes: Route<any>[] = [
     Chords_addLinkVisit,
     Chords_checkLinks,
     Chords_getAll,

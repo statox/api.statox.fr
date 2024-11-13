@@ -1,14 +1,13 @@
-import type { Request } from 'express';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { deleteEntry } from '../../modules/clipboard';
 
-const handler = async (req: Request) => {
-    const { name } = req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    const { name } = params.input;
     await deleteEntry({ name });
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['name'],
     additionalProperties: false,
@@ -17,9 +16,11 @@ const inputSchema: AllowedSchema = {
             type: 'string'
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/clipboard/deleteEntry',
     inputSchema,

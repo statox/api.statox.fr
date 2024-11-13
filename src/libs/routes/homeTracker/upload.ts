@@ -1,12 +1,14 @@
-import type { Request } from 'express';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker';
 
-const handler = async (req: Request) => {
-    ingestSensorData(req.body);
+const handler: RouteHandler<Input> = async (params) => {
+    ingestSensorData(params.input);
 };
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof sensorRawDataInputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/homeTracker/upload',
     inputSchema: sensorRawDataInputSchema,

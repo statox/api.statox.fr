@@ -1,14 +1,12 @@
-import type { Request } from 'express';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { deleteWatcher } from '../../modules/webWatcher';
 
-const handler = async (req: Request) => {
-    const { id } = req.body;
-    await deleteWatcher(id);
+const handler: RouteHandler<Input> = async (params) => {
+    await deleteWatcher(params.input.id);
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['id'],
     additionalProperties: false,
@@ -18,9 +16,11 @@ const inputSchema: AllowedSchema = {
             description: 'id of the watcher to delete'
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/webWatcher/deleteWatcher',
     inputSchema,

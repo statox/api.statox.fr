@@ -1,18 +1,17 @@
-import type { Request } from 'express';
 import { File } from 'formidable';
-import { AllowedSchema } from 'express-json-validator-middleware';
-import { PostRoute } from '../types';
+import { FromSchema } from 'json-schema-to-ts';
+import { PostRoute, RouteHandler } from '../types';
 import { addEntry } from '../../modules/readingList';
 
-const handler = async (req: Request) => {
-    const { name, commaSeparatedTags, comment, link } = req.body;
+const handler: RouteHandler<Input> = async (params) => {
+    const { name, commaSeparatedTags, comment, link } = params.input;
     const tags = commaSeparatedTags.split(',').filter((tag: string) => tag.length);
-    const file: File = req.body.file?.pop();
+    const file: File = params.input.file?.pop() as unknown as File;
 
     await addEntry({ name, tags, comment, link, file });
 };
 
-const inputSchema: AllowedSchema = {
+const inputSchema = {
     type: 'object',
     required: ['name', 'commaSeparatedTags'],
     additionalProperties: false,
@@ -36,9 +35,11 @@ const inputSchema: AllowedSchema = {
             type: 'array'
         }
     }
-};
+} as const;
 
-export const route: PostRoute = {
+type Input = FromSchema<typeof inputSchema>;
+
+export const route: PostRoute<Input> = {
     method: 'post',
     path: '/readingList/addEntry',
     inputSchema,
