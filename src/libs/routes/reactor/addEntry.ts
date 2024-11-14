@@ -6,6 +6,7 @@ import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name, commaSeparatedTags } = params.input;
+    params.loggableContext.addData('entryName', name);
 
     const tags = commaSeparatedTags.split(',').filter((tag: string) => tag.length);
     const file: File = params.input.file.pop() as unknown as File;

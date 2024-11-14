@@ -3,7 +3,7 @@ import { app } from '../../../../src/app';
 import { th } from '../../../helpers';
 
 describe('homeTracker/upload', () => {
-    it('should log the sent value', async () => {
+    it('should log the sent value to home tracker index and add sensor name in access log', async () => {
         await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
@@ -41,6 +41,17 @@ describe('homeTracker/upload', () => {
             pressurehPa: 1000,
             tempCelsius: 23.5,
             timeToSendMs: 7000
+        });
+
+        th.slog.checkLog('app', 'access-log', {
+            path: '/homeTracker/upload',
+            code: 200,
+            remoteIp: '::ffff:127.0.0.1',
+            requestId: '00000000-0000-0000-0000-000000000001',
+            requestInterrupted: false,
+            context: {
+                sensorName: 'foo'
+            }
         });
     });
 

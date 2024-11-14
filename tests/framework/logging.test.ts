@@ -22,4 +22,19 @@ describe('logging middleware', () => {
             executionTimeMs: sinon.match((val) => val < 5)
         });
     });
+
+    it('should add a loggable context to the response and allow the route handler to add data to the access log', async () => {
+        await request(app).get('/getroutewithloggedcontext');
+        th.slog.checkLog('app', 'access-log', {
+            path: '/getroutewithloggedcontext',
+            code: 200,
+            remoteIp: '::ffff:127.0.0.1',
+            requestId: '00000000-0000-0000-0000-000000000001',
+            requestInterrupted: false,
+            context: {
+                livemode: true,
+                status: 'some data'
+            }
+        });
+    });
 });

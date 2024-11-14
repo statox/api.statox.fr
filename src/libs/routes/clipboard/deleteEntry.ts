@@ -5,6 +5,8 @@ import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name } = params.input;
+    params.loggableContext.addData('entryName', name);
+
     await deleteEntry({ name });
 };
 

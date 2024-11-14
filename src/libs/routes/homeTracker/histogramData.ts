@@ -3,6 +3,7 @@ import { PostRoute, RouteHandler } from '../types';
 import { getHistogramData } from '../../modules/homeTracker';
 
 const handler: RouteHandler<Input> = async (params) => {
+    params.loggableContext.addData('timewindow', params.input.timeWindow);
     return getHistogramData(params.input.timeWindow);
 };
 

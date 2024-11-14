@@ -4,6 +4,9 @@ import { emptyObjectSchema } from '../helpers';
 import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker';
 
 const handler: RouteHandler<Input> = async (params) => {
+    params.loggableContext.addData('sensorName', params.input.sensorName);
+    params.loggableContext.addData('dataStr', JSON.stringify(params.input));
+
     ingestSensorData(params.input);
 };
 

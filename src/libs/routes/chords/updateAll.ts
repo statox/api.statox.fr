@@ -1,12 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyOutput, PostRoute, RouteHandler } from '../types';
 import { updateChords } from '../../modules/chords/commands';
-import { slog } from '../../modules/logging';
 import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { chords } = params.input;
-    slog.log('chords', 'Updating chords', { nbChords: chords.length });
+    params.loggableContext.addData('nbChords', chords.length);
     await updateChords(chords);
 };
 

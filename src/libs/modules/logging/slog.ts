@@ -17,61 +17,69 @@ type xRequestInfo = {
     'x-request-start'?: number;
 };
 
-type LoggableProperties =
-    | {
-          bucket?: string;
-          cfGeoInfo?: CloudflareGeoInfo;
-          cfRay?: string;
-          code?: number;
-          delayMs?: number;
-          entryName?: string;
-          error?: Error;
-          executionTimeMs?: number;
-          failedCalls?: number;
-          forecast?: string;
-          insertTime?: string;
-          invalidField?: string;
-          invalidValueStr?: string;
-          linkId?: string;
-          livemode?: boolean;
-          meanWindDirectionDegrees?: number;
-          meanWindSpeedMS?: number;
-          nbChords?: number;
-          notification?: string;
-          originalError?: Error;
-          originalMessage?: string;
-          path?: string;
-          port?: number;
-          precipitationMM?: number;
-          pressureLatest?: number;
-          pressureOldest?: number;
-          previousStatus?: string;
-          previousTimestamp?: number;
-          referenceTime?: string;
-          remoteIp?: string;
-          requestId?: string;
-          requestInterrupted?: boolean;
-          s3Key?: string;
-          shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
-          station?: string;
-          stationId?: string;
-          stationName?: string;
-          status?: string;
-          taskName?: string;
-          timestamp?: number;
-          timestampLatest?: number;
-          timestampOldest?: number;
-          trend?: string;
-          validityTime?: string;
-          visitedUrl?: string;
-          watcherName?: string;
-          xRequestInfo?: xRequestInfo;
-          zValue?: number;
-      }
+export type LoggableProperties = {
+    context?: LoggableProperties;
+
+    bucket?: string;
+    cfGeoInfo?: CloudflareGeoInfo;
+    cfRay?: string;
+    code?: number;
+    dataStr?: string;
+    delayMs?: number;
+    enabled?: boolean;
+    entryName?: string;
+    error?: Error;
+    executionTimeMs?: number;
+    failedCalls?: number;
+    forecast?: string;
+    id?: number;
+    insertTime?: string;
+    invalidField?: string;
+    invalidValueStr?: string;
+    linkId?: string;
+    livemode?: boolean;
+    meanWindDirectionDegrees?: number;
+    meanWindSpeedMS?: number;
+    nbChords?: number;
+    notification?: string;
+    originalError?: Error;
+    originalMessage?: string;
+    path?: string;
+    port?: number;
+    precipitationMM?: number;
+    pressureLatest?: number;
+    pressureOldest?: number;
+    previousStatus?: string;
+    previousTimestamp?: number;
+    referenceTime?: string;
+    remoteIp?: string;
+    requestId?: string;
+    requestInterrupted?: boolean;
+    s3Key?: string;
+    sensorName?: string;
+    shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
+    station?: string;
+    stationId?: string;
+    stationName?: string;
+    status?: string;
+    taskName?: string;
+    timestamp?: number;
+    timestampLatest?: number;
+    timestampOldest?: number;
+    timewindow?: string;
+    trend?: string;
+    validityTime?: string;
+    visitedUrl?: string;
+    watcherName?: string;
+    xRequestInfo?: xRequestInfo;
+    zValue?: number;
+};
+
+export type LogObject =
+    | { component: AppLogComponent; message: string }
+    | LoggableProperties
     | SensorLogData
     | SensorErrorData;
-
-export type LogObject = { component: AppLogComponent; message: string } | LoggableProperties;
 
 export type AppLogComponent =
     | 'app'

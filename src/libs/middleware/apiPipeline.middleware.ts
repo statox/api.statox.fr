@@ -25,7 +25,8 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 input = req.params || {};
             }
 
-            const routeResult = (await route.handler({ input })) || {};
+            const routeResult =
+                (await route.handler({ input, loggableContext: res.locals.loggableContext })) || {};
 
             // Only do output validation if we are not in prod
             if (!isProd) {
@@ -41,6 +42,7 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 return route.customResponseHandler(routeResult, res);
             }
             res.send(routeResult);
+            next();
         } catch (error) {
             if (isAjvError(error)) {
                 // @ts-expect-error This won't happen in prod

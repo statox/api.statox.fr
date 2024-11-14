@@ -5,6 +5,8 @@ import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { watcherId, setToEnabled } = params.input;
+    params.loggableContext.addData('id', watcherId);
+    params.loggableContext.addData('enabled', setToEnabled);
 
     if (setToEnabled) {
         await enableWatcher(watcherId);

@@ -7,6 +7,7 @@ import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name, content, isPublic: isPublicInput } = params.input;
+    params.loggableContext.addData('entryName', name);
 
     // We allow multiple types because when uploading a file with multipart/formdata
     // the fields are not casted by Formidable

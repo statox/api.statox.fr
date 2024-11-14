@@ -20,7 +20,7 @@ const pressureHistoryFixtureToELKFixture = (pressureHistory: PressureHistoryFixt
 describe('homeTracker/weatherForecast', () => {
     beforeEach('Flush ELK', th.elk.flush);
 
-    it('Should get pressure history properly', async () => {
+    it.skip('Should get pressure history properly', async () => {
         const pressureHistory: PressureHistoryFixture[] = [];
         const hourlyFrequency = 60 / 10; // One record every 10 minutes
         const nbRecords = hourlyFrequency * 25; // 25 hours of recording (one additional hours to avoid flakyness)

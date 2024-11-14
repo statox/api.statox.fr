@@ -1,12 +1,11 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyOutput, PostRoute, RouteHandler } from '../types';
 import { addLinkVisit } from '../../modules/chords';
-import { slog } from '../../modules/logging';
 import { emptyObjectSchema } from '../helpers';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { url } = params.input;
-    slog.log('chords', 'Adding visit', { visitedUrl: url });
+    params.loggableContext.addData('visitedUrl', url);
     await addLinkVisit({ url });
 };
 

@@ -34,6 +34,17 @@ const getRouteWithResult: GetRoute<
     outputSchema: getRouteWithResultOutputSchema
 };
 
+const getRouteWithLoggedContext: GetRoute<EmptyInput, EmptyOutput> = {
+    method: 'get',
+    authentication: 'none',
+    path: '/getroutewithloggedcontext',
+    handler: async (params) => {
+        params.loggableContext.addData('livemode', true);
+        params.loggableContext.addData('status', 'some data');
+    },
+    outputSchema: emptyObjectSchema
+};
+
 const getRouteWithCustomOutputHandler: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',
     authentication: 'none',
@@ -118,6 +129,7 @@ const testRoutes = [
     getRoute,
     getRouteWithResult,
     getRouteWithCustomOutputHandler,
+    getRouteWithLoggedContext,
     getRouteThatThrows,
     getRouteWithInvalidOutput,
     postRoute,

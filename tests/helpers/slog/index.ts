@@ -45,7 +45,7 @@ class TestHelper_Slog extends TestHelper {
                 console.log([component, message, data]);
             }
         }
-        assert(calledWithCorrectArgs, 'Logged data doesnt match');
+        assert(calledWithCorrectArgs, "Logged data doesn't match");
     };
 
     checkNoLogs = () => {

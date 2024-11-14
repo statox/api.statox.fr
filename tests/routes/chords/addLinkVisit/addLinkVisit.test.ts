@@ -45,6 +45,13 @@ describe('chords/addLinkVisit', () => {
                 }
             ]
         });
+
+        th.slog.checkLog('app', 'access-log', {
+            path: '/chords/addLinkVisit',
+            context: {
+                visitedUrl: 'https://bar.com'
+            }
+        });
     });
     it('should update existing entry', async () => {
         await th.mysql.fixture({

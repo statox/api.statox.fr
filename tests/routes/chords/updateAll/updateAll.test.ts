@@ -20,7 +20,13 @@ describe('chords/updateAll', () => {
             })
             .expect(200);
 
-        th.slog.checkLog('chords', 'Updating chords', { nbChords: 1 });
+        th.slog.checkLog('app', 'access-log', {
+            path: '/chords/updateAll',
+            context: {
+                nbChords: 1
+            }
+        });
+
         th.s3.checkNbCalls({ nbCalls: 1 });
         th.s3.checkCall({
             commandType: 'PutObject',

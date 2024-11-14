@@ -4,7 +4,9 @@ import { GetRoute, RouteHandler } from '../types';
 import { getRedirectForEntry } from '../../modules/reactor/getEntries';
 
 const handler: RouteHandler<Input> = async (params) => {
-    return getRedirectForEntry(params.input.linkId);
+    const { linkId } = params.input;
+    params.loggableContext.addData('linkId', linkId);
+    return getRedirectForEntry(linkId);
 };
 
 const customResponseHandler = (output: Output, res: Response) => {

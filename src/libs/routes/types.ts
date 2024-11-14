@@ -1,8 +1,12 @@
 import { Response } from 'express';
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { emptyObjectSchema } from './helpers';
+import { LoggableContext } from '../modules/logging';
 
-export type RouteHandler<Input> = (params: { input: Input }) => Promise<unknown>;
+export type RouteHandler<Input> = (params: {
+    input: Input;
+    loggableContext: LoggableContext;
+}) => Promise<unknown>;
 
 export type ApiJsonSchema = JSONSchema;
 
