@@ -39,7 +39,7 @@ const outputSchema = {
                             humidity: { type: 'number' },
                             internalHumidity: { type: 'number' },
                             internalTempCelsius: { type: 'number' },
-                            pressurePa: { type: 'number' },
+                            pressurehPa: { type: 'number' },
                             tempCelsius: { type: 'number' },
                             timeToSendMs: { type: 'number' }
                         },

@@ -28,12 +28,9 @@ const outputSchema = {
                 items: {
                     type: 'string'
                 }
-            },
-            pouet: {
-                type: 'number'
             }
         },
-        required: ['pouet', 'artist', 'title', 'url', 'creationDate', 'tags']
+        required: ['artist', 'title', 'url', 'creationDate', 'tags']
     }
 } as const;
 

@@ -22,20 +22,24 @@ const outputSchema = {
             type: 'number'
         },
         fails: {
-            type: 'object',
-            properties: {
-                status: {
-                    type: 'string'
+            type: 'array',
+            minItems: 0,
+            items: {
+                type: 'object',
+                properties: {
+                    status: {
+                        type: 'string'
+                    },
+                    chord: {
+                        type: 'object'
+                    },
+                    error: {
+                        type: 'object'
+                    }
                 },
-                chord: {
-                    type: 'object'
-                },
-                error: {
-                    type: 'object'
-                }
-            },
-            required: ['status'],
-            additionalProperties: false
+                required: ['status'],
+                additionalProperties: false
+            }
         }
     },
     required: ['nbChecks', 'nbSkipped', 'nbFails', 'timestamp', 'fails'],
