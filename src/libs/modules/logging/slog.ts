@@ -1,22 +1,30 @@
 import { isDebug, isProd, isTests } from '../../config/env.js';
-import { logToELK } from './elk.js';
+import { logToELK } from './services/elk.js';
 import { AppLogComponent, LogObject } from './types.js';
 
-const log = (component: AppLogComponent, message: string, data?: LogObject) => {
-    if (isTests) {
-        if (isDebug) {
-            console.log(component, message, data || '');
-        }
-        return;
-    }
+type LogFn = (component: AppLogComponent, message: string, data?: LogObject) => void;
 
-    if (!isProd) {
-        console.log(component, message, data || '');
-        return;
-    }
+const elklog = (component: AppLogComponent, message: string, data?: LogObject) =>
     logToELK({ component, message, ...data });
-};
 
-export const slog = {
+const consolelog = (component: AppLogComponent, message: string, data?: LogObject) =>
+    console.log(component, message, data || '');
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const nulllog = (component: AppLogComponent, message: string, data?: LogObject) => {};
+
+let log: LogFn;
+
+if (isProd) {
+    log = elklog;
+} else if ((isTests && isDebug) || (!isTests && !isProd)) {
+    log = consolelog;
+} else {
+    log = nulllog;
+}
+
+export const slog: {
+    log: LogFn;
+} = {
     log
 };
