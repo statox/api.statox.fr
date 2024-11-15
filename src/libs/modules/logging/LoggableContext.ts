@@ -1,4 +1,4 @@
-import { LoggableProperties } from './slog';
+import { LoggableProperties } from './slog.js';
 
 export class LoggableContext {
     loggedProperties: LoggableProperties;

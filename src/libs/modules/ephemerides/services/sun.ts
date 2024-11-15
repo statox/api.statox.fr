@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { getTimes } from '../../../../packages/suncalc';
+import { getTimes } from '../../../../packages/suncalc/index.js';
 
 const paris = {
     latitude: 48.8575,

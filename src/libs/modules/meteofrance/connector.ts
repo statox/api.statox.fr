@@ -1,6 +1,6 @@
-import { METEO_FRANCE_API_KEY } from '../../config/meteofrance';
-import { slog } from '../logging';
-import { MeteoFranceStationObservation } from './types';
+import { METEO_FRANCE_API_KEY } from '../../config/meteofrance.js';
+import { slog } from '../logging/index.js';
+import { MeteoFranceStationObservation } from './types.js';
 
 const BASE_URL = 'https://public-api.meteofrance.fr/public/DPObs/v1';
 

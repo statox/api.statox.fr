@@ -1,5 +1,5 @@
-import { db } from '../../databases/db';
-import { getPresignedURLForKey } from '../s3files';
+import { db } from '../../databases/db.js';
+import { getPresignedURLForKey } from '../s3files/index.js';
 
 type ClipboardEntry = {
     id: number;

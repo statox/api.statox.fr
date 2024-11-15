@@ -1,8 +1,8 @@
 import request from 'supertest';
-import { WatchedContent } from '../../../../src/libs/modules/webWatcher';
-import { app } from '../../../../src/app';
+import { WatchedContent } from '../../../../src/libs/modules/webWatcher/index.js';
+import { app } from '../../../../src/app.js';
 import { assert } from 'chai';
-import { th } from '../../../helpers';
+import { th } from '../../../helpers/index.js';
 
 describe('webWatcher/getAllWatchers', () => {
     it('should return all the watchers', async () => {

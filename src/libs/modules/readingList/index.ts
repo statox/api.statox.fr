@@ -1,3 +1,3 @@
-export * from './addEntry';
-export * from './errors';
-export * from './getEntries';
+export * from './addEntry.js';
+export * from './errors.js';
+export * from './getEntries.js';

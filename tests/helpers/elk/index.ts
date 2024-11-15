@@ -1,9 +1,9 @@
 import sinon from 'sinon';
-import { elk, resetDataStreamForTests } from '../../../src/libs/databases/elk';
-import { isDebug } from '../../../src/libs/config/env';
+import { elk, resetDataStreamForTests } from '../../../src/libs/databases/elk.js';
+import { isDebug } from '../../../src/libs/config/env.js';
 import { assert } from 'chai';
-import { TestHelper } from '../TestHelper';
-import { ELKFixture } from './types';
+import { TestHelper } from '../TestHelper.js';
+import { ELKFixture } from './types.js';
 
 const originalSearch = elk.search;
 

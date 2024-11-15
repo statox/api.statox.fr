@@ -1,9 +1,9 @@
-import { initApp } from './src/app';
-import { initDb } from './src/libs/databases/db';
-import { initELK } from './src/libs/databases/elk';
-import { initLocalStackS3 } from './src/libs/databases/s3';
-import { slog } from './src/libs/modules/logging';
-import { notifySlack } from './src/libs/modules/notifier/slack';
+import { initApp } from './src/app.js';
+import { initDb } from './src/libs/databases/db.js';
+import { initELK } from './src/libs/databases/elk.js';
+import { initLocalStackS3 } from './src/libs/databases/s3.js';
+import { slog } from './src/libs/modules/logging/index.js';
+import { notifySlack } from './src/libs/modules/notifier/slack.js';
 
 const start = async () => {
     await initLocalStackS3();

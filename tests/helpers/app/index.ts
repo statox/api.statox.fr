@@ -1,10 +1,10 @@
 import { FromSchema } from 'json-schema-to-ts';
 import sinon from 'sinon';
-import { TestHelper } from '../TestHelper';
-import * as routes from '../../../src/libs/routes';
-import { EmptyInput, EmptyOutput, GetRoute, PostRoute } from '../../../src/libs/routes/types';
-import { initApp } from '../../../src/app';
-import { emptyObjectSchema } from '../../../src/libs/routes/helpers';
+import { TestHelper } from '../TestHelper.js';
+import * as routes from '../../../src/libs/routes/index.js';
+import { EmptyInput, EmptyOutput, GetRoute, PostRoute } from '../../../src/libs/routes/types.js';
+import { initApp } from '../../../src/app.js';
+import { emptyObjectSchema } from '../../../src/libs/routes/helpers.js';
 
 const getRoute: GetRoute<EmptyInput, EmptyOutput> = {
     method: 'get',

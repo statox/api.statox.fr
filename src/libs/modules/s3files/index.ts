@@ -2,10 +2,10 @@ import { File } from 'formidable';
 import { DeleteObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { PoolConnection, RowDataPacket } from 'mysql2/promise';
-import { getPresignedUrl, S3 } from '../../databases/s3';
-import { db } from '../../databases/db';
-import { ExpiredItemError, ItemNotFoundError, TooManyEntriesError } from '../../routes/errors';
-import { slog } from '../logging';
+import { getPresignedUrl, S3 } from '../../databases/s3.js';
+import { db } from '../../databases/db.js';
+import { ExpiredItemError, ItemNotFoundError, TooManyEntriesError } from '../../routes/errors.js';
+import { slog } from '../logging/index.js';
 
 type ManagedBuckets = 'reading-list' | 'clipboard' | 'reactor';
 

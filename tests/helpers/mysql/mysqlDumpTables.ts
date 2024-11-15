@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2';
-import { db } from '../../../src/libs/databases/db';
+import { db } from '../../../src/libs/databases/db.js';
 
 export const mysqlDumpTables = async (tables: string[] | string) => {
     if (!Array.isArray(tables)) {

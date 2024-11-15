@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import * as SunCalc from '../index';
+import * as SunCalc from '../index.js';
 
 describe('SunCalc - added tests', () => {
     describe('custom times', () => {

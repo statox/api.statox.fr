@@ -6,8 +6,8 @@
  * https://integritext.net/DrKFS/zambretti.htm
  */
 
-import { elk } from '../../../databases/elk';
-import { slog } from '../../logging';
+import { elk } from '../../../databases/elk.js';
+import { slog } from '../../logging/index.js';
 
 // TODO Have a single source of forecast and reuse them in the different lookup tables
 type LookupTable = Map<number, string>;

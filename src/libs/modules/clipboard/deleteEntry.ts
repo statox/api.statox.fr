@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
-import { db } from '../../databases/db';
-import { deleteS3File } from '../s3files';
+import { db } from '../../databases/db.js';
+import { deleteS3File } from '../s3files/index.js';
 
 export const deleteEntry = async (params: { name: string }) => {
     const [rows] = await db.query<RowDataPacket[]>('SELECT s3Key FROM Clipboard WHERE name = ?', [

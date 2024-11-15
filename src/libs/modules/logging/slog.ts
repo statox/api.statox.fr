@@ -1,6 +1,6 @@
-import { isDebug, isProd, isTests } from '../../config/env';
-import { SensorErrorData, SensorLogData } from '../homeTracker';
-import { logToELK } from './elk';
+import { isDebug, isProd, isTests } from '../../config/env.js';
+import { SensorErrorData, SensorLogData } from '../homeTracker/index.js';
+import { logToELK } from './elk.js';
 
 type CloudflareGeoInfo = {
     'cf-ipcity'?: string;

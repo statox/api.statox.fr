@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../../src/app';
+import { app } from '../../src/app.js';
 
 describe('Endpoint routing', () => {
     it('should accept a call with the correct verb', async () => {

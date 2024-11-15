@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { doHomeTrackerMonitoring } from '../../../src/libs/modules/homeTracker';
-import { th } from '../../helpers';
+import { doHomeTrackerMonitoring } from '../../../src/libs/modules/homeTracker/index.js';
+import { th } from '../../helpers/index.js';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
     it('Should create a notification for missing sensor data, and should notify only once', async () => {

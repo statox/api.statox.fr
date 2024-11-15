@@ -1,5 +1,5 @@
-export { getAllSensorsWithLatestLog } from './getAllSensorsWithLatestLog';
-export { getHistogramData } from './getHistogramData';
-export { ingestSensorData } from './ingestData';
-export { doHomeTrackerMonitoring } from './monitorSensors';
-export { zambrettiForecaster } from './weatherForecast';
+export { getAllSensorsWithLatestLog } from './getAllSensorsWithLatestLog.js';
+export { getHistogramData } from './getHistogramData.js';
+export { ingestSensorData } from './ingestData.js';
+export { doHomeTrackerMonitoring } from './monitorSensors.js';
+export { zambrettiForecaster } from './weatherForecast.js';

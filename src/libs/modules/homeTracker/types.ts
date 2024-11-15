@@ -1,4 +1,4 @@
-import { ApiJsonSchema } from '../../routes/types';
+import { ApiJsonSchema } from '../../routes/types.js';
 
 export interface SensorRawData {
     sensorName: string;

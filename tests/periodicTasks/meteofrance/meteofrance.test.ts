@@ -1,8 +1,8 @@
-import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config';
-import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector';
+import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config.js';
+import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector.js';
 import sinon from 'sinon';
-import { doSingleStationCheck } from '../../../src/libs/modules/meteofrance';
-import { th } from '../../helpers';
+import { doSingleStationCheck } from '../../../src/libs/modules/meteofrance/index.js';
+import { th } from '../../helpers/index.js';
 
 describe('periodic task - meteofrance', () => {
     let stubFailureDelayMs: sinon.SinonStub;

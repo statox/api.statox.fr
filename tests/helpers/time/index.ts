@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { DateTime } from 'luxon';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '../TestHelper.js';
 import { assert } from 'chai';
 
 let sinonDateTimeNowStub: sinon.SinonStub | undefined;

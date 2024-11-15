@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { db } from '../databases/db';
+import { db } from '../databases/db.js';
 import { RowDataPacket } from 'mysql2/promise';
-import { slog } from '../modules/logging';
+import { slog } from '../modules/logging/index.js';
 
 /*
  * IOT API Key authentication middleware.

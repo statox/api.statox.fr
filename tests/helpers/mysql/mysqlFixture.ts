@@ -1,6 +1,6 @@
 import { raw } from 'mysql2';
-import { db } from '../../../src/libs/databases/db';
-import { MysqlFixture } from './types';
+import { db } from '../../../src/libs/databases/db.js';
+import { MysqlFixture } from './types.js';
 
 export const mysqlFixture = async (fixture: MysqlFixture) => {
     for (const table of Object.keys(fixture)) {

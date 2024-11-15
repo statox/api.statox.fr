@@ -2,8 +2,8 @@ import sinon from 'sinon';
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { assert } from 'chai';
 import 'aws-sdk-client-mock-jest';
-import { s3Mock } from '../../../src/libs/databases/s3';
-import { TestHelper } from '../TestHelper';
+import { s3Mock } from '../../../src/libs/databases/s3.js';
+import { TestHelper } from '../TestHelper.js';
 
 class TestHelper_S3 extends TestHelper {
     constructor() {

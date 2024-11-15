@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../../../src/app';
+import { app } from '../../../src/app.js';
 import { assert } from 'chai';
-import { th } from '../../helpers';
+import { th } from '../../helpers/index.js';
 
 describe('r/:linkId', () => {
     it('should redirect to the s3 presigned url', async () => {

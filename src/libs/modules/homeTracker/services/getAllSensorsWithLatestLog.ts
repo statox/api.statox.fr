@@ -1,5 +1,5 @@
-import { elk } from '../../../databases/elk';
-import { SensorLogData } from '../types';
+import { elk } from '../../../databases/elk.js';
+import { SensorLogData } from '../types.js';
 
 interface SensorState {
     sensorName: string;

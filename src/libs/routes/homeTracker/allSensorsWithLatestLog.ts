@@ -1,5 +1,5 @@
-import { EmptyInput, GetRoute } from '../types';
-import { getAllSensorsWithLatestLog } from '../../modules/homeTracker';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getAllSensorsWithLatestLog } from '../../modules/homeTracker/index.js';
 import { FromSchema } from 'json-schema-to-ts';
 
 const handler = async () => {

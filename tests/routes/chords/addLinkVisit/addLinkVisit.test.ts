@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../../../../src/app';
+import { app } from '../../../../src/app.js';
 import { assert } from 'chai';
-import { th } from '../../../helpers';
+import { th } from '../../../helpers/index.js';
 
 describe('chords/addLinkVisit', () => {
     it('should create new entry with count 1', async () => {

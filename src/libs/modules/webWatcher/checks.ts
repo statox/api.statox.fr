@@ -1,7 +1,7 @@
 import jsdom from 'jsdom';
-import { db } from '../../databases/db';
-import { slog } from '../logging';
-import { notifySlack } from '../notifier/slack';
+import { db } from '../../databases/db.js';
+import { slog } from '../logging/index.js';
+import { notifySlack } from '../notifier/slack.js';
 import { createHash } from 'node:crypto';
 import {
     CSSWatchedContent,
@@ -9,8 +9,8 @@ import {
     isCSSWatcherContent,
     isHASHWatcherContent,
     WatchedContent
-} from './types';
-import { getEnabledWatchedContent } from './watchers';
+} from './types.js';
+import { getEnabledWatchedContent } from './watchers.js';
 
 const { JSDOM } = jsdom;
 

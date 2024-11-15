@@ -1,1 +1,1 @@
-export * as slackNotifier from './slack';
+export * as slackNotifier from './slack.js';

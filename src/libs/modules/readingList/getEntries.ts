@@ -1,7 +1,7 @@
-import { db } from '../../databases/db';
+import { db } from '../../databases/db.js';
 import { RowDataPacket } from 'mysql2/promise';
-import { getPresignedURLForKey } from '../s3files';
-import { slog } from '../logging';
+import { getPresignedURLForKey } from '../s3files/index.js';
+import { slog } from '../logging/index.js';
 
 interface ReadingListItemDB extends RowDataPacket {
     id: number;

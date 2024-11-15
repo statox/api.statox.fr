@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { updateChords } from '../../modules/chords/commands';
-import { emptyObjectSchema } from '../helpers';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { updateChords } from '../../modules/chords/commands.js';
+import { emptyObjectSchema } from '../helpers.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { chords } = params.input;

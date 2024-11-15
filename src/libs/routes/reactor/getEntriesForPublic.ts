@@ -1,5 +1,5 @@
-import { EmptyInput, GetRoute } from '../types';
-import { getEntriesForPublic } from '../../modules/reactor';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getEntriesForPublic } from '../../modules/reactor/index.js';
 import { FromSchema } from 'json-schema-to-ts';
 
 const handler = async () => {

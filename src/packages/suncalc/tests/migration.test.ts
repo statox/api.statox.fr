@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import * as SunCalc from '../index';
-import { migration_testcases } from './testcases';
+import * as SunCalc from '../index.js';
+import { migration_testcases } from './testcases.js';
 
 /*
  * This file is was created when copying the original SunCalc to this repo

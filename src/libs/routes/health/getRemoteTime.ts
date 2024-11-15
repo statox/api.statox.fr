@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
+import { EmptyInput, GetRoute } from '../types.js';
 
 const handler = async () => {
     return { time: Date.now() };

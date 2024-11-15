@@ -1,5 +1,5 @@
-import { elk } from '../../../databases/elk';
-import { slog } from '../../logging';
+import { elk } from '../../../databases/elk.js';
+import { slog } from '../../logging/index.js';
 
 export const get24hoursOfPressure = async () => {
     try {

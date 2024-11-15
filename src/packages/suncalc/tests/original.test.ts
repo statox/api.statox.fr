@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import * as SunCalc from '../index';
+import * as SunCalc from '../index.js';
 
 /*
  * This file is the port of the test file in the original repo

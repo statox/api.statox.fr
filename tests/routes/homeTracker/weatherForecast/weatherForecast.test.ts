@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import request from 'supertest';
-import { app } from '../../../../src/app';
+import { app } from '../../../../src/app.js';
 import { DateTime, DurationLike } from 'luxon';
-import { th } from '../../../helpers';
+import { th } from '../../../helpers/index.js';
 
 type PressureHistoryFixture = { pressurehPa: number; tsDiff: DurationLike };
 

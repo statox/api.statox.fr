@@ -11,7 +11,7 @@
  * With this file in the code I can access response.local.loggableContext with proper typing
  */
 
-import { LoggableContext } from '../../modules/logging';
+import { LoggableContext } from '../../modules/logging/index.js';
 
 // This export is required to make the file a module
 export {};

@@ -1,3 +1,3 @@
-export * from './checks';
-export * from './types';
-export * from './watchers';
+export * from './checks.js';
+export * from './types.js';
+export * from './watchers.js';

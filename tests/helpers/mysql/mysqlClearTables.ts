@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2';
-import { db } from '../../../src/libs/databases/db';
+import { db } from '../../../src/libs/databases/db.js';
 
 let allTables: string[];
 const listAllTables = async () => {

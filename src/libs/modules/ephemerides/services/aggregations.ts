@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { getLunarState } from './moon';
-import { getSolarState } from './sun';
+import { getLunarState } from './moon.js';
+import { getSolarState } from './sun.js';
 
 export const getTodayEphemerides = () => {
     // Using Luxon to easily mock the date in tests

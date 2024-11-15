@@ -1,10 +1,10 @@
 import { File } from 'formidable';
 import mime from 'mime-types';
-import { generate4BytesHex } from '../random';
-import { db } from '../../databases/db';
-import { createS3FileInTransaction } from '../s3files';
+import { generate4BytesHex } from '../random.js';
+import { db } from '../../databases/db.js';
+import { createS3FileInTransaction } from '../s3files/index.js';
 import { QueryError } from 'mysql2/promise';
-import { ItemAlreadyExistsError } from '../../routes/errors';
+import { ItemAlreadyExistsError } from '../../routes/errors.js';
 
 type NewEntryParams = {
     name: string;

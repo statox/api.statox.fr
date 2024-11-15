@@ -1,9 +1,9 @@
-import Ajv, { ErrorObject } from 'ajv';
+import Ajv from 'ajv';
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from 'json-schema';
 
 type AllowedSchema = JSONSchema4 | JSONSchema6 | JSONSchema7;
 
-const ajv = new Ajv();
+const ajv = new Ajv.Ajv();
 
 export const validateAgainstJsonSchema = (object: unknown, schema: AllowedSchema) => {
     const validateFunction = ajv.compile(schema);
@@ -19,9 +19,9 @@ export const validateAgainstJsonSchema = (object: unknown, schema: AllowedSchema
     return true;
 };
 
-type AjvError = ErrorObject;
+type AjvError = Ajv.ErrorObject;
 export const isAjvError = (error: unknown): error is AjvError => {
-    const errorObject = error as ErrorObject;
+    const errorObject = error as Ajv.ErrorObject;
 
     if (Array.isArray(error)) {
         return isAjvError(error[0]);

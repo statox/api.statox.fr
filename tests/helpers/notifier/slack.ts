@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { slackNotifier } from '../../../src/libs/modules/notifier';
-import { isDebug } from '../../../src/libs/config/env';
-import { TestHelper } from '../TestHelper';
+import { slackNotifier } from '../../../src/libs/modules/notifier/index.js';
+import { isDebug } from '../../../src/libs/config/env.js';
+import { TestHelper } from '../TestHelper.js';
 
 let slackStub: sinon.SinonStub;
 

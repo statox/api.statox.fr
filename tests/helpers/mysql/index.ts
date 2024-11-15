@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
-import { TestHelper } from '../TestHelper';
-import { mysqlCheckContains } from './mysqlCheckContains';
-import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain';
-import { mysqlCheckTableLength } from './mysqlCheckTableLength';
-import { mysqlClearAllTables } from './mysqlClearTables';
-import { mysqlDumpTables } from './mysqlDumpTables';
-import { mysqlFixture } from './mysqlFixture';
-import { MysqlCheckData, MysqlFixture } from './types';
+import { TestHelper } from '../TestHelper.js';
+import { mysqlCheckContains } from './mysqlCheckContains.js';
+import { mysqlCheckDoesNotContain } from './mysqlCheckDoesNotContain.js';
+import { mysqlCheckTableLength } from './mysqlCheckTableLength.js';
+import { mysqlClearAllTables } from './mysqlClearTables.js';
+import { mysqlDumpTables } from './mysqlDumpTables.js';
+import { mysqlFixture } from './mysqlFixture.js';
+import { MysqlCheckData, MysqlFixture } from './types.js';
 
 class TestHelper_MySQL extends TestHelper {
     checkContains: (data: MysqlCheckData) => Promise<void>;

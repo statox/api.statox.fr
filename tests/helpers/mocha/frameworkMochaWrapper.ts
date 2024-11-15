@@ -1,11 +1,11 @@
-import { TestHelper } from '../TestHelper';
-import { initDb } from '../../../src/libs/databases/db';
-import { testHelper_App } from '../app';
-import { testHelper_Auth } from '../auth';
-import { testHelper_Mysql } from '../mysql';
-import { testHelper_S3 } from '../s3';
-import { testHelper_SlackNotifier } from '../notifier/slack';
-import { testHelper_Slog } from '../slog';
+import { TestHelper } from '../TestHelper.js';
+import { initDb } from '../../../src/libs/databases/db.js';
+import { testHelper_App } from '../app/index.js';
+import { testHelper_Auth } from '../auth/index.js';
+import { testHelper_Mysql } from '../mysql/index.js';
+import { testHelper_S3 } from '../s3/index.js';
+import { testHelper_SlackNotifier } from '../notifier/slack.js';
+import { testHelper_Slog } from '../slog/index.js';
 
 const helpers: TestHelper[] = [
     testHelper_Mysql,

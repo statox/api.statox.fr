@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
-import { emptyObjectSchema } from './helpers';
-import { LoggableContext } from '../modules/logging';
+import { emptyObjectSchema } from './helpers.js';
+import { LoggableContext } from '../modules/logging/index.js';
 
 export type RouteHandler<Input> = (params: {
     input: Input;

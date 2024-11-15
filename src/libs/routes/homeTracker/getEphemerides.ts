@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
-import { getTodayEphemerides } from '../../modules/ephemerides';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getTodayEphemerides } from '../../modules/ephemerides/index.js';
 
 const handler = async () => {
     const ephemerides = getTodayEphemerides();

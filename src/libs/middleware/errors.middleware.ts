@@ -5,15 +5,15 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { notifySlack } from '../modules/notifier/slack';
-import { EntryAlreadyExistsError } from '../modules/webWatcher';
-import { ApiKeyError } from './authIOT.middleware';
+import { notifySlack } from '../modules/notifier/slack.js';
+import { EntryAlreadyExistsError } from '../modules/webWatcher/index.js';
+import { ApiKeyError } from './authIOT.middleware.js';
 import {
     FileOrContentRequiredError,
     ItemAlreadyExistsError,
     ItemNotFoundError
-} from '../routes/errors';
-import { OutputValidationError } from './apiPipeline.middleware';
+} from '../routes/errors.js';
+import { OutputValidationError } from './apiPipeline.middleware.js';
 
 export const errorHandler = async (
     error: Error,

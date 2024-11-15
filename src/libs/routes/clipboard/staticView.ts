@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
-import { getEntriesForStaticView } from '../../modules/clipboard';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getEntriesForStaticView } from '../../modules/clipboard/index.js';
 
 const handler = async () => {
     return getEntriesForStaticView();

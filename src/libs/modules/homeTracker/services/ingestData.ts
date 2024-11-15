@@ -1,7 +1,7 @@
-import { slog } from '../../logging';
-import { SensorLogData, SensorRawData } from '../types';
-import { elk } from '../../../databases/elk';
-import { notifySlack } from '../../notifier/slack';
+import { slog } from '../../logging/index.js';
+import { SensorLogData, SensorRawData } from '../types.js';
+import { elk } from '../../../databases/elk.js';
+import { notifySlack } from '../../notifier/slack.js';
 
 export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     const {

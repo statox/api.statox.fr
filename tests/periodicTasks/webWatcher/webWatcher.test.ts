@@ -1,6 +1,6 @@
 import sinon from 'sinon';
-import { doWebWatcher } from '../../../src/libs/modules/webWatcher';
-import { th } from '../../helpers';
+import { doWebWatcher } from '../../../src/libs/modules/webWatcher/index.js';
+import { th } from '../../helpers/index.js';
 
 describe('periodic task - webWatcher', () => {
     let stub: sinon.SinonStub;

@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { addLinkVisit } from '../../modules/chords';
-import { emptyObjectSchema } from '../helpers';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { addLinkVisit } from '../../modules/chords/index.js';
+import { emptyObjectSchema } from '../helpers.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { url } = params.input;

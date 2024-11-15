@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2/promise';
-import { db } from '../../../src/libs/databases/db';
-import { ColumnCheckFunction, MysqlCheckData, TableCheck } from './types';
+import { db } from '../../../src/libs/databases/db.js';
+import { ColumnCheckFunction, MysqlCheckData, TableCheck } from './types.js';
 
 const checkTableContains = async (table: string, checks: TableCheck[]) => {
     for (const row of checks) {

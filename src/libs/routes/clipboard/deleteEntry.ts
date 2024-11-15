@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { deleteEntry } from '../../modules/clipboard';
-import { emptyObjectSchema } from '../helpers';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { deleteEntry } from '../../modules/clipboard/index.js';
+import { emptyObjectSchema } from '../helpers.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name } = params.input;

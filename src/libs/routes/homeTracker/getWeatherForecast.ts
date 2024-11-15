@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
-import { zambrettiForecaster } from '../../modules/homeTracker';
-import { get24hoursOfPressure } from '../../modules/homeTracker/services/getPressureHistory';
+import { EmptyInput, GetRoute } from '../types.js';
+import { zambrettiForecaster } from '../../modules/homeTracker/index.js';
+import { get24hoursOfPressure } from '../../modules/homeTracker/services/getPressureHistory.js';
 
 const handler = async () => {
     const [forecast, pressureHistory] = await Promise.all([

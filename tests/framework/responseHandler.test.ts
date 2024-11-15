@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { app } from '../../src/app';
+import { app } from '../../src/app.js';
 
 describe('route handler', () => {
     it('should be executed and affect the response if it exists', async () => {

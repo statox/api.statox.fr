@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { PostRoute, RouteHandler } from '../types';
-import { getHistogramData } from '../../modules/homeTracker';
+import { PostRoute, RouteHandler } from '../types.js';
+import { getHistogramData } from '../../modules/homeTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     params.loggableContext.addData('timewindow', params.input.timeWindow);

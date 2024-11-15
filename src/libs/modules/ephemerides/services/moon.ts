@@ -1,5 +1,5 @@
 import { Hemisphere, LunarPhase, Moon, MoonOptions } from 'lunarphase-js';
-import { LunarPhaseDetails } from '../types';
+import { LunarPhaseDetails } from '../types.js';
 
 // Visibility windows coming from
 // https://en.wikipedia.org/wiki/Lunar_phase#Principal_and_intermediate_phases_of_the_Moon

@@ -1,4 +1,4 @@
-import { MoonPosition, MoonIllumination, SunPosition } from '..';
+import { MoonPosition, MoonIllumination, SunPosition } from '../index.js';
 
 interface TestCase {
     input: {

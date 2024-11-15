@@ -1,8 +1,8 @@
 import { File } from 'formidable';
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { addEntry } from '../../modules/reactor';
-import { emptyObjectSchema } from '../helpers';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { addEntry } from '../../modules/reactor/index.js';
+import { emptyObjectSchema } from '../helpers.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name, commaSeparatedTags } = params.input;

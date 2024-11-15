@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { app } from '../../../../src/app';
-import { th } from '../../../helpers';
+import { app } from '../../../../src/app.js';
+import { th } from '../../../helpers/index.js';
 
 describe('webWatcher/toggleWatcherEnabled', () => {
     it('Should properly disable a watcher', async () => {

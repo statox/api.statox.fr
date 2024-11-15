@@ -1,9 +1,9 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
-import { slog } from '../../../src/libs/modules/logging';
-import { AppLogComponent, LogObject } from '../../../src/libs/modules/logging/slog';
-import { isDebug } from '../../../src/libs/config/env';
-import { TestHelper } from '../TestHelper';
+import { slog } from '../../../src/libs/modules/logging/index.js';
+import { AppLogComponent, LogObject } from '../../../src/libs/modules/logging/slog.js';
+import { isDebug } from '../../../src/libs/config/env.js';
+import { TestHelper } from '../TestHelper.js';
 
 export type TestLogObject = {
     [P in keyof LogObject]?: LogObject[P] | sinon.SinonMatcher;

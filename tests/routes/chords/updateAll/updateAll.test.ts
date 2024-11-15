@@ -1,6 +1,6 @@
 import request from 'supertest';
-import { app } from '../../../../src/app';
-import { th } from '../../../helpers';
+import { app } from '../../../../src/app.js';
+import { th } from '../../../helpers/index.js';
 
 describe('chords/updateAll', () => {
     it('should work', async () => {

@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { createWatcher } from '../../modules/webWatcher';
-import { emptyObjectSchema } from '../helpers';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { createWatcher } from '../../modules/webWatcher/index.js';
+import { emptyObjectSchema } from '../helpers.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     let cssSelector: string | undefined = undefined;

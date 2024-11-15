@@ -1,6 +1,6 @@
-import { slog } from '../modules/logging';
-import { isProd } from './env';
-import { ConfigError } from './errors';
+import { slog } from '../modules/logging/index.js';
+import { isProd } from './env.js';
+import { ConfigError } from './errors.js';
 
 // My user ID to be @mentioned on slack (Found in the UI)
 export const SLACK_USERID = isProd ? process.env.SLACK_USERID! : 'AZERTY';

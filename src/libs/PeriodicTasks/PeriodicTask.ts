@@ -1,6 +1,6 @@
-import { isProd } from '../config/env';
-import { slog } from '../modules/logging';
-import { notifySlack } from '../modules/notifier/slack';
+import { isProd } from '../config/env.js';
+import { slog } from '../modules/logging/index.js';
+import { notifySlack } from '../modules/notifier/slack.js';
 
 export class PeriodicTask {
     intervalMs: number;

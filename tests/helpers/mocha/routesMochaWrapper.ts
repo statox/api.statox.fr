@@ -1,13 +1,13 @@
-import { TestHelper } from '../TestHelper';
-import { initApp } from '../../../src/app';
-import { initDb } from '../../../src/libs/databases/db';
-import { initELK } from '../../../src/libs/databases/elk';
-import { testHelper_Auth } from '../auth';
-import { testHelper_ELK } from '../elk';
-import { testHelper_Mysql } from '../mysql';
-import { testHelper_S3 } from '../s3';
-import { testHelper_SlackNotifier } from '../notifier/slack';
-import { testHelper_Slog } from '../slog';
+import { TestHelper } from '../TestHelper.js';
+import { initApp } from '../../../src/app.js';
+import { initDb } from '../../../src/libs/databases/db.js';
+import { initELK } from '../../../src/libs/databases/elk.js';
+import { testHelper_Auth } from '../auth/index.js';
+import { testHelper_ELK } from '../elk/index.js';
+import { testHelper_Mysql } from '../mysql/index.js';
+import { testHelper_S3 } from '../s3/index.js';
+import { testHelper_SlackNotifier } from '../notifier/slack.js';
+import { testHelper_Slog } from '../slog/index.js';
 
 // TODO Maybe implement a dependency mechanism. For now this is
 // handled only with the order of this array.

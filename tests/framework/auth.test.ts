@@ -1,8 +1,8 @@
 import request from 'supertest';
 import sinon from 'sinon';
-import { app } from '../../src/app';
-import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth';
-import { th } from '../helpers';
+import { app } from '../../src/app.js';
+import { fakeCheckRequiredPermissionsHandler, fakeValidateAccessToken } from '../helpers/auth/index.js';
+import { th } from '../helpers/index.js';
 
 describe('authentication middlewares', () => {
     describe('auth none', () => {

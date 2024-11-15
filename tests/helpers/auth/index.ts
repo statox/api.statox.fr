@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { NextFunction, Request, Response } from 'express';
-import * as auth from '../../../src/libs/middleware/auth0.middleware';
-import { TestHelper } from '../TestHelper';
-import { th } from '..';
+import * as auth from '../../../src/libs/middleware/auth0.middleware.js';
+import { TestHelper } from '../TestHelper.js';
+import { th } from '../index.js';
 
 // exported for framework tests
 export let fakeValidateAccessToken: sinon.SinonStub;

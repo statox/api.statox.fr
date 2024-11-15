@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { elk, elkClientTargetsLocalEnv } from '../../libs/databases/elk';
-import { MeteoFranceLogData } from '../../libs/modules/meteofrance';
+import { elk, elkClientTargetsLocalEnv } from '../../libs/databases/elk.js';
+import { MeteoFranceLogData } from '../../libs/modules/meteofrance/index.js';
 
 export const populateFakeMeteoFranceLogs = async () => {
     if (!elkClientTargetsLocalEnv()) {

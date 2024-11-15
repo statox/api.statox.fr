@@ -1,6 +1,6 @@
-import { db } from '../../databases/db';
+import { db } from '../../databases/db.js';
 import { QueryError } from 'mysql2/promise';
-import { WatchedContent, WatchType } from './types';
+import { WatchedContent, WatchType } from './types.js';
 
 export const getWatchedContent = async () => {
     const [content] = await db.query<WatchedContent[]>(

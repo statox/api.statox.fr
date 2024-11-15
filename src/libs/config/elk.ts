@@ -1,5 +1,5 @@
-import { isProd } from './env';
-import { ConfigError } from './errors';
+import { isProd } from './env.js';
+import { ConfigError } from './errors.js';
 
 export const ELK_DOMAIN_ENDPOINT = isProd ? process.env.ELK_DOMAIN_ENDPOINT : 'https://127.0.0.1';
 const LOGGER_USER = isProd ? process.env.LOGGER_USER : 'test';

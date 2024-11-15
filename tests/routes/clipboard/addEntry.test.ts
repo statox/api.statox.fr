@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../../../src/app';
+import { app } from '../../../src/app.js';
 import { assert } from 'chai';
-import { th } from '../../helpers';
+import { th } from '../../helpers/index.js';
 
 describe('clipboard/addEntry', () => {
     // TODO Have a proper s3 mock so that we can test that the transaction

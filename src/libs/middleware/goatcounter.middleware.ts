@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../config/env';
-import { slog } from '../modules/logging';
+import { isProd } from '../config/env.js';
+import { slog } from '../modules/logging/index.js';
 
 // Token is from https://api-statox-fr.goatcounter.com/user/api
 const token = isProd ? process.env.GOATCOUNTER_TOKEN : '';

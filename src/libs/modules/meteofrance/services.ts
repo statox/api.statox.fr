@@ -1,9 +1,9 @@
 import { setTimeout } from 'timers/promises';
 import { DateTime } from 'luxon';
-import { slog } from '../logging';
-import { getLatestObservationForHourlyStation } from './connector';
-import { failureTimeoutMs, getStations } from './config';
-import { MeteoFranceLogData, Station } from './types';
+import { slog } from '../logging/index.js';
+import { getLatestObservationForHourlyStation } from './connector.js';
+import { failureTimeoutMs, getStations } from './config.js';
+import { MeteoFranceLogData, Station } from './types.js';
 
 const previousTimestamps: { [stationId: string]: number } = {};
 

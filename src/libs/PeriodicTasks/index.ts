@@ -1,8 +1,8 @@
-import { slog } from '../modules/logging';
-import { doHomeTrackerMonitoring } from '../modules/homeTracker';
-import { doMeteoFrance } from '../modules/meteofrance';
-import { doWebWatcher } from '../modules/webWatcher';
-import { PeriodicTask } from './PeriodicTask';
+import { slog } from '../modules/logging/index.js';
+import { doHomeTrackerMonitoring } from '../modules/homeTracker/index.js';
+import { doMeteoFrance } from '../modules/meteofrance/index.js';
+import { doWebWatcher } from '../modules/webWatcher/index.js';
+import { PeriodicTask } from './PeriodicTask.js';
 
 const tasks = [
     new PeriodicTask({

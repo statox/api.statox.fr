@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types';
-import { emptyObjectSchema } from '../helpers';
-import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker';
+import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { emptyObjectSchema } from '../helpers.js';
+import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     params.loggableContext.addData('sensorName', params.input.sensorName);

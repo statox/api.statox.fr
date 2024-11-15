@@ -6,6 +6,7 @@
         "node": "18.x"
     },
     "main": "index.ts",
+    "type": "module",
     "scripts": {
         "setup-githooks": "./githooks/setup.sh",
         "check": "npm run lint && npm run prettier",

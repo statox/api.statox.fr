@@ -1,6 +1,6 @@
-import { elk } from '../../../databases/elk';
-import { notifySlack } from '../../notifier/slack';
-import { monitoredSensorNames } from '../config';
+import { elk } from '../../../databases/elk.js';
+import { notifySlack } from '../../notifier/slack.js';
+import { monitoredSensorNames } from '../config.js';
 
 const missingSensorLogs_alertedSensors = new Set();
 

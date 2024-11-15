@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { app } from '../../../../src/app';
+import { app } from '../../../../src/app.js';
 import { assert } from 'chai';
-import { th } from '../../../helpers';
+import { th } from '../../../helpers/index.js';
 import { DateTime } from 'luxon';
 
 describe('homeTracker/allSensorsWithLatestLog', () => {

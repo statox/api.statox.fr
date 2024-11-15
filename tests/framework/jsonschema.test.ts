@@ -1,8 +1,8 @@
 import request from 'supertest';
 import sinon from 'sinon';
 import { ValidationError } from 'express-json-validator-middleware';
-import { app } from '../../src/app';
-import { th } from '../helpers';
+import { app } from '../../src/app.js';
+import { th } from '../helpers/index.js';
 
 describe('JSON schema validation middleware', () => {
     it('should accept a correct input', async () => {

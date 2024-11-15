@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { assert } from 'chai';
-import { app } from '../../../src/app';
-import { th } from '../../helpers';
+import { app } from '../../../src/app.js';
+import { th } from '../../helpers/index.js';
 
 describe('readingList/addEntry', () => {
     // TODO Add other possible cases

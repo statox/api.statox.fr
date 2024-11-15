@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { getAllChords } from '../../modules/chords';
-import { EmptyInput, GetRoute } from '../types';
+import { getAllChords } from '../../modules/chords/index.js';
+import { EmptyInput, GetRoute } from '../types.js';
 
 const handler = async () => {
     return getAllChords();

@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { elk, elkClientTargetsLocalEnv } from '../../libs/databases/elk';
-import { SensorLogData } from '../../libs/modules/homeTracker';
+import { elk, elkClientTargetsLocalEnv } from '../../libs/databases/elk.js';
+import { SensorLogData } from '../../libs/modules/homeTracker/index.js';
 
 export const populateFakeHomeTrackerData = async () => {
     if (!elkClientTargetsLocalEnv()) {

@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
-import { getAllEntries } from '../../modules/clipboard';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getAllEntries } from '../../modules/clipboard/index.js';
 
 const handler = async () => {
     return getAllEntries();

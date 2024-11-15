@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types';
-import { getAllEntries } from '../../modules/readingList';
+import { EmptyInput, GetRoute } from '../types.js';
+import { getAllEntries } from '../../modules/readingList/index.js';
 
 const handler = async () => {
     const items = await getAllEntries();

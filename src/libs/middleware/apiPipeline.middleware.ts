@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../config/env';
-import { Route } from '../routes/types';
-import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv';
-import { slog } from '../modules/logging';
+import { isProd } from '../config/env.js';
+import { Route } from '../routes/types.js';
+import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
+import { slog } from '../modules/logging/index.js';
 import { AllowedSchema } from 'express-json-validator-middleware';
 
 export class OutputValidationError extends Error {

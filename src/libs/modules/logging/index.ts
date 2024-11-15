@@ -1,2 +1,2 @@
-export * as slog from './slog';
-export * from './LoggableContext';
+export * as slog from './slog.js';
+export * from './LoggableContext.js';

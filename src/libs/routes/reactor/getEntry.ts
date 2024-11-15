@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { FromSchema } from 'json-schema-to-ts';
-import { GetRoute, RouteHandler } from '../types';
-import { getRedirectForEntry } from '../../modules/reactor/getEntries';
+import { GetRoute, RouteHandler } from '../types.js';
+import { getRedirectForEntry } from '../../modules/reactor/getEntries.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { linkId } = params.input;

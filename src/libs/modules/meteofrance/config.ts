@@ -1,4 +1,4 @@
-import { Station } from './types';
+import { Station } from './types.js';
 
 // List of hourly stations obstained once with an API call
 const stations: Station[] = [
