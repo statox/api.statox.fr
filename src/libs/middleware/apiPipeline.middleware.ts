@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../config/env.js';
+import { isDebug, isProd } from '../config/env.js';
 import { Route } from '../routes/types.js';
 import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
 import { slog } from '../modules/logging/index.js';
@@ -47,6 +47,11 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
             if (isAjvError(error)) {
                 // @ts-expect-error This won't happen in prod
                 slog.log('middleware', 'Failed output validation', { error });
+                if (!isProd || isDebug) {
+                    slog.log('middleware', 'Failed output validation details', {
+                        dataStr: JSON.stringify(error)
+                    });
+                }
                 return next(new OutputValidationError());
             }
             next(error);
