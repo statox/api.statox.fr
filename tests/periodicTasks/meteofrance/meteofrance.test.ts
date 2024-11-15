@@ -1,15 +1,11 @@
-import * as meteoFranceConfig from '../../../src/libs/modules/meteofrance/config.js';
-import * as meteoFranceConnector from '../../../src/libs/modules/meteofrance/connector.js';
+import { meteoFranceConnector } from '../../../src/libs/modules/meteofrance/connector.js';
 import sinon from 'sinon';
 import { doSingleStationCheck } from '../../../src/libs/modules/meteofrance/index.js';
 import { th } from '../../helpers/index.js';
 
 describe('periodic task - meteofrance', () => {
-    let stubFailureDelayMs: sinon.SinonStub;
     let stubObservationAPI: sinon.SinonStub;
     before(() => {
-        stubFailureDelayMs = sinon.stub(meteoFranceConfig, 'failureTimeoutMs');
-        stubFailureDelayMs.returns(1);
         stubObservationAPI = sinon.stub(
             meteoFranceConnector,
             'getLatestObservationForHourlyStation'
@@ -45,7 +41,6 @@ describe('periodic task - meteofrance', () => {
         });
     });
     after(() => {
-        stubFailureDelayMs.restore();
         stubObservationAPI.restore();
     });
 

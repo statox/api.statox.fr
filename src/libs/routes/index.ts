@@ -25,31 +25,35 @@ import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher.js
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers.js';
 import { route as WebWatcher_toggleWatcherEnabled } from './webWatcher/toggleWatcherEnabled.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const routes: Route<any, any>[] = [
-    Chords_addLinkVisit,
-    Chords_checkLinks,
-    Chords_getAll,
-    Chords_getLinksVisitsCount,
-    Chords_updateAll,
-    Clipboard_addEntry,
-    Clipboard_deleteEntry,
-    Clipboard_geAllEntries,
-    Clipboard_getPublicEntries,
-    Clipboard_staticView,
-    Health_GetRemoteTime,
-    HomeTracker_allSensorsWithLatestLog,
-    HomeTracker_getEphemerides,
-    HomeTracker_getWeatherForecast,
-    HomeTracker_histogramData,
-    HomeTracker_upload,
-    Reactor_addEntry,
-    Reactor_getEntriesForPublic,
-    Reactor_getEntry,
-    ReadingList_addEntry,
-    ReadingList_getAllEntries,
-    WebWatcher_createWatcher,
-    WebWatcher_deleteWatcher,
-    WebWatcher_getAllWatcher,
-    WebWatcher_toggleWatcherEnabled
-];
+export const routes: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    list: Route<any, any>[];
+} = {
+    list: [
+        Chords_addLinkVisit,
+        Chords_checkLinks,
+        Chords_getAll,
+        Chords_getLinksVisitsCount,
+        Chords_updateAll,
+        Clipboard_addEntry,
+        Clipboard_deleteEntry,
+        Clipboard_geAllEntries,
+        Clipboard_getPublicEntries,
+        Clipboard_staticView,
+        Health_GetRemoteTime,
+        HomeTracker_allSensorsWithLatestLog,
+        HomeTracker_getEphemerides,
+        HomeTracker_getWeatherForecast,
+        HomeTracker_histogramData,
+        HomeTracker_upload,
+        Reactor_addEntry,
+        Reactor_getEntriesForPublic,
+        Reactor_getEntry,
+        ReadingList_addEntry,
+        ReadingList_getAllEntries,
+        WebWatcher_createWatcher,
+        WebWatcher_deleteWatcher,
+        WebWatcher_getAllWatcher,
+        WebWatcher_toggleWatcherEnabled
+    ]
+};

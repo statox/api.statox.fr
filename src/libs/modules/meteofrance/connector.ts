@@ -4,7 +4,7 @@ import { MeteoFranceStationObservation } from './types.js';
 
 const BASE_URL = 'https://public-api.meteofrance.fr/public/DPObs/v1';
 
-export const getLatestObservationForHourlyStation = async (stationId: string) => {
+const getLatestObservationForHourlyStation = async (stationId: string) => {
     // Observation API
     // https://portail-api.meteofrance.fr/web/fr/api/test/8aab9bc4-6de1-48ee-a2b0-42007b632d5e/cbc94ef9-5147-468c-b87f-5ba02234f834
     //
@@ -34,4 +34,8 @@ export const getLatestObservationForHourlyStation = async (stationId: string) =>
 
     const observations = await observationsResponse.json();
     return observations[0] as MeteoFranceStationObservation;
+};
+
+export const meteoFranceConnector = {
+    getLatestObservationForHourlyStation
 };

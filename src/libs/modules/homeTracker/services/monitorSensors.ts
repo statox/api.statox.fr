@@ -1,5 +1,5 @@
 import { elk } from '../../../databases/elk.js';
-import { notifySlack } from '../../notifier/slack.js';
+import { slackNotifier } from '../../notifier/slack.js';
 import { monitoredSensorNames } from '../config.js';
 
 const missingSensorLogs_alertedSensors = new Set();
@@ -37,7 +37,7 @@ export const doHomeTrackerMonitoring = async () => {
 
         if (nbLogs < 2) {
             if (!missingSensorLogs_alertedSensors.has(sensorName)) {
-                await notifySlack({
+                await slackNotifier.notifySlack({
                     message: 'Missing home tracker data for sensor ' + sensorName,
                     directMention: true
                 });

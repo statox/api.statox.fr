@@ -5,11 +5,7 @@ import { isProd, isTests } from '../../config/env.js';
 
 const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 
-export const notifySlack = async (params: {
-    message?: string;
-    error?: Error;
-    directMention?: true;
-}) => {
+const notifySlack = async (params: { message?: string; error?: Error; directMention?: true }) => {
     try {
         const { message, error, directMention } = params;
 
@@ -71,4 +67,8 @@ export const notifySlack = async (params: {
             originalMessage: params.message
         });
     }
+};
+
+export const slackNotifier = {
+    notifySlack
 };

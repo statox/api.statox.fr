@@ -4,7 +4,7 @@ import mustacheExpress from 'mustache-express';
 import { Socket } from 'net';
 import { Server } from 'http';
 import { AllowedSchema, Validator } from 'express-json-validator-middleware';
-import { checkRequiredPermissions, validateAccessToken } from './libs/middleware/auth0.middleware.js';
+import { auth0middleware } from './libs/middleware/auth0.middleware.js';
 import { errorHandler } from './libs/middleware/errors.middleware.js';
 // import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
 import { isProd } from './libs/config/env.js';
@@ -43,12 +43,12 @@ export const initApp = () => {
     // app.use(goatCounterHandler);
     app.use(multipartHandler);
 
-    for (const route of routes) {
+    for (const route of routes.list) {
         const pipeline = [];
 
         if (route.authentication === 'user') {
-            pipeline.push(validateAccessToken);
-            pipeline.push(checkRequiredPermissions(['author']));
+            pipeline.push(auth0middleware.validateAccessToken);
+            pipeline.push(auth0middleware.checkRequiredPermissions(['author']));
         } else if (route.authentication === 'apikey-iot') {
             pipeline.push(validateAPIKeyHeader);
         }

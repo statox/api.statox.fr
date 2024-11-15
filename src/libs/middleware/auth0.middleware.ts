@@ -15,12 +15,12 @@ const prodAuth0 = {
 
 const config = isProd ? prodAuth0 : localAuth0;
 
-export const validateAccessToken = auth({
+const validateAccessToken = auth({
     issuerBaseURL: `https://${config.auth0Domain}`,
     audience: config.auth0Audience
 });
 
-export const checkRequiredPermissions = (requiredPermissions: string[]) => {
+const checkRequiredPermissions = (requiredPermissions: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
         const permissionCheck = claimCheck((payload) => {
             const permissions = payload.permissions as string[];
@@ -40,4 +40,9 @@ export const checkRequiredPermissions = (requiredPermissions: string[]) => {
 
         permissionCheck(req, res, next);
     };
+};
+
+export const auth0middleware = {
+    validateAccessToken,
+    checkRequiredPermissions
 };

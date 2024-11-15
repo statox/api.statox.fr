@@ -1,7 +1,7 @@
 import jsdom from 'jsdom';
 import { db } from '../../databases/db.js';
 import { slog } from '../logging/index.js';
-import { notifySlack } from '../notifier/slack.js';
+import { slackNotifier } from '../notifier/slack.js';
 import { createHash } from 'node:crypto';
 import {
     CSSWatchedContent,
@@ -26,7 +26,10 @@ const recordContentChanged = async (params: {
         status: newContent,
         previousStatus: previousContent
     });
-    notifySlack({ message: c.name + ' - ' + c.notificationMessage, directMention: true });
+    slackNotifier.notifySlack({
+        message: c.name + ' - ' + c.notificationMessage,
+        directMention: true
+    });
 
     return db.query(
         `
@@ -56,7 +59,11 @@ const recordContentChecked = async (c: WatchedContent) => {
 };
 
 const recordContentCheckFailed = async (c: WatchedContent, error: Error) => {
-    notifySlack({ message: 'FAILED TO RUN WebWatcher - ' + c.name, directMention: true, error });
+    slackNotifier.notifySlack({
+        message: 'FAILED TO RUN WebWatcher - ' + c.name,
+        directMention: true,
+        error
+    });
 
     return db.query(
         `

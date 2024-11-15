@@ -97,7 +97,7 @@ export type AppLogComponent =
     | 'weather-forecast'
     | 'web-watcher';
 
-export const log = (component: AppLogComponent, message: string, data?: LogObject) => {
+const log = (component: AppLogComponent, message: string, data?: LogObject) => {
     if (isTests) {
         if (isDebug) {
             console.log(component, message, data || '');
@@ -110,4 +110,8 @@ export const log = (component: AppLogComponent, message: string, data?: LogObjec
         return;
     }
     logToELK({ component, message, ...data });
+};
+
+export const slog = {
+    log
 };

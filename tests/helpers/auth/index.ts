@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { NextFunction, Request, Response } from 'express';
-import * as auth from '../../../src/libs/middleware/auth0.middleware.js';
+import { auth0middleware } from '../../../src/libs/middleware/auth0.middleware.js';
 import { TestHelper } from '../TestHelper.js';
 import { th } from '../index.js';
 
@@ -11,7 +11,7 @@ let fakeCheckRequiredPermissions: sinon.SinonStub;
 
 const setupFakeAuth = async () => {
     fakeValidateAccessToken = sinon
-        .stub(auth, 'validateAccessToken')
+        .stub(auth0middleware, 'validateAccessToken')
         .callsFake((_req: Request, _res: Response, next: NextFunction) => {
             // TODO: Find a way to actually check the token
             next();
@@ -25,7 +25,7 @@ const setupFakeAuth = async () => {
         });
 
     fakeCheckRequiredPermissions = sinon
-        .stub(auth, 'checkRequiredPermissions')
+        .stub(auth0middleware, 'checkRequiredPermissions')
         .returns(fakeCheckRequiredPermissionsHandler);
 };
 

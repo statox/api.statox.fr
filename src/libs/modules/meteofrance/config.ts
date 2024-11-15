@@ -41,4 +41,3 @@ const stations: Station[] = [
 ];
 
 export const getStations = () => stations;
-export const failureTimeoutMs = () => 5000;

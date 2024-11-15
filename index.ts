@@ -3,7 +3,7 @@ import { initDb } from './src/libs/databases/db.js';
 import { initELK } from './src/libs/databases/elk.js';
 import { initLocalStackS3 } from './src/libs/databases/s3.js';
 import { slog } from './src/libs/modules/logging/index.js';
-import { notifySlack } from './src/libs/modules/notifier/slack.js';
+import { slackNotifier } from './src/libs/modules/notifier/slack.js';
 
 const start = async () => {
     await initLocalStackS3();
@@ -11,7 +11,7 @@ const start = async () => {
     await initELK();
     initApp();
     slog.log('app', 'App started');
-    notifySlack({ message: 'App started' });
+    slackNotifier.notifySlack({ message: 'App started' });
 };
 
 start();
@@ -20,10 +20,10 @@ start();
 const shutdown = (signal: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin) => {
     return (error: Error) => {
         slog.log('app', 'App will shutdown', { shutdownOrigin: signal, error });
-        notifySlack({ message: 'App will shutdown' });
+        slackNotifier.notifySlack({ message: 'App will shutdown' });
 
         if (error) {
-            notifySlack({ message: 'Shutdown because of error', error });
+            slackNotifier.notifySlack({ message: 'Shutdown because of error', error });
         }
 
         setTimeout(() => {

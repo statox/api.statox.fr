@@ -1,6 +1,6 @@
 import { isProd } from '../config/env.js';
 import { slog } from '../modules/logging/index.js';
-import { notifySlack } from '../modules/notifier/slack.js';
+import { slackNotifier } from '../modules/notifier/slack.js';
 
 export class PeriodicTask {
     intervalMs: number;
@@ -43,7 +43,7 @@ export class PeriodicTask {
             });
 
             if (this.notifyOnFailure) {
-                notifySlack({
+                slackNotifier.notifySlack({
                     message: `error in periodic task ${this.taskName}`,
                     error: error as Error
                 });

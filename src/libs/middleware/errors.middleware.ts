@@ -5,7 +5,7 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { notifySlack } from '../modules/notifier/slack.js';
+import { slackNotifier } from '../modules/notifier/slack.js';
 import { EntryAlreadyExistsError } from '../modules/webWatcher/index.js';
 import { ApiKeyError } from './authIOT.middleware.js';
 import {
@@ -22,7 +22,7 @@ export const errorHandler = async (
     next: NextFunction
 ) => {
     response.locals.loggableContext?.addData('error', error);
-    notifySlack({ error, directMention: true });
+    slackNotifier.notifySlack({ error, directMention: true });
 
     if (error instanceof OutputValidationError) {
         response.status(500).json({ message: 'Failed output validation' });

@@ -1,7 +1,7 @@
 import { slog } from '../../logging/index.js';
 import { SensorLogData, SensorRawData } from '../types.js';
 import { elk } from '../../../databases/elk.js';
-import { notifySlack } from '../../notifier/slack.js';
+import { slackNotifier } from '../../notifier/slack.js';
 
 export const ingestSensorData = async (sensorRawData: SensorRawData) => {
     const {
@@ -165,11 +165,11 @@ export const ingestSensorData = async (sensorRawData: SensorRawData) => {
         });
     } catch (error) {
         // TODO Add tests for this behavior
-        notifySlack({
+        slackNotifier.notifySlack({
             message: 'error ingesting home tracker data',
             error: error as Error
         });
-        notifySlack({
+        slackNotifier.notifySlack({
             message: `missing data: ${JSON.stringify(newDocument)}`
         });
     }

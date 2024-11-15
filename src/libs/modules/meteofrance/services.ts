@@ -1,16 +1,17 @@
 import { setTimeout } from 'timers/promises';
 import { DateTime } from 'luxon';
 import { slog } from '../logging/index.js';
-import { getLatestObservationForHourlyStation } from './connector.js';
-import { failureTimeoutMs, getStations } from './config.js';
+import { meteoFranceConnector } from './connector.js';
+import { getStations } from './config.js';
 import { MeteoFranceLogData, Station } from './types.js';
+import { isProd } from '../../config/env.js';
 
 const previousTimestamps: { [stationId: string]: number } = {};
 
 const handleStationObservation = async (station: Station) => {
     const previousTimestamp = previousTimestamps[station.id] || 0;
 
-    const lastObs = await getLatestObservationForHourlyStation(station.id);
+    const lastObs = await meteoFranceConnector.getLatestObservationForHourlyStation(station.id);
 
     if (!lastObs) {
         throw new Error('Meteo france API did not respond');
@@ -67,7 +68,8 @@ export const doSingleStationCheck = async (station: Station) => {
             });
         }
         failedCalls++;
-        await setTimeout(failureTimeoutMs());
+        const failureTimeoutMs = isProd ? 5000 : 1;
+        await setTimeout(failureTimeoutMs);
     }
 
     slog.log('meteo-france', 'Stop retrying calls', {

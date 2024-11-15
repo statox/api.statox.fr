@@ -1,7 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import sinon from 'sinon';
 import { TestHelper } from '../TestHelper.js';
-import * as routes from '../../../src/libs/routes/index.js';
+import { routes } from '../../../src/libs/routes/index.js';
 import { EmptyInput, EmptyOutput, GetRoute, PostRoute } from '../../../src/libs/routes/types.js';
 import { initApp } from '../../../src/app.js';
 import { emptyObjectSchema } from '../../../src/libs/routes/helpers.js';
@@ -140,7 +140,7 @@ const testRoutes = [
 let routesStub: sinon.SinonStub;
 
 const setupAppStub = async () => {
-    routesStub = sinon.stub(routes, 'routes').value(testRoutes);
+    routesStub = sinon.stub(routes, 'list').value(testRoutes);
     initApp();
 };
 
