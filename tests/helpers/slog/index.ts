@@ -1,7 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { slog } from '../../../src/libs/modules/logging/index.js';
-import { AppLogComponent, LogObject } from '../../../src/libs/modules/logging/slog.js';
+import { AppLogComponent } from '../../../src/libs/modules/logging/index.js';
+import { LogObject } from '../../../src/libs/modules/logging/types.js';
 import { isDebug } from '../../../src/libs/config/env.js';
 import { TestHelper } from '../TestHelper.js';
 
