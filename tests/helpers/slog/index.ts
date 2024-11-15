@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { slog } from '../../../src/libs/modules/logging/index.js';
-import { AppLogComponent } from '../../../src/libs/modules/logging/index.js';
 import { LogObject } from '../../../src/libs/modules/logging/types.js';
 import { isDebug } from '../../../src/libs/config/env.js';
 import { TestHelper } from '../TestHelper.js';
@@ -31,7 +30,7 @@ class TestHelper_Slog extends TestHelper {
         });
     }
 
-    checkLog = (component: AppLogComponent, message: string, data?: TestLogObject) => {
+    checkLog = (component: string, message: string, data?: TestLogObject) => {
         const calledWithCorrectArgs = slogSpy.calledWithMatch(component, message, data);
         if (!calledWithCorrectArgs) {
             if (isDebug) {

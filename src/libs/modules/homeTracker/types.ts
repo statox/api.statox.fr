@@ -34,12 +34,6 @@ export interface SensorLogData {
     timeToSendMs?: number;
 }
 
-export interface SensorErrorData {
-    sensorName: string;
-    invalidField: string;
-    invalidValueStr: string;
-}
-
 export const sensorRawDataInputSchema = {
     type: 'object',
     required: ['sensorName'],

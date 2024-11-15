@@ -1,5 +1,3 @@
-import { SensorErrorData, SensorLogData } from '../homeTracker/index.js';
-
 type CloudflareGeoInfo = {
     'cf-ipcity'?: string;
     'cf-ipcontinent'?: string;
@@ -47,6 +45,7 @@ export type LoggableProperties = {
     precipitationMM?: number;
     pressureLatest?: number;
     pressureOldest?: number;
+    pressurehPa?: number;
     previousStatus?: string;
     previousTimestamp?: number;
     referenceTime?: string;
@@ -89,8 +88,4 @@ export type AppLogComponent =
     | 'weather-forecast'
     | 'web-watcher';
 
-export type LogObject =
-    | { component: AppLogComponent; message: string }
-    | LoggableProperties
-    | SensorLogData
-    | SensorErrorData;
+export type LogObject = { component: AppLogComponent; message: string } | LoggableProperties;
