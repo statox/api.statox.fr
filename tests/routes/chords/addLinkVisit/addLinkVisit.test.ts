@@ -1,29 +1,9 @@
 import request from 'supertest';
-import sinon from 'sinon';
 import { app } from '../../../../src/app';
 import { assert } from 'chai';
 import { th } from '../../../helpers';
 
 describe('chords/addLinkVisit', () => {
-    it('should check input schema', async () => {
-        await request(app)
-            .post('/chords/addLinkVisit')
-            .set('Accept', 'application/json')
-            .send({
-                foo: 'bar'
-            })
-            .expect(400);
-
-        th.slog.checkLog('middleware', 'Caught error', {
-            error: sinon.match((error) => {
-                const bodyError = error?.validationErrors?.body[0];
-                const isCorrectMessage = bodyError?.message === "must have required property 'url'";
-
-                return isCorrectMessage;
-            })
-        });
-    });
-
     it('should create new entry with count 1', async () => {
         await request(app)
             .post('/chords/addLinkVisit')

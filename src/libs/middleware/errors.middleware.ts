@@ -5,7 +5,6 @@ import {
     UnauthorizedError,
     InsufficientScopeError
 } from 'express-oauth2-jwt-bearer';
-import { slog } from '../modules/logging';
 import { notifySlack } from '../modules/notifier/slack';
 import { EntryAlreadyExistsError } from '../modules/webWatcher';
 import { ApiKeyError } from './authIOT.middleware';
@@ -22,7 +21,7 @@ export const errorHandler = async (
     response: Response,
     next: NextFunction
 ) => {
-    slog.log('middleware', 'Caught error', { error });
+    response.locals.loggableContext?.addData('error', error);
     notifySlack({ error, directMention: true });
 
     if (error instanceof OutputValidationError) {

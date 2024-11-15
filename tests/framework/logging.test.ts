@@ -37,4 +37,18 @@ describe('logging middleware', () => {
             }
         });
     });
+
+    it('should add a loggable context to the response and an error should be in the context', async () => {
+        await request(app).get('/getroutethatthrows');
+        th.slog.checkLog('app', 'access-log', {
+            path: '/getroutethatthrows',
+            code: 500,
+            remoteIp: '::ffff:127.0.0.1',
+            requestId: '00000000-0000-0000-0000-000000000001',
+            requestInterrupted: false,
+            context: {
+                error: sinon.match((error) => error.message === 'The route threw')
+            }
+        });
+    });
 });
