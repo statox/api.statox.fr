@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
-import { isProd } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 
 const localAuth0 = {
@@ -13,11 +13,11 @@ const prodAuth0 = {
     auth0Domain: 'statox.eu.auth0.com'
 };
 
-const config = isProd ? prodAuth0 : localAuth0;
+const auth0config = config.env.isProd ? prodAuth0 : localAuth0;
 
 const validateAccessToken = auth({
-    issuerBaseURL: `https://${config.auth0Domain}`,
-    audience: config.auth0Audience
+    issuerBaseURL: `https://${auth0config.auth0Domain}`,
+    audience: auth0config.auth0Audience
 });
 
 const checkRequiredPermissions = (requiredPermissions: string[]) => {

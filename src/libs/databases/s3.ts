@@ -6,16 +6,12 @@ import {
     S3Client
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import {
-    R2_ACCESS_KEY_ID,
-    R2_ENDPOINT,
-    R2_SECRET_KEY,
-    isProd,
-    isTests
-} from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';
+
+const { isProd, isTests } = config.env;
 
 export let s3Mock: AwsClientStub<S3Client>;
 if (isTests) {
@@ -25,10 +21,10 @@ if (isTests) {
 
 export const S3 = new S3Client({
     region: isProd ? 'auto' : 'eu-west-1',
-    endpoint: R2_ENDPOINT!,
+    endpoint: config.r2.endpoint,
     credentials: {
-        accessKeyId: R2_ACCESS_KEY_ID!,
-        secretAccessKey: R2_SECRET_KEY!
+        accessKeyId: config.r2.accessKeyId,
+        secretAccessKey: config.r2.secretKey
     }
 });
 

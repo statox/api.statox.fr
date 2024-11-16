@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { elk, resetDataStreamForTests } from '../../../src/libs/databases/elk.js';
-import { isDebug } from '../../../src/packages/config/index.js';
+import { config } from '../../../src/packages/config/index.js';
 import { assert } from 'chai';
 import { TestHelper } from '../TestHelper.js';
 import { ELKFixture } from './types.js';
@@ -74,7 +74,7 @@ class TestHelper_ELK extends TestHelper {
             document: { document }
         });
         if (!calledWithCorrectArgs) {
-            if (isDebug) {
+            if (config.env.isDebug) {
                 console.log('elk calls:');
                 console.log(JSON.stringify(elkSpy.getCalls(), null, 2));
                 console.log('elk expected args:');

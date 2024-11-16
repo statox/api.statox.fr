@@ -1,0 +1,46 @@
+import { AllowedSchema, validateAgainstJsonSchema } from '../../../libs/modules/ajv/index.js';
+import { configSchema } from './schema.js';
+import { Config } from '../types.js';
+import { MYSQL_CONNECTION_URL } from '../sources/db.js';
+import { ELK_API_ENDPOINT, ELK_API_KEY, ELK_DOMAIN_ENDPOINT, ELK_TOKEN } from '../sources/elk.js';
+import { isDebug, isProd, isTests } from '../sources/env.js';
+import { METEO_FRANCE_API_KEY } from '../sources/meteofrance.js';
+import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../sources/r2.js';
+import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../sources/slack.js';
+
+export const config: Config = {
+    mysql: {
+        connectionUrl: MYSQL_CONNECTION_URL
+    },
+    elk: {
+        domainEndpoint: ELK_DOMAIN_ENDPOINT,
+        token: ELK_TOKEN,
+        apiEndpoint: ELK_API_ENDPOINT,
+        apiKey: ELK_API_KEY
+    },
+    env: {
+        isProd: isProd,
+        isTests: isTests,
+        isDebug: isDebug
+    },
+    meteofrance: {
+        apiKey: METEO_FRANCE_API_KEY
+    },
+    r2: {
+        accessKeyId: R2_ACCESS_KEY_ID,
+        secretKey: R2_SECRET_KEY,
+        endpoint: R2_ENDPOINT
+    },
+    slack: {
+        userId: SLACK_USERID,
+        webhookUrl: SLACK_WEBHOOK_URL
+    }
+};
+
+try {
+    validateAgainstJsonSchema(config, configSchema as unknown as AllowedSchema);
+} catch (error) {
+    console.error("Configuration doesn't match expected schema");
+    console.error(error);
+    throw error;
+}

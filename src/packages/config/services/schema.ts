@@ -1,6 +1,4 @@
-import { JSONSchema } from 'json-schema-to-ts';
-
-export const configSchema: JSONSchema = {
+export const configSchema = {
     type: 'object',
     additionalProperties: false,
     required: ['mysql', 'elk', 'env', 'meteofrance', 'r2', 'slack'],
@@ -11,34 +9,35 @@ export const configSchema: JSONSchema = {
             required: ['connectionUrl'],
             properties: {
                 connectionUrl: {
-                    type: 'string'
+                    type: 'string',
+                    pattern: '^mysql://[a-zA-Z0-9]+:.+@.+:[0-9]+/.+$'
                 }
             }
         },
         elk: {
             type: 'object',
             additionalProperties: false,
-            required: ['domainEndpoint', 'loggerUser', 'loggerPassword', 'apiEndpoint', 'apiKey'],
+            required: ['domainEndpoint', 'token', 'apiEndpoint', 'apiKey'],
             properties: {
                 domainEndpoint: {
                     description: 'URL of the logstash endpoint to ingest logs via slog',
-                    type: 'string'
+                    type: 'string',
+                    pattern: '^https://.+'
                 },
-                loggerUser: {
-                    description: 'User for logstash',
-                    type: 'string'
-                },
-                loggerPassword: {
-                    description: 'Password for logstash',
-                    type: 'string'
+                token: {
+                    description: 'Base64 of the user and password for authentication to logstash',
+                    type: 'string',
+                    minLength: 2
                 },
                 apiEndpoint: {
                     description: 'URL of the ELK cluster to ingest to be used as a document store',
-                    type: 'string'
+                    type: 'string',
+                    pattern: '^https?://.+'
                 },
                 apiKey: {
                     description: 'Access key for the ELK cluster',
-                    type: 'string'
+                    type: 'string',
+                    minLength: 2
                 }
             }
         },
@@ -69,7 +68,8 @@ export const configSchema: JSONSchema = {
             properties: {
                 apiKey: {
                     description: 'Api key for public-api.meteofrance.fr',
-                    type: 'string'
+                    type: 'string',
+                    minLength: 2
                 }
             }
         },
@@ -80,13 +80,16 @@ export const configSchema: JSONSchema = {
             required: ['accessKeyId', 'secretKey', 'endpoint'],
             properties: {
                 accessKeyId: {
-                    type: 'string'
+                    type: 'string',
+                    minLength: 2
                 },
                 secretKey: {
-                    type: 'string'
+                    type: 'string',
+                    minLength: 2
                 },
                 endpoint: {
-                    type: 'string'
+                    type: 'string',
+                    pattern: '^https://.+'
                 }
             }
         },
@@ -96,12 +99,15 @@ export const configSchema: JSONSchema = {
             required: ['userId', 'webhookUrl'],
             properties: {
                 userId: {
-                    type: 'string'
+                    description: 'My user ID to be @mentioned on slack (Found in the UI)',
+                    type: 'string',
+                    minLength: 2
                 },
                 webhookUrl: {
-                    type: 'string'
+                    type: 'string',
+                    pattern: '^https://.+'
                 }
             }
         }
     }
-};
+} as const;

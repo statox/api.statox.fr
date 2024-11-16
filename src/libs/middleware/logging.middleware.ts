@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { randomUUID } from 'crypto';
 import { hrtime } from 'node:process';
 import { LoggableContext, slog } from '../modules/logging/index.js';
-import { isTests } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 
 export const loggingHandler = async (req: Request, res: Response, next: NextFunction) => {
     const path = req.path;
@@ -26,7 +26,9 @@ export const loggingHandler = async (req: Request, res: Response, next: NextFunc
     };
 
     res.locals.startTimeNs = hrtime.bigint();
-    res.locals.requestId = isTests ? '00000000-0000-0000-0000-000000000001' : randomUUID();
+    res.locals.requestId = config.env.isTests
+        ? '00000000-0000-0000-0000-000000000001'
+        : randomUUID();
     res.locals.loggableContext = new LoggableContext();
 
     const createAccessLog = (params: { requestInterrupted?: boolean }) => {

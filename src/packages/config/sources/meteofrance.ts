@@ -1,5 +1,4 @@
 import { isProd } from './env.js';
-import { ConfigError } from '../errors.js';
 
 // Token is generated from this page
 // https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesObservation
@@ -15,8 +14,4 @@ import { ConfigError } from '../errors.js';
 // Tests setup: The connector's method is stubbed
 // Local setup: Get the API key from the prod config
 
-export const METEO_FRANCE_API_KEY = isProd ? process.env.METEO_FRANCE_API_KEY : 'CHANGEME';
-
-if (!METEO_FRANCE_API_KEY) {
-    throw new ConfigError('MeteoFrance API key');
-}
+export const METEO_FRANCE_API_KEY = isProd ? process.env.METEO_FRANCE_API_KEY! : 'CHANGEME';

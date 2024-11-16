@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { isDebug, isProd } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { Route } from '../routes/types.js';
-import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
+import { AllowedSchema, isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
 import { slog } from '../modules/logging/index.js';
-import { AllowedSchema } from 'express-json-validator-middleware';
+
+const { isDebug, isProd } = config.env;
 
 export class OutputValidationError extends Error {
     constructor() {

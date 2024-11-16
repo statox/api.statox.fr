@@ -1,13 +1,9 @@
 import { IncomingWebhook } from '@slack/webhook';
-import {
-    SLACK_USERID,
-    SLACK_WEBHOOK_URL,
-    isProd,
-    isTests
-} from '../../../packages/config/index.js';
+import { config } from '../../../packages/config/index.js';
 import { slog } from '../logging/index.js';
 
-const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
+const { isProd, isTests } = config.env;
+const webhook = new IncomingWebhook(config.slack.webhookUrl);
 
 const notifySlack = async (params: { message?: string; error?: Error; directMention?: true }) => {
     try {
@@ -28,7 +24,7 @@ const notifySlack = async (params: { message?: string; error?: Error; directMent
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `<@${SLACK_USERID}>`
+                    text: `<@${config.slack.userId}>`
                 }
             });
         }

@@ -7,7 +7,7 @@ import { AllowedSchema, Validator } from 'express-json-validator-middleware';
 import { auth0middleware } from './libs/middleware/auth0.middleware.js';
 import { errorHandler } from './libs/middleware/errors.middleware.js';
 // import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
-import { isProd } from './packages/config/index.js';
+import { config } from './packages/config/index.js';
 import { loggingHandler } from './libs/middleware/logging.middleware.js';
 import { multipartHandler } from './libs/middleware/multipart.middleware.js';
 import { routes } from './libs/routes/index.js';
@@ -73,7 +73,7 @@ export const initApp = () => {
     const server = app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
     configureServerTimeout(server);
 
-    if (isProd) {
+    if (config.env.isProd) {
         startPeriodicTasks();
     }
 };

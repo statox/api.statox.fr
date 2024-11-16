@@ -1,13 +1,13 @@
-import { ELK_DOMAIN_ENDPOINT, ELK_TOKEN } from '../../../../packages/config/index.js';
+import { config } from '../../../../packages/config/index.js';
 import { LogObject } from '../types.js';
 
 export const logToELK = async (data: LogObject) => {
     try {
-        const ingestURL = ELK_DOMAIN_ENDPOINT + '/api.statox.fr/_doc';
+        const ingestURL = config.elk.domainEndpoint + '/api.statox.fr/_doc';
         await fetch(ingestURL, {
             method: 'POST',
             headers: {
-                Authorization: `Basic ${ELK_TOKEN}`,
+                Authorization: `Basic ${config.elk.token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)

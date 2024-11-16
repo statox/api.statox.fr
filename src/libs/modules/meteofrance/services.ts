@@ -4,7 +4,7 @@ import { slog } from '../logging/index.js';
 import { meteoFranceConnector } from './connector.js';
 import { getStations } from './config.js';
 import { MeteoFranceLogData, Station } from './types.js';
-import { isProd } from '../../../packages/config/index.js';
+import { config } from '../../../packages/config/index.js';
 
 const previousTimestamps: { [stationId: string]: number } = {};
 
@@ -68,7 +68,7 @@ export const doSingleStationCheck = async (station: Station) => {
             });
         }
         failedCalls++;
-        const failureTimeoutMs = isProd ? 5000 : 1;
+        const failureTimeoutMs = config.env.isProd ? 5000 : 1;
         await setTimeout(failureTimeoutMs);
     }
 

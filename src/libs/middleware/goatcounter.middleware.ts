@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 
 // Token is from https://api-statox-fr.goatcounter.com/user/api
-const token = isProd ? process.env.GOATCOUNTER_TOKEN : '';
+const token = config.env.isProd ? process.env.GOATCOUNTER_TOKEN : '';
 const goatCounterUrl = 'https://api-statox-fr.goatcounter.com/api/v0/count';
 
 export const goatCounterHandler = async (req: Request, _res: Response, next: NextFunction) => {
-    if (!isProd) {
+    if (!config.env.isProd) {
         return next();
     }
 

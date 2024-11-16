@@ -1,5 +1,5 @@
 import { Client } from '@elastic/elasticsearch';
-import { ELK_API_ENDPOINT, ELK_API_KEY, isProd, isTests } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate.js';
 import { data_home_tracker_indexTemplate } from './data/data-home-tracker-index-template.js';
 import { logs_meteo_france_indexTemplate } from './data/logs-meteo-france-index-template.js';
@@ -7,18 +7,20 @@ import { populateFakeMeteoFranceLogs } from '../../tools/elk/meteo-france-popula
 
 export let elk: Client;
 
+const { isProd, isTests } = config.env;
+
 if (isProd) {
     elk = new Client({
-        node: ELK_API_ENDPOINT,
+        node: config.elk.apiEndpoint,
         auth: {
-            apiKey: ELK_API_KEY!
+            apiKey: config.elk.apiKey
         }
     });
 } else {
     // It is not possible to generate a fixed API key so instead of trying to
     // get one at docker creation, locally we use a login/password authentication.
     elk = new Client({
-        node: ELK_API_ENDPOINT,
+        node: config.elk.apiEndpoint,
         auth: {
             username: 'elastic',
             password: 'foo'

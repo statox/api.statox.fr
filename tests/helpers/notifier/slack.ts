@@ -1,10 +1,12 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { slackNotifier } from '../../../src/libs/modules/notifier/index.js';
-import { isDebug } from '../../../src/packages/config/index.js';
+import { config } from '../../../src/packages/config/index.js';
 import { TestHelper } from '../TestHelper.js';
 
 let slackStub: sinon.SinonStub;
+
+const { isDebug } = config.env;
 
 const setupNotifierSlackStub = async () => {
     // We might need something more subtle but for now I just want to bypass

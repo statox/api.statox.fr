@@ -1,4 +1,4 @@
-import { isProd } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 import { slackNotifier } from '../modules/notifier/slack.js';
 
@@ -22,7 +22,7 @@ export class PeriodicTask {
 
     start() {
         // Avoid starting all periodic tasks at the app start to spread the load
-        const maxRandomDelayAtStartMin = isProd ? 2 : 0;
+        const maxRandomDelayAtStartMin = config.env.isProd ? 2 : 0;
         const randomDelayAtStartMS = Math.random() * maxRandomDelayAtStartMin * 60 * 1000;
 
         slog.log('periodic-tasks', 'First task run scheduled', {

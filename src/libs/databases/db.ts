@@ -1,12 +1,12 @@
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { slog } from '../modules/logging/index.js';
-import { MYSQL_CONNECTION_URL } from '../../packages/config/index.js';
+import { config } from '../../packages/config/index.js';
 
 export let db: Pool;
 export const initDb = async () => {
     slog.log('app', 'init db');
-    const parsedUrl = url.parse(MYSQL_CONNECTION_URL);
+    const parsedUrl = url.parse(config.mysql.connectionUrl);
 
     if (!parsedUrl) {
         throw new Error('Couldnt parse DB url');

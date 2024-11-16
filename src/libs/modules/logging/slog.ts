@@ -1,6 +1,8 @@
-import { isDebug, isProd, isTests } from '../../../packages/config/index.js';
+import { config } from '../../../packages/config/index.js';
 import { logToELK } from './services/elk.js';
 import { AppLogComponent, LogObject } from './types.js';
+
+const { isProd, isTests, isDebug } = config.env;
 
 type LogFn = (component: AppLogComponent, message: string, data?: LogObject) => void;
 

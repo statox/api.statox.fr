@@ -1,4 +1,4 @@
-import { METEO_FRANCE_API_KEY } from '../../../packages/config/index.js';
+import { config } from '../../../packages/config/index.js';
 import { slog } from '../logging/index.js';
 import { MeteoFranceStationObservation } from './types.js';
 
@@ -18,7 +18,7 @@ const getLatestObservationForHourlyStation = async (stationId: string) => {
     const observationsResponse = await fetch(url, {
         method: 'GET',
         headers: {
-            apikey: `${METEO_FRANCE_API_KEY}`,
+            apikey: `${config.meteofrance.apiKey}`,
             accept: 'application/json'
         }
     });

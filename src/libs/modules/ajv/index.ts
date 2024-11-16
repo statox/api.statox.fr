@@ -1,7 +1,7 @@
 import Ajv from 'ajv';
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from 'json-schema';
 
-type AllowedSchema = JSONSchema4 | JSONSchema6 | JSONSchema7;
+export type AllowedSchema = JSONSchema4 | JSONSchema6 | JSONSchema7;
 
 const ajv = new Ajv.Ajv();
 
@@ -13,7 +13,7 @@ export const validateAgainstJsonSchema = (object: unknown, schema: AllowedSchema
         if (validateFunction.errors?.length) {
             throw validateFunction.errors;
         }
-        throw new Error('Output validation failed without error. This is unexpected');
+        throw new Error('Schema validation failed without error. This is unexpected');
     }
 
     return true;
