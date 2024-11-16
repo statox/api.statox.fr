@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth, claimCheck, InsufficientScopeError } from 'express-oauth2-jwt-bearer';
-import { isProd } from '../config/env.js';
+import { isProd } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 
 const localAuth0 = {

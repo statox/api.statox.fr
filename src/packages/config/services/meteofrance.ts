@@ -1,5 +1,5 @@
 import { isProd } from './env.js';
-import { ConfigError } from './errors.js';
+import { ConfigError } from '../errors.js';
 
 // Token is generated from this page
 // https://portail-api.meteofrance.fr/web/fr/api/DonneesPubliquesObservation

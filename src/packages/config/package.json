@@ -1,0 +1,9 @@
+{
+    "name": "@statox/config",
+    "version": "1.0.0",
+    "description": "Parse and validate the configurations for api.statox.fr",
+    "main": "index.ts",
+    "author": "statox",
+    "license": "MIT",
+    "type": "module"
+}

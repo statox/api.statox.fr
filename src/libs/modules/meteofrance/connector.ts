@@ -1,4 +1,4 @@
-import { METEO_FRANCE_API_KEY } from '../../config/meteofrance.js';
+import { METEO_FRANCE_API_KEY } from '../../../packages/config/index.js';
 import { slog } from '../logging/index.js';
 import { MeteoFranceStationObservation } from './types.js';
 

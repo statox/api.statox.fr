@@ -1,6 +1,5 @@
 import { Client } from '@elastic/elasticsearch';
-import { ELK_API_ENDPOINT, ELK_API_KEY } from '../config/elk.js';
-import { isProd, isTests } from '../config/env.js';
+import { ELK_API_ENDPOINT, ELK_API_KEY, isProd, isTests } from '../../packages/config/index.js';
 import { populateFakeHomeTrackerData } from '../../tools/elk/home-tracker-populate.js';
 import { data_home_tracker_indexTemplate } from './data/data-home-tracker-index-template.js';
 import { logs_meteo_france_indexTemplate } from './data/logs-meteo-france-index-template.js';

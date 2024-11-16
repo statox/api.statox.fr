@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { isProd } from '../config/env.js';
+import { isProd } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 
 // Token is from https://api-statox-fr.goatcounter.com/user/api

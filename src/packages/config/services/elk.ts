@@ -1,5 +1,5 @@
 import { isProd } from './env.js';
-import { ConfigError } from './errors.js';
+import { ConfigError } from '../errors.js';
 
 export const ELK_DOMAIN_ENDPOINT = isProd ? process.env.ELK_DOMAIN_ENDPOINT : 'https://127.0.0.1';
 const LOGGER_USER = isProd ? process.env.LOGGER_USER : 'test';
@@ -14,6 +14,6 @@ if (!ELK_DOMAIN_ENDPOINT || !LOGGER_USER || !LOGGER_PASSWORD) {
     throw new ConfigError('ELK logger');
 }
 
-if (!ELK_DOMAIN_ENDPOINT || !ELK_API_KEY) {
+if (!ELK_API_ENDPOINT || !ELK_API_KEY) {
     throw new ConfigError('ELK api');
 }

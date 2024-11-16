@@ -1,4 +1,4 @@
-import { isDebug, isProd, isTests } from '../../config/env.js';
+import { isDebug, isProd, isTests } from '../../../packages/config/index.js';
 import { logToELK } from './services/elk.js';
 import { AppLogComponent, LogObject } from './types.js';
 

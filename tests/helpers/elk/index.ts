@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { elk, resetDataStreamForTests } from '../../../src/libs/databases/elk.js';
-import { isDebug } from '../../../src/libs/config/env.js';
+import { isDebug } from '../../../src/packages/config/index.js';
 import { assert } from 'chai';
 import { TestHelper } from '../TestHelper.js';
 import { ELKFixture } from './types.js';

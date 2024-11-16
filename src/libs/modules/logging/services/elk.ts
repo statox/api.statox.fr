@@ -1,4 +1,4 @@
-import { ELK_DOMAIN_ENDPOINT, ELK_TOKEN } from '../../../config/elk.js';
+import { ELK_DOMAIN_ENDPOINT, ELK_TOKEN } from '../../../../packages/config/index.js';
 import { LogObject } from '../types.js';
 
 export const logToELK = async (data: LogObject) => {

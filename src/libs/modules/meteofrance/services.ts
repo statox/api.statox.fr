@@ -4,7 +4,7 @@ import { slog } from '../logging/index.js';
 import { meteoFranceConnector } from './connector.js';
 import { getStations } from './config.js';
 import { MeteoFranceLogData, Station } from './types.js';
-import { isProd } from '../../config/env.js';
+import { isProd } from '../../../packages/config/index.js';
 
 const previousTimestamps: { [stationId: string]: number } = {};
 

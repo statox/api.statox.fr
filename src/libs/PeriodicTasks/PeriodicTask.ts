@@ -1,4 +1,4 @@
-import { isProd } from '../config/env.js';
+import { isProd } from '../../packages/config/index.js';
 import { slog } from '../modules/logging/index.js';
 import { slackNotifier } from '../modules/notifier/slack.js';
 

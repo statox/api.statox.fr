@@ -1,7 +1,11 @@
 import { IncomingWebhook } from '@slack/webhook';
-import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../../config/slack.js';
+import {
+    SLACK_USERID,
+    SLACK_WEBHOOK_URL,
+    isProd,
+    isTests
+} from '../../../packages/config/index.js';
 import { slog } from '../logging/index.js';
-import { isProd, isTests } from '../../config/env.js';
 
 const webhook = new IncomingWebhook(SLACK_WEBHOOK_URL);
 

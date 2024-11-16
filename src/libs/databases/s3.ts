@@ -6,11 +6,16 @@ import {
     S3Client
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { isProd, isTests } from '../config/env.js';
+import {
+    R2_ACCESS_KEY_ID,
+    R2_ENDPOINT,
+    R2_SECRET_KEY,
+    isProd,
+    isTests
+} from '../../packages/config/index.js';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
 import { sdkStreamMixin } from '@smithy/util-stream';
 import { Readable } from 'stream';
-import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../config/s3.js';
 
 export let s3Mock: AwsClientStub<S3Client>;
 if (isTests) {

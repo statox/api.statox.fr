@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { randomUUID } from 'crypto';
 import { hrtime } from 'node:process';
 import { LoggableContext, slog } from '../modules/logging/index.js';
-import { isTests } from '../config/env.js';
+import { isTests } from '../../packages/config/index.js';
 
 export const loggingHandler = async (req: Request, res: Response, next: NextFunction) => {
     const path = req.path;

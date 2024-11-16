@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { isDebug, isProd } from '../config/env.js';
+import { isDebug, isProd } from '../../packages/config/index.js';
 import { Route } from '../routes/types.js';
 import { isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
 import { slog } from '../modules/logging/index.js';

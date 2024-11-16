@@ -1,6 +1,6 @@
-import { slog } from '../modules/logging/index.js';
 import { isProd } from './env.js';
-import { ConfigError } from './errors.js';
+import { slog } from '../../../libs/modules/logging/index.js';
+import { ConfigError } from '../errors.js';
 
 export const R2_ACCESS_KEY_ID = isProd ? process.env.R2_ACCESS_KEY_ID : 'test';
 export const R2_SECRET_KEY = isProd ? process.env.R2_SECRET_KEY : 'test';

@@ -1,7 +1,7 @@
 import mysql, { Pool, PoolOptions } from 'mysql2/promise';
 import url from 'url';
 import { slog } from '../modules/logging/index.js';
-import { MYSQL_CONNECTION_URL } from '../config/db.js';
+import { MYSQL_CONNECTION_URL } from '../../packages/config/index.js';
 
 export let db: Pool;
 export const initDb = async () => {
