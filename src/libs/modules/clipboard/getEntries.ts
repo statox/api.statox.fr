@@ -57,7 +57,8 @@ export const getEntriesForStaticView = async () => {
     }
 
     const result: ClipboardEntryForStaticView[] = [];
-    for (const entry of entries) {
+    // Sort to have the newest entries at the top of the list
+    for (const entry of entries.sort((a, b) => b.id - a.id)) {
         let contentIsLink = false;
         try {
             new URL(entry.content);

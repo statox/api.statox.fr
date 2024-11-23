@@ -92,13 +92,13 @@ describe('clipboard/view', () => {
 <body>
 <ul>
     <li>
+        ${publicEntryLink.name}
+        - <a href="${publicEntryLink.content}">${publicEntryLink.content}</a>
+    </li>
+    <li>
         ${publicEntryKey.name}
         - ${publicEntryKey.content}
         - <a href="http.*;GetObject">Download</a>
-    </li>
-    <li>
-        ${publicEntryLink.name}
-        - <a href="${publicEntryLink.content}">${publicEntryLink.content}</a>
     </li>
 </ul>
 </body>
