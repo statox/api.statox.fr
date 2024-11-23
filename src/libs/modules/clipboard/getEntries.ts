@@ -15,15 +15,22 @@ type ClipboardEntry = {
 
 export const getPublicEntries = async () => {
     const [entries] = await db.query(
-        `SELECT * FROM Clipboard
-WHERE isPublic = 1
-AND creationDateUnix + ttl > UNIX_TIMESTAMP()`
+        `SELECT
+            id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
+        FROM Clipboard
+        WHERE isPublic = 1
+        AND creationDateUnix + ttl > UNIX_TIMESTAMP()
+`
     );
     return await enrichEntries(entries as ClipboardEntry[]);
 };
 
 export const getAllEntries = async () => {
-    const [entries] = await db.query(`SELECT * FROM Clipboard`);
+    const [entries] = await db.query(
+        `SELECT
+            id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
+        FROM Clipboard`
+    );
     return await enrichEntries(entries as ClipboardEntry[]);
 };
 
