@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyInput, GetRoute } from '../types.js';
-import { listRecipes } from '../../modules/cookbook/services/listRecipes.js';
+import { listRecipes } from '../../modules/cookbook/index.js';
 
 const handler = async () => {
     const recipes = await listRecipes();

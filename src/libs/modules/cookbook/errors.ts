@@ -10,3 +10,9 @@ export class DuplicateIngredientError extends CustomError {
         super('INGREDIENT_INCLUDED_MORE_THAN_ONCE');
     }
 }
+
+export class RecipeNotFoundError extends CustomError {
+    constructor(readonly id: number) {
+        super('RECIPE_ID_NOT_FOUND');
+    }
+}

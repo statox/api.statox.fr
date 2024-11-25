@@ -14,7 +14,7 @@ import {
     ItemNotFoundError
 } from '../routes/errors.js';
 import { OutputValidationError } from './apiPipeline.middleware.js';
-import { DuplicateIngredientError } from '../modules/cookbook/errors.js';
+import { DuplicateIngredientError, RecipeNotFoundError } from '../modules/cookbook/index.js';
 
 export const errorHandler = async (
     error: Error,
@@ -35,7 +35,8 @@ export const errorHandler = async (
         error instanceof FileOrContentRequiredError ||
         error instanceof EntryAlreadyExistsError ||
         error instanceof ItemNotFoundError ||
-        error instanceof DuplicateIngredientError
+        error instanceof DuplicateIngredientError ||
+        error instanceof RecipeNotFoundError
     ) {
         response.status(400).json({ message: error.message });
         return next();

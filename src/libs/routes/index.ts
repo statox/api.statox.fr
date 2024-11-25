@@ -11,6 +11,7 @@ import { route as Clipboard_getPublicEntries } from './clipboard/getPublicEntrie
 import { route as Clipboard_staticView } from './clipboard/staticView.js';
 import { route as Cookbook_addRecipe } from './cookbook/addRecipe.js';
 import { route as Cookbook_listRecipes } from './cookbook/listRecipes.js';
+import { route as Cookbook_getRecipe } from './cookbook/getRecipe.js';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime.js';
 import { route as HomeTracker_allSensorsWithLatestLog } from './homeTracker/allSensorsWithLatestLog.js';
 import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemerides.js';
@@ -44,6 +45,7 @@ export const routes: {
         Clipboard_staticView,
         Cookbook_addRecipe,
         Cookbook_listRecipes,
+        Cookbook_getRecipe,
         Health_GetRemoteTime,
         HomeTracker_allSensorsWithLatestLog,
         HomeTracker_getEphemerides,
