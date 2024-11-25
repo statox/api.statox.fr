@@ -5,9 +5,8 @@ import { addRecipe } from '../../modules/cookbook/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { name, content, ingredients } = params.input;
-    params.loggableContext.addData('entryName', name);
 
-    await addRecipe({ name, content, ingredients });
+    await addRecipe({ name, content, ingredients }, params.loggableContext);
 };
 
 const inputSchema = {

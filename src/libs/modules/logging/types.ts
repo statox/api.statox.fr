@@ -20,6 +20,10 @@ export type LoggableProperties = {
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
     code?: number;
+    cookbook_duplicateIngredient?: string;
+    cookbook_nbIngredients?: number;
+    cookbook_newRecipeId?: number;
+    cookbook_newRecipeName?: string;
     dataStr?: string;
     delayMs?: number;
     enabled?: boolean;

@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../../src/app.js';
 import { th } from '../../../helpers/index.js';
+import { assert } from 'chai';
 
 describe('cookbook/addRecipe', () => {
     describe('should reject a new recipe', () => {
@@ -23,11 +24,56 @@ describe('cookbook/addRecipe', () => {
                     content: 'V2',
                     ingredients: []
                 })
-                .expect(400);
+                .expect(400)
+                .then((response) => {
+                    assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
+                });
 
             await th.mysql.checkTableLength('Cookbook_Recipe', 1);
+
+            th.slog.checkLog('app', 'access-log', {
+                context: {
+                    cookbook_newRecipeName: 'Carot Cake'
+                }
+            });
+        });
+
+        it('With duplicate ingredients', async () => {
+            await request(app)
+                .post('/cookbook/addRecipe')
+                .set('Accept', 'application/json')
+                .send({
+                    name: 'Carot Cake',
+                    content: 'content',
+                    ingredients: [
+                        {
+                            name: 'carot',
+                            quantity: 1
+                        },
+                        {
+                            name: 'carot',
+                            quantity: 2
+                        }
+                    ]
+                })
+                .expect(400)
+                .then((response) => {
+                    assert.equal(response.text, '{"message":"INGREDIENT_INCLUDED_MORE_THAN_ONCE"}');
+                });
+
+            await th.mysql.checkTableLength('Cookbook_Recipe', 0);
+            await th.mysql.checkTableLength('Cookbook_Ingredient', 0);
+            await th.mysql.checkTableLength('Cookbook_Recipe_Ingredient', 0);
+
+            th.slog.checkLog('app', 'access-log', {
+                context: {
+                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_duplicateIngredient: 'carot'
+                }
+            });
         });
     });
+
     describe('should successfully create a new recipe', () => {
         it('Without ingredients', async () => {
             // This is probably a case we want to forbid in the future
@@ -64,6 +110,14 @@ describe('cookbook/addRecipe', () => {
                         updateDateUnix: th.mysql.aroundNowSec
                     }
                 ]
+            });
+
+            th.slog.checkLog('app', 'access-log', {
+                context: {
+                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_nbIngredients: 0,
+                    cookbook_newRecipeId: 2
+                }
             });
         });
 
@@ -104,6 +158,8 @@ describe('cookbook/addRecipe', () => {
                 })
                 .expect(200);
 
+            await th.mysql.checkTableLength('Cookbook_Recipe', 2);
+
             await th.mysql.checkContains({
                 Cookbook_Recipe: [
                     {
@@ -120,23 +176,32 @@ describe('cookbook/addRecipe', () => {
                         name: 'sugar'
                     },
                     {
-                        id: 2,
+                        // Note that id becomes 3 because the duplicate "sugar" bumps the auto increment key
+                        id: 3,
                         name: 'carot'
                     }
                 ],
                 Cookbook_Recipe_Ingredient: [
                     {
-                        recipeId: 1,
+                        recipeId: 2,
                         ingredientId: 1,
                         quantity: 100,
                         unit: 'g'
                     },
                     {
-                        recipeId: 1,
-                        ingredientId: 2,
+                        recipeId: 2,
+                        ingredientId: 3,
                         quantity: 2
                     }
                 ]
+            });
+
+            th.slog.checkLog('app', 'access-log', {
+                context: {
+                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_nbIngredients: 2,
+                    cookbook_newRecipeId: 2
+                }
             });
         });
     });

@@ -2,6 +2,7 @@ import { OkPacket, QueryError, RowDataPacket } from 'mysql2';
 import { db } from '../../databases/db.js';
 import { ItemAlreadyExistsError } from '../../routes/errors.js';
 import { DuplicateIngredientError } from './errors.js';
+import { LoggableContext } from '../logging/index.js';
 
 interface NewRecipeParams {
     name: string;
@@ -13,15 +14,21 @@ interface NewRecipeParams {
     }[];
 }
 
-export const addRecipe = async (newRecipe: NewRecipeParams) => {
+export const addRecipe = async (newRecipe: NewRecipeParams, logContext: LoggableContext) => {
     const { name, content, ingredients } = newRecipe;
+
+    logContext.addData('cookbook_newRecipeName', name);
 
     const ingredientsName = new Set();
     for (const ingredient of ingredients) {
         if (ingredientsName.has(ingredient.name)) {
+            logContext.addData('cookbook_duplicateIngredient', ingredient.name);
             throw new DuplicateIngredientError(ingredient.name);
         }
+        ingredientsName.add(ingredient.name);
     }
+
+    logContext.addData('cookbook_nbIngredients', ingredients.length);
 
     const conn = await db.getConnection();
 
@@ -38,7 +45,7 @@ VALUES (?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
         );
 
         const newRecipeId = (createdRecipe[0] as OkPacket).insertId!;
-        console.log('Create new recipe with id', newRecipeId);
+        logContext.addData('cookbook_newRecipeId', newRecipeId);
 
         /*
          * For each ingredient, either create it or get its id if it already exists
@@ -48,7 +55,7 @@ VALUES (?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
             const createdIngredient = await conn.query(
                 `
 INSERT INTO Cookbook_Ingredient (name) VALUES (?)
-ON DUPLICATE KEY UPDATE name = VALUES(name);
+ON DUPLICATE KEY UPDATE id = id
 `,
                 [ingredient.name]
             );
