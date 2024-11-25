@@ -9,6 +9,7 @@ import { route as Clipboard_deleteEntry } from './clipboard/deleteEntry.js';
 import { route as Clipboard_geAllEntries } from './clipboard/getAllEntries.js';
 import { route as Clipboard_getPublicEntries } from './clipboard/getPublicEntries.js';
 import { route as Clipboard_staticView } from './clipboard/staticView.js';
+import { route as Cookbook_addRecipe } from './cookbook/addRecipe.js';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime.js';
 import { route as HomeTracker_allSensorsWithLatestLog } from './homeTracker/allSensorsWithLatestLog.js';
 import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemerides.js';
@@ -40,6 +41,7 @@ export const routes: {
         Clipboard_geAllEntries,
         Clipboard_getPublicEntries,
         Clipboard_staticView,
+        Cookbook_addRecipe,
         Health_GetRemoteTime,
         HomeTracker_allSensorsWithLatestLog,
         HomeTracker_getEphemerides,
