@@ -89,7 +89,7 @@ export const configSchema = {
                 },
                 endpoint: {
                     type: 'string',
-                    pattern: '^https://.+'
+                    pattern: '^https?://.+'
                 }
             }
         },
@@ -105,7 +105,7 @@ export const configSchema = {
                 },
                 webhookUrl: {
                     type: 'string',
-                    pattern: '^https://.+'
+                    pattern: '^https?://.+'
                 }
             }
         }
