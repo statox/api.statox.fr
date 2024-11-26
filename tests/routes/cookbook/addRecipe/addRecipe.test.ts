@@ -2,19 +2,12 @@ import request from 'supertest';
 import { app } from '../../../../src/app.js';
 import { th } from '../../../helpers/index.js';
 import { assert } from 'chai';
+import { cookbookFixture } from '../cookbook_fixtures.js';
 
 describe('cookbook/addRecipe', () => {
     describe('should reject a new recipe', () => {
         it('With identical name', async () => {
-            await request(app)
-                .post('/cookbook/addRecipe')
-                .set('Accept', 'application/json')
-                .send({
-                    name: 'Carot Cake',
-                    content: 'V1',
-                    ingredients: []
-                })
-                .expect(200);
+            await th.mysql.fixture(cookbookFixture);
 
             await request(app)
                 .post('/cookbook/addRecipe')
@@ -29,7 +22,7 @@ describe('cookbook/addRecipe', () => {
                     assert.equal(response.text, '{"message":"ITEM_ALREADY_EXISTS"}');
                 });
 
-            await th.mysql.checkTableLength('Cookbook_Recipe', 1);
+            await th.mysql.checkTableLength('Cookbook_Recipe', 3);
 
             th.slog.checkLog('app', 'access-log', {
                 context: {
@@ -39,11 +32,13 @@ describe('cookbook/addRecipe', () => {
         });
 
         it('With duplicate ingredients', async () => {
+            await th.mysql.fixture(cookbookFixture);
+
             await request(app)
                 .post('/cookbook/addRecipe')
                 .set('Accept', 'application/json')
                 .send({
-                    name: 'Carot Cake',
+                    name: 'New recipe',
                     content: 'content',
                     ingredients: [
                         {
@@ -61,13 +56,13 @@ describe('cookbook/addRecipe', () => {
                     assert.equal(response.text, '{"message":"INGREDIENT_INCLUDED_MORE_THAN_ONCE"}');
                 });
 
-            await th.mysql.checkTableLength('Cookbook_Recipe', 0);
-            await th.mysql.checkTableLength('Cookbook_Ingredient', 0);
-            await th.mysql.checkTableLength('Cookbook_Recipe_Ingredient', 0);
+            await th.mysql.checkTableLength('Cookbook_Recipe', 3);
+            await th.mysql.checkTableLength('Cookbook_Ingredient', 3);
+            await th.mysql.checkTableLength('Cookbook_Recipe_Ingredient', 4);
 
             th.slog.checkLog('app', 'access-log', {
                 context: {
-                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_newRecipeName: 'New recipe',
                     cookbook_duplicateIngredient: 'carot'
                 }
             });
@@ -78,23 +73,13 @@ describe('cookbook/addRecipe', () => {
         it('Without ingredients', async () => {
             // This is probably a case we want to forbid in the future
 
-            await th.mysql.fixture({
-                Cookbook_Recipe: [
-                    {
-                        id: 1,
-                        name: 'foo',
-                        content: 'bar',
-                        creationDateUnix: 0,
-                        updateDateUnix: 0
-                    }
-                ]
-            });
+            await th.mysql.fixture(cookbookFixture);
 
             await request(app)
                 .post('/cookbook/addRecipe')
                 .set('Accept', 'application/json')
                 .send({
-                    name: 'Carot Cake',
+                    name: 'New recipe',
                     content: 'The text of the recipe, potentially much longer than that',
                     ingredients: []
                 })
@@ -103,8 +88,8 @@ describe('cookbook/addRecipe', () => {
             await th.mysql.checkContains({
                 Cookbook_Recipe: [
                     {
-                        id: 2,
-                        name: 'Carot Cake',
+                        id: 4,
+                        name: 'New recipe',
                         content: 'The text of the recipe, potentially much longer than that',
                         creationDateUnix: th.mysql.aroundNowSec,
                         updateDateUnix: th.mysql.aroundNowSec
@@ -114,35 +99,21 @@ describe('cookbook/addRecipe', () => {
 
             th.slog.checkLog('app', 'access-log', {
                 context: {
-                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_newRecipeName: 'New recipe',
                     cookbook_nbIngredients: 0,
-                    cookbook_newRecipeId: 2
+                    cookbook_newRecipeId: 4
                 }
             });
         });
 
         it('With a mix of new and existing ingredients', async () => {
-            await th.mysql.fixture({
-                Cookbook_Recipe: [
-                    {
-                        name: 'foo',
-                        content: 'bar',
-                        creationDateUnix: 0,
-                        updateDateUnix: 0
-                    }
-                ],
-                Cookbook_Ingredient: [
-                    {
-                        name: 'sugar'
-                    }
-                ]
-            });
+            await th.mysql.fixture(cookbookFixture);
 
             await request(app)
                 .post('/cookbook/addRecipe')
                 .set('Accept', 'application/json')
                 .send({
-                    name: 'Carot Cake',
+                    name: 'New recipe',
                     content: 'The text of the recipe, potentially much longer than that',
                     ingredients: [
                         {
@@ -151,20 +122,20 @@ describe('cookbook/addRecipe', () => {
                             unit: 'g'
                         },
                         {
-                            name: 'carot',
+                            name: 'new ingredient',
                             quantity: 2
                         }
                     ]
                 })
                 .expect(200);
 
-            await th.mysql.checkTableLength('Cookbook_Recipe', 2);
+            await th.mysql.checkTableLength('Cookbook_Recipe', 4);
 
             await th.mysql.checkContains({
                 Cookbook_Recipe: [
                     {
-                        id: 2,
-                        name: 'Carot Cake',
+                        id: 4,
+                        name: 'New recipe',
                         content: 'The text of the recipe, potentially much longer than that',
                         creationDateUnix: th.mysql.aroundNowSec,
                         updateDateUnix: th.mysql.aroundNowSec
@@ -172,25 +143,25 @@ describe('cookbook/addRecipe', () => {
                 ],
                 Cookbook_Ingredient: [
                     {
-                        id: 1,
+                        id: 2,
                         name: 'sugar'
                     },
                     {
                         // Note that id becomes 3 because the duplicate "sugar" bumps the auto increment key
-                        id: 3,
-                        name: 'carot'
+                        id: 5,
+                        name: 'new ingredient'
                     }
                 ],
                 Cookbook_Recipe_Ingredient: [
                     {
-                        recipeId: 2,
-                        ingredientId: 1,
+                        recipeId: 4,
+                        ingredientId: 2,
                         quantity: 100,
                         unit: 'g'
                     },
                     {
-                        recipeId: 2,
-                        ingredientId: 3,
+                        recipeId: 4,
+                        ingredientId: 5,
                         quantity: 2
                     }
                 ]
@@ -198,9 +169,9 @@ describe('cookbook/addRecipe', () => {
 
             th.slog.checkLog('app', 'access-log', {
                 context: {
-                    cookbook_newRecipeName: 'Carot Cake',
+                    cookbook_newRecipeName: 'New recipe',
                     cookbook_nbIngredients: 2,
-                    cookbook_newRecipeId: 2
+                    cookbook_newRecipeId: 4
                 }
             });
         });
