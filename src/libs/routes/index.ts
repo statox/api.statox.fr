@@ -10,15 +10,16 @@ import { route as Clipboard_geAllEntries } from './clipboard/getAllEntries.js';
 import { route as Clipboard_getPublicEntries } from './clipboard/getPublicEntries.js';
 import { route as Clipboard_staticView } from './clipboard/staticView.js';
 import { route as Cookbook_addRecipe } from './cookbook/addRecipe.js';
+import { route as Cookbook_getRecipe } from './cookbook/getRecipe.js';
 import { route as Cookbook_listIngredients } from './cookbook/listIngredients.js';
 import { route as Cookbook_listRecipes } from './cookbook/listRecipes.js';
-import { route as Cookbook_getRecipe } from './cookbook/getRecipe.js';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime.js';
 import { route as HomeTracker_allSensorsWithLatestLog } from './homeTracker/allSensorsWithLatestLog.js';
 import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemerides.js';
 import { route as HomeTracker_getWeatherForecast } from './homeTracker/getWeatherForecast.js';
 import { route as HomeTracker_histogramData } from './homeTracker/histogramData.js';
 import { route as HomeTracker_upload } from './homeTracker/upload.js';
+import { route as PersonalTracker_Upload } from './personalTracker/upload.js';
 import { route as Reactor_addEntry } from './reactor/addEntry.js';
 import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic.js';
 import { route as Reactor_getEntry } from './reactor/getEntry.js';
@@ -45,15 +46,16 @@ export const routes: {
         Clipboard_getPublicEntries,
         Clipboard_staticView,
         Cookbook_addRecipe,
+        Cookbook_getRecipe,
         Cookbook_listIngredients,
         Cookbook_listRecipes,
-        Cookbook_getRecipe,
         Health_GetRemoteTime,
         HomeTracker_allSensorsWithLatestLog,
         HomeTracker_getEphemerides,
         HomeTracker_getWeatherForecast,
         HomeTracker_histogramData,
         HomeTracker_upload,
+        PersonalTracker_Upload,
         Reactor_addEntry,
         Reactor_getEntriesForPublic,
         Reactor_getEntry,
