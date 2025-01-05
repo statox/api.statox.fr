@@ -16,8 +16,8 @@ describe('/homeTracker/getEphemerides', () => {
             .then((response) => {
                 const { ephemerides } = response.body;
                 assert.deepEqual(ephemerides, {
-                    lunarAge: 16.373701132359034,
-                    lunarAgePercent: 0.5544658066241368,
+                    lunarAge: 16.332034465381327,
+                    lunarAgePercent: 0.5530548402257409,
                     moonPhase: 'Full',
                     moonPhaseFr: 'Pleine lune',
                     moonVisibilityWindow: ['18:00', '06:00'],

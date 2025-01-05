@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import mustacheExpress from 'mustache-express';
+import { DateTime } from 'luxon';
 import { Socket } from 'net';
 import { Server } from 'http';
 import { AllowedSchema, Validator } from 'express-json-validator-middleware';
@@ -21,15 +22,21 @@ export let app: express.Express;
 
 const PORT = process.env.PORT || 3000;
 
-export const initApp = () => {
-    console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-    console.log('IN INIT APP');
+const isUTC = () => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    console.log(`Current Timezone: ${timezone}`);
-    console.log(`Environment Timezone (TZ): ${process.env.TZ || 'Not set'}`);
+    const luzonTZ = DateTime.now().zoneName;
     const offset = new Date().getTimezoneOffset(); // in minutes
-    console.log(`Timezone Offset: ${offset} minutes from UTC`);
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+
+    return timezone === 'UTC' && luzonTZ === 'UTC' && offset === 0;
+};
+
+export const initApp = () => {
+    if (!isUTC()) {
+        console.log('Time is not UTC. Dont start the app.');
+        slog.log('app', 'Time is not UTC. Dont start the app.');
+        process.exit(1);
+    }
+
     slog.log('app', 'init app');
     app = express();
     app.use(
