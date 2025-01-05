@@ -22,6 +22,14 @@ export let app: express.Express;
 const PORT = process.env.PORT || 3000;
 
 export const initApp = () => {
+    console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
+    console.log('IN INIT APP');
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    console.log(`Current Timezone: ${timezone}`);
+    console.log(`Environment Timezone (TZ): ${process.env.TZ || 'Not set'}`);
+    const offset = new Date().getTimezoneOffset(); // in minutes
+    console.log(`Timezone Offset: ${offset} minutes from UTC`);
+    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
     slog.log('app', 'init app');
     app = express();
     app.use(
