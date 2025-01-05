@@ -106,9 +106,6 @@ jobs:
       - name: Init elk
         run: ./src/tools/init-elk.sh
 
-      - name: Run Debug tests
-        run: debug=true npm run tests:all
-
       - name: Run tests
         run: npm run tests:ci
 

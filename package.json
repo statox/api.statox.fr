@@ -22,12 +22,12 @@
         "postinstall": "tsc",
         "env": "./src/tools/containers-env.sh up",
         "env:stop": "./src/tools/containers-env.sh down",
-        "serve": "nodemon dist/index.js",
+        "serve": "TZ=UTC nodemon dist/index.js",
         "watch": "rm -fr dist/ && tsc -w",
-        "tests": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/routes.json",
+        "tests": "src/tools/init-db.sh --tests && TZ=UTC PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/routes.json",
         "tests:all": "npm run tests:packages && npm run tests:framework && npm run tests",
         "tests:ci": "npm run tests:packages -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=packages.json' && npm run tests:framework -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=framework.json' && npm run tests -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=tests.json'",
-        "tests:framework": "PORT=3001 ENV=tests src/tools/init-db.sh --tests && PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json",
+        "tests:framework": "src/tools/init-db.sh --tests && TZ=UTC PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json",
         "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json"
     },
     "dependencies": {
