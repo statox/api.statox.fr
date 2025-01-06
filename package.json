@@ -76,7 +76,7 @@
         "github-actions-ctrf": "^0.0.54",
         "globals": "^15.14.0",
         "json-schema-to-ts": "^3.1.1",
-        "mocha": "^10.7.3",
+        "mocha": "^11.0.1",
         "mocha-ctrf-json-reporter": "^0.0.6",
         "nodemon": "^3.1.9",
         "prettier": "^3.4.2",
