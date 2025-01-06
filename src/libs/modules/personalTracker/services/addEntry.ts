@@ -1,15 +1,13 @@
 import { db } from '../../../databases/db.js';
+import { PersonalEvent } from '../types.js';
 
-type NewEntryParams = {
-    eventType: string;
-    eventValue?: number;
-};
-
-export const addEntry = async (newEntry: NewEntryParams) => {
-    const { eventType, eventValue } = newEntry;
+export const addEntry = async (event: PersonalEvent) => {
+    const { timestampUTC, type, value } = event;
 
     await db.query(
-        `INSERT INTO PersonalTracker (type, value, eventDateUnix) VALUES (?, ?, UNIX_TIMESTAMP())`,
-        [eventType, eventValue]
+        `INSERT INTO PersonalTracker (type, value, eventDateUnix)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE value = ?`,
+        [type, value, timestampUTC, value]
     );
 };

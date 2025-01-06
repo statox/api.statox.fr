@@ -4,24 +4,36 @@ import { emptyObjectSchema } from '../helpers.js';
 import { addEntry } from '../../modules/personalTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
-    params.loggableContext.addData('eventType', params.input.eventType);
-    params.loggableContext.addData('eventValue', params.input.eventValue);
+    params.loggableContext.addData('eventTS', params.input.event.timestampUTC);
+    params.loggableContext.addData('eventType', params.input.event.type);
+    params.loggableContext.addData('eventValue', params.input.event.value);
 
-    await addEntry(params.input);
+    await addEntry(params.input.event);
 };
 
 const inputSchema = {
     type: 'object',
-    required: ['eventType'],
+    required: ['event'],
     additionalProperties: false,
     properties: {
-        eventType: {
-            description: 'Event type',
-            type: 'string'
-        },
-        eventValue: {
-            description: 'The value associated with the event',
-            type: 'number'
+        event: {
+            type: 'object',
+            required: ['timestampUTC', 'type', 'value'],
+            additionalProperties: false,
+            properties: {
+                timestampUTC: {
+                    description: 'The date of the event in seconds in UTC',
+                    type: 'number'
+                },
+                type: {
+                    description: 'Event type',
+                    type: 'string'
+                },
+                value: {
+                    description: 'The value associated with the event',
+                    type: 'number'
+                }
+            }
         }
     }
 } as const;

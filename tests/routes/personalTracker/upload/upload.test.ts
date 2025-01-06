@@ -8,8 +8,11 @@ describe('personalTracker/upload', () => {
             .post('/personalTracker/upload')
             .set('Accept', 'application/json')
             .send({
-                eventType: 'weight',
-                eventValue: 800
+                event: {
+                    timestampUTC: 1736186137,
+                    type: 'weight',
+                    value: 800
+                }
             })
             .expect(200);
 
@@ -17,17 +20,62 @@ describe('personalTracker/upload', () => {
             PersonalTracker: [
                 {
                     id: 1,
+                    eventDateUnix: 1736186137,
                     type: 'weight',
-                    value: 800,
-                    eventDateUnix: th.mysql.aroundNowSec
+                    value: 800
                 }
             ]
         });
 
         th.slog.checkLog('app', 'access-log', {
             context: {
+                eventTS: 1736186137,
                 eventType: 'weight',
                 eventValue: 800
+            }
+        });
+    });
+
+    it('Should update an event value if same type at same TS exists', async () => {
+        await th.mysql.fixture({
+            PersonalTracker: [
+                {
+                    id: 1,
+                    eventDateUnix: 1736186137,
+                    type: 'weight',
+                    value: 800
+                }
+            ]
+        });
+
+        await request(app)
+            .post('/personalTracker/upload')
+            .set('Accept', 'application/json')
+            .send({
+                event: {
+                    timestampUTC: 1736186137,
+                    type: 'weight',
+                    value: 900
+                }
+            })
+            .expect(200);
+
+        await th.mysql.checkContains({
+            PersonalTracker: [
+                {
+                    id: 1,
+                    eventDateUnix: 1736186137,
+                    type: 'weight',
+                    value: 900
+                }
+            ]
+        });
+
+        th.slog.checkLog('app', 'access-log', {
+            context: {
+                eventTS: 1736186137,
+                eventType: 'weight',
+                eventValue: 900
             }
         });
     });
