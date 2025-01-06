@@ -19,6 +19,7 @@ import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemeride
 import { route as HomeTracker_getWeatherForecast } from './homeTracker/getWeatherForecast.js';
 import { route as HomeTracker_histogramData } from './homeTracker/histogramData.js';
 import { route as HomeTracker_upload } from './homeTracker/upload.js';
+import { route as PersonalTracker_GetAll } from './personalTracker/getAll.js';
 import { route as PersonalTracker_Upload } from './personalTracker/upload.js';
 import { route as Reactor_addEntry } from './reactor/addEntry.js';
 import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic.js';
@@ -55,6 +56,7 @@ export const routes: {
         HomeTracker_getWeatherForecast,
         HomeTracker_histogramData,
         HomeTracker_upload,
+        PersonalTracker_GetAll,
         PersonalTracker_Upload,
         Reactor_addEntry,
         Reactor_getEntriesForPublic,
