@@ -1,7 +1,6 @@
 import jsdom from 'jsdom';
 import { db } from '../../databases/db.js';
 import { slog } from '../logging/index.js';
-import { slackNotifier } from '../notifier/slack.js';
 import { createHash } from 'node:crypto';
 import {
     CSSWatchedContent,
@@ -11,6 +10,7 @@ import {
     WatchedContent
 } from './types.js';
 import { getEnabledWatchedContent } from './watchers.js';
+import { pushNotifier, slackNotifier } from '../notifier/index.js';
 
 const { JSDOM } = jsdom;
 
@@ -26,9 +26,14 @@ const recordContentChanged = async (params: {
         status: newContent,
         previousStatus: previousContent
     });
+
     slackNotifier.notifySlack({
         message: c.name + ' - ' + c.notificationMessage,
         directMention: true
+    });
+    pushNotifier.notify({
+        title: 'Web Watcher',
+        message: c.name + ' - ' + c.notificationMessage
     });
 
     return db.query(

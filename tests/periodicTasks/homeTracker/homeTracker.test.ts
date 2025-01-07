@@ -3,7 +3,7 @@ import { doHomeTrackerMonitoring } from '../../../src/libs/modules/homeTracker/i
 import { th } from '../../helpers/index.js';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
-    it('Should create a notification for missing sensor data, and should notify only once', async () => {
+    it('Should create slack and push notifications for missing sensor data, and should notify only once', async () => {
         await th.elk.flush();
         await th.elk.fixture({
             'data-home-tracker': [
@@ -79,8 +79,19 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
         });
         th.slack.checkNbNotifications(2);
 
+        th.push.checkNotification({
+            title: 'Home Tracker',
+            message: 'Missing home tracker data for sensor jardiniere'
+        });
+        th.push.checkNotification({
+            title: 'Home Tracker',
+            message: 'Missing home tracker data for sensor sdb'
+        });
+        th.push.checkNbNotifications(2);
+
         // On second call we shouldn't create another notification for the failing sensor
         await doHomeTrackerMonitoring();
         th.slack.checkNbNotifications(2);
+        th.push.checkNbNotifications(2);
     });
 });

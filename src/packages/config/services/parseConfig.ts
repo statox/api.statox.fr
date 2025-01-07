@@ -7,6 +7,7 @@ import { isDebug, isProd, isTests } from '../sources/env.js';
 import { METEO_FRANCE_API_KEY } from '../sources/meteofrance.js';
 import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../sources/r2.js';
 import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../sources/slack.js';
+import { NTFY_SH_URL } from '../sources/ntfy_sh.js';
 
 export const config: Config = {
     mysql: {
@@ -22,6 +23,9 @@ export const config: Config = {
         isProd: isProd,
         isTests: isTests,
         isDebug: isDebug
+    },
+    ntfy_sh: {
+        topicUrl: NTFY_SH_URL
     },
     meteofrance: {
         apiKey: METEO_FRANCE_API_KEY

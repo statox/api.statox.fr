@@ -1,7 +1,7 @@
 export const configSchema = {
     type: 'object',
     additionalProperties: false,
-    required: ['mysql', 'elk', 'env', 'meteofrance', 'r2', 'slack'],
+    required: ['mysql', 'elk', 'env', 'ntfy_sh', 'meteofrance', 'r2', 'slack'],
     properties: {
         mysql: {
             type: 'object',
@@ -58,6 +58,18 @@ export const configSchema = {
                     description:
                         'Should be set to true only when running tests and more details is needed',
                     type: 'boolean'
+                }
+            }
+        },
+        ntfy_sh: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['topicUrl'],
+            properties: {
+                topicUrl: {
+                    description: 'The topic url to send push notifications via nfty.sh',
+                    type: 'string',
+                    minLength: 2
                 }
             }
         },

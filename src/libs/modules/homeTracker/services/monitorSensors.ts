@@ -1,5 +1,5 @@
 import { elk } from '../../../databases/elk.js';
-import { slackNotifier } from '../../notifier/slack.js';
+import { pushNotifier, slackNotifier } from '../../notifier/index.js';
 import { monitoredSensorNames } from '../config.js';
 
 const missingSensorLogs_alertedSensors = new Set();
@@ -40,6 +40,10 @@ export const doHomeTrackerMonitoring = async () => {
                 await slackNotifier.notifySlack({
                     message: 'Missing home tracker data for sensor ' + sensorName,
                     directMention: true
+                });
+                await pushNotifier.notify({
+                    title: 'Home Tracker',
+                    message: 'Missing home tracker data for sensor ' + sensorName
                 });
                 missingSensorLogs_alertedSensors.add(sensorName);
             }

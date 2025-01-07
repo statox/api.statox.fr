@@ -94,6 +94,15 @@ describe('periodic task - webWatcher', () => {
             message: 'Web check 2 - Has changed',
             directMention: true
         });
+
+        th.push.checkNotification({
+            title: 'Web Watcher',
+            message: 'Web check 1 - Has changed'
+        });
+        th.push.checkNotification({
+            title: 'Web Watcher',
+            message: 'Web check 2 - Has changed'
+        });
     });
 
     it('should detect a change, notify and record the change - for HASH Watchers', async () => {
@@ -170,6 +179,15 @@ describe('periodic task - webWatcher', () => {
             message: 'Hash check 2 - Has changed',
             directMention: true
         });
+
+        th.push.checkNotification({
+            title: 'Web Watcher',
+            message: 'Hash check 1 - Has changed'
+        });
+        th.push.checkNotification({
+            title: 'Web Watcher',
+            message: 'Hash check 2 - Has changed'
+        });
     });
 
     it('should respect the check interval and not check too often', async () => {
@@ -213,6 +231,7 @@ describe('periodic task - webWatcher', () => {
             ]
         });
         th.slack.checkNoNotifications();
+        th.push.checkNoNotifications();
     });
 
     it('should not run disabled checks', async () => {
@@ -258,6 +277,7 @@ describe('periodic task - webWatcher', () => {
         });
 
         th.slack.checkNoNotifications();
+        th.push.checkNoNotifications();
     });
 
     it('should update last check time even when no changed happened in the page', async () => {
@@ -304,6 +324,7 @@ describe('periodic task - webWatcher', () => {
         });
 
         th.slack.checkNoNotifications();
+        th.push.checkNoNotifications();
     });
 
     it('should update error date and message when failure happens', async () => {

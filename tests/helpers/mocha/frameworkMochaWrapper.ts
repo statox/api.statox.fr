@@ -3,6 +3,7 @@ import { initDb } from '../../../src/libs/databases/db.js';
 import { testHelper_App } from '../app/index.js';
 import { testHelper_Auth } from '../auth/index.js';
 import { testHelper_Mysql } from '../mysql/index.js';
+import { testHelper_PushNotifier } from '../notifier/push.js';
 import { testHelper_S3 } from '../s3/index.js';
 import { testHelper_SlackNotifier } from '../notifier/slack.js';
 import { testHelper_Slog } from '../slog/index.js';
@@ -12,6 +13,7 @@ const helpers: TestHelper[] = [
     testHelper_Auth,
     testHelper_App,
     testHelper_SlackNotifier,
+    testHelper_PushNotifier,
     testHelper_S3,
     testHelper_Slog
 ];

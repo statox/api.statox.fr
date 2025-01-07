@@ -5,6 +5,7 @@ import { initELK } from '../../../src/libs/databases/elk.js';
 import { testHelper_Auth } from '../auth/index.js';
 import { testHelper_ELK } from '../elk/index.js';
 import { testHelper_Mysql } from '../mysql/index.js';
+import { testHelper_PushNotifier } from '../notifier/push.js';
 import { testHelper_S3 } from '../s3/index.js';
 import { testHelper_SlackNotifier } from '../notifier/slack.js';
 import { testHelper_Slog } from '../slog/index.js';
@@ -17,6 +18,7 @@ const helpers: TestHelper[] = [
     testHelper_Mysql,
     testHelper_Auth,
     testHelper_SlackNotifier,
+    testHelper_PushNotifier,
     testHelper_S3,
     testHelper_Slog,
     testHelper_ELK
