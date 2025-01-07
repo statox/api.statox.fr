@@ -11,7 +11,6 @@ const start = async () => {
     await initELK();
     initApp();
     slog.log('app', 'App started');
-    slackNotifier.notifySlack({ message: 'App started' });
 };
 
 start();
@@ -20,7 +19,6 @@ start();
 const shutdown = (signal: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin) => {
     return (error: Error) => {
         slog.log('app', 'App will shutdown', { shutdownOrigin: signal, error });
-        slackNotifier.notifySlack({ message: 'App will shutdown' });
 
         if (error) {
             slackNotifier.notifySlack({ message: 'Shutdown because of error', error });
