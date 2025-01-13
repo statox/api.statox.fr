@@ -52,7 +52,7 @@
     "devDependencies": {
         "@eslint/eslintrc": "^3.2.0",
         "@eslint/js": "^9.17.0",
-        "@smithy/util-stream": "^3.1.2",
+        "@smithy/util-stream": "^4.0.1",
         "@types/chai": "^5.0.1",
         "@types/cors": "^2.8.17",
         "@types/eslint__eslintrc": "^2.1.2",
