@@ -42,7 +42,7 @@
         "express-json-validator-middleware": "^3.0.1",
         "express-oauth2-jwt-bearer": "^1.1.0",
         "formidable": "^3.5.2",
-        "jsdom": "^25.0.1",
+        "jsdom": "^26.0.0",
         "lunarphase-js": "^2.0.3",
         "luxon": "^3.5.0",
         "mime-types": "^2.1.35",
