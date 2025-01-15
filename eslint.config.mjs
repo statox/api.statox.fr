@@ -35,11 +35,11 @@ export default [
         },
 
         rules: {
-            // Don't check if the error of try...catch blocks are used
+            // Avoid error if the error of try...catch blocks are used but are named _something
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {
-                    caughtErrors: 'none'
+                    caughtErrorsIgnorePattern: '^_'
                 }
             ]
         }
