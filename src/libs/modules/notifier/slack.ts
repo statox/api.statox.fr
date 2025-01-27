@@ -14,7 +14,10 @@ const notifySlack = async (params: { message?: string; error?: Error; directMent
         }
 
         if (!isTests && !isProd) {
-            console.log('SLACK NOTIFICATION', { directMention, message, error });
+            console.log('===== NEW SLACK NOTIFICATION =====');
+            console.log({ directMention });
+            console.log({ message, error });
+            return;
         }
 
         const blocks = [];
