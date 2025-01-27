@@ -109,7 +109,7 @@ export const initLocalStackS3 = async () => {
         return;
     }
 
-    console.log('init localstack s3');
+    console.log('S3 init - Check buckets to create');
     const listResponse = await S3.send(new ListBucketsCommand({}));
     const existingBuckets = listResponse.Buckets || [];
 
@@ -118,18 +118,16 @@ export const initLocalStackS3 = async () => {
     );
 
     for (const bucket of bucketsNotCreated) {
-        console.log('Create bucket', bucket);
+        console.log('S3 init - Create bucket', bucket);
         await S3.send(new CreateBucketCommand({ Bucket: bucket }));
     }
 
     for (const file of requiredFiles) {
-        const stream = new Readable();
-        stream.push(file.body);
-        stream.push(null);
+        console.log('S3 init - Create required file', `${file.bucket}/${file.key}`);
         const cmd = new PutObjectCommand({
             Bucket: file.bucket,
             Key: file.key,
-            Body: sdkStreamMixin(stream)
+            Body: Buffer.from(file.body)
         });
         await S3.send(cmd);
     }
