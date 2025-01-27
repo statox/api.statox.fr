@@ -8,8 +8,6 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { config } from '../../packages/config/index.js';
 import { AwsClientStub, mockClient } from 'aws-sdk-client-mock';
-import { sdkStreamMixin } from '@smithy/util-stream';
-import { Readable } from 'stream';
 
 const { isProd, isTests } = config.env;
 
