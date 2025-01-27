@@ -34,6 +34,7 @@ export const addEntry = async (params: AddReadingListItemParams) => {
     }
 
     const conn = await db.getConnection();
+    conn.beginTransaction();
     try {
         await conn.query(
             `

@@ -44,6 +44,27 @@ describe('reactor/addEntry', () => {
         th.s3.checkNbCalls({ nbCalls: 0 });
     });
 
+    it('Failing S3 command should not commit changes in the DB', async () => {
+        await th.mysql.fixture({
+            Reactor: []
+        });
+
+        await request(app)
+            .post('/reactor/addEntry')
+            .set('content-type', 'multipart/form-data')
+            .field('name', 'should_fail')
+            .field('commaSeparatedTags', 'tag1,tag2')
+            .attach('file', 'tests/assets/glider.png')
+            .expect(500)
+            .then((response) => {
+                assert.equal(response.text, '{"message":"Internal Server Error"}');
+            });
+
+        th.s3.checkNbCalls({ nbCalls: 1 });
+        await th.mysql.checkTableLength('Reactor', 0);
+        await th.mysql.checkTableLength('S3Files', 0);
+    });
+
     it('should create new entry and upload the file to S3', async () => {
         await request(app)
             .post('/reactor/addEntry')

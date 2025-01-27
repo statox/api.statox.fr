@@ -1,7 +1,11 @@
 import sinon from 'sinon';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+    DeleteObjectCommand,
+    GetObjectCommand,
+    PutObjectCommand,
+    PutObjectCommandInput
+} from '@aws-sdk/client-s3';
 import { assert } from 'chai';
-// import 'aws-sdk-client-mock-jest'; // TODO commented when trying to migrate to ESM, what is it used for?
 import { s3Mock } from '../../../src/libs/databases/s3.js';
 import { TestHelper } from '../TestHelper.js';
 
@@ -12,6 +16,18 @@ class TestHelper_S3 extends TestHelper {
             hooks: {
                 beforeEach: async () => {
                     s3Mock.reset();
+
+                    // TODO See if we want to have a finer way to fail calls to S3
+                    // For now any call with a key containing should_fail will fail
+                    s3Mock
+                        .on(
+                            PutObjectCommand,
+                            // @ts-expect-error looks like .on is not typed to expect a matcher even if it works
+                            (params: Partial<PutObjectCommandInput>) => {
+                                return params.Key?.includes('should_fail');
+                            }
+                        )
+                        .rejects(new Error('Simulated failure'));
                 }
             }
         });

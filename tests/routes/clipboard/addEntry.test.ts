@@ -97,6 +97,28 @@ describe('clipboard/addEntry', () => {
             th.s3.checkNbCalls({ nbCalls: 0 });
             await th.mysql.checkTableLength('S3Files', 0);
         });
+
+        it('Failing S3 command should not commit changes in the DB', async () => {
+            const buffer = Buffer.from('some data');
+            await th.mysql.fixture({
+                Clipboard: []
+            });
+
+            await request(app)
+                .post('/clipboard/addEntry')
+                .set('content-type', 'multipart/form-data')
+                .field('name', 'should_fail')
+                .field('content', 'entry content')
+                .attach('file', buffer)
+                .expect(500)
+                .then((response) => {
+                    assert.equal(response.text, '{"message":"Internal Server Error"}');
+                });
+
+            th.s3.checkNbCalls({ nbCalls: 1 });
+            await th.mysql.checkTableLength('Clipboard', 0);
+            await th.mysql.checkTableLength('S3Files', 0);
+        });
     });
 
     describe('should successfully create a new entry', () => {
