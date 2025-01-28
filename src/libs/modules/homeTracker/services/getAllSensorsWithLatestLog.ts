@@ -13,6 +13,13 @@ const colorsOfKnownSensors: {
 } = {
     'dev-jardiniere': { r: 0, g: 140, b: 0 },
     'dev-salon': { r: 140, g: 0, b: 60 },
+
+    // Temporary add colors during calibration phase
+    'calibration-chambre': { r: 0, g: 80, b: 140 },
+    'calibration-jardiniere': { r: 0, g: 140, b: 0 },
+    'calibration-salon': { r: 140, g: 0, b: 60 },
+    'calibration-sdb': { r: 110, g: 110, b: 20 },
+
     chambre: { r: 0, g: 80, b: 140 },
     jardiniere: { r: 0, g: 140, b: 0 },
     salon: { r: 140, g: 0, b: 60 },
