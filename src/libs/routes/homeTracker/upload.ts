@@ -13,8 +13,7 @@ const handler: RouteHandler<Input> = async (params) => {
     // For now sensors always sleep for 10 minutes between two uploads
     // The -4 is to try to reduce drift due to sensors restarting
     // TODO: Implement variable sleep time based on time of the day
-    // const instructSleepSec = 10 * 60 - 4;
-    const instructSleepSec = 30;
+    const instructSleepSec = 10 * 60 - 4;
     params.loggableContext.addData('instructSleepSec', instructSleepSec);
     return { instructSleepSec };
 };
