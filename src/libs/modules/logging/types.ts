@@ -37,6 +37,7 @@ export type LoggableProperties = {
     forecast?: string;
     id?: number;
     insertTime?: string;
+    instructSleepSec?: number;
     invalidField?: string;
     invalidValueStr?: string;
     linkId?: string;

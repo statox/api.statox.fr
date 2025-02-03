@@ -1,6 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { ApiJsonSchema, EmptyOutput, PostRoute, RouteHandler } from '../types.js';
-import { emptyObjectSchema } from '../helpers.js';
 import { pushNotifier } from '../../modules/notifier/index.js';
 
 /*
@@ -15,6 +14,11 @@ const handler: RouteHandler<Input> = async (params) => {
         title: 'Test sensor sleep',
         message: 'Got call from sensor' + params.input.sensorName
     });
+
+    const instructSleepSec = Math.floor(1 + Math.random() * 10);
+    params.loggableContext.addData('instructSleepSec', instructSleepSec);
+
+    return { instructSleepSec };
 };
 
 export const sensorRawDataInputSchema = {
@@ -41,5 +45,15 @@ export const route: PostRoute<Input, EmptyOutput> = {
     inputSchema: sensorRawDataInputSchema,
     handler,
     authentication: 'apikey-iot',
-    outputSchema: emptyObjectSchema
+    outputSchema: {
+        type: 'object',
+        required: ['instructSleepSec'],
+        additionalProperties: false,
+        properties: {
+            instructSleepSec: {
+                description: 'The recommended sleeping time of the sensor in seconds',
+                type: 'number'
+            }
+        }
+    }
 };
