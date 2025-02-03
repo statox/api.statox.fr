@@ -1,10 +1,11 @@
 import request from 'supertest';
 import { app } from '../../../../src/app.js';
 import { th } from '../../../helpers/index.js';
+import { assert } from 'chai';
 
 describe('homeTracker/upload', () => {
     it('should log the sent value to home tracker index and add sensor name in access log', async () => {
-        await request(app)
+        const res = await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer fakeaccesskeyfortests')
@@ -25,6 +26,8 @@ describe('homeTracker/upload', () => {
                 timeToSendMs: 7000
             })
             .expect(200);
+
+        assert.deepEqual(res.body, { instructSleepSec: 596 });
 
         th.elk.checkDocumentCreated('data-home-tracker', {
             sensorName: 'foo',
@@ -56,7 +59,7 @@ describe('homeTracker/upload', () => {
     });
 
     it('should add log for incorrect value but still log what is correct', async () => {
-        await request(app)
+        const res = await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer fakeaccesskeyfortests')
@@ -68,6 +71,8 @@ describe('homeTracker/upload', () => {
                 batteryCharge: 4.0
             })
             .expect(200);
+
+        assert.deepEqual(res.body, { instructSleepSec: 596 });
 
         th.elk.checkDocumentCreated('data-home-tracker', {
             sensorName: 'foo',
