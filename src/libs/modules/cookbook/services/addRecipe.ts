@@ -31,6 +31,7 @@ export const addRecipe = async (newRecipe: NewRecipeParams, logContext: Loggable
     logContext.addData('cookbook_nbIngredients', ingredients.length);
 
     const conn = await db.getConnection();
+    conn.beginTransaction();
 
     try {
         /*
@@ -83,6 +84,7 @@ VALUES (?, ?, ?, ?)
                 [newRecipeId, ingredientId, ingredient.quantity, ingredient.unit]
             );
         }
+        return conn.commit();
     } catch (error) {
         await conn.rollback();
         if ((error as QueryError).code === 'ER_DUP_ENTRY') {

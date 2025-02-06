@@ -38,8 +38,5 @@ export const getRecipeById = async (params: { id: number }): Promise<RecipeWithD
         [params.id]
     );
 
-    // console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-    // console.log({ recipe, ingredients });
-
     return { ...recipe, ingredients };
 };
