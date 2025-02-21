@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
     # Use root/example as user/password credentials
     db:
