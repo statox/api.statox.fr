@@ -6,6 +6,7 @@
 # At clone time
 npm install
 npm run setup-githooks # Setup a post-merge githook to be alerted when dependabot merged a PR
+npx heroku git:remote -a statox-backend # Add the heroku git remote to be able to deploy
 
 # Working locally
 npm run env # Start the docker environment
