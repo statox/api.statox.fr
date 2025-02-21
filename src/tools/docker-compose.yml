@@ -25,8 +25,6 @@ services:
             - '127.0.0.1:24571:4571'
         environment:
             - SERVICES=s3
-        tmpfs:
-            - /tmp/localstack:exec,mode=600
 
     elk:
         container_name: apistatox.elk
