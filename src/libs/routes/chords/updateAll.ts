@@ -22,16 +22,20 @@ const inputSchema = {
                 additionalProperties: false,
                 properties: {
                     artist: {
-                        type: 'string'
+                        type: 'string',
+                        minLength: 1
                     },
                     title: {
-                        type: 'string'
+                        type: 'string',
+                        minLength: 1
                     },
                     url: {
-                        type: 'string'
+                        type: 'string',
+                        minLength: 1
                     },
                     creationDate: {
-                        type: 'number'
+                        type: 'number',
+                        minimum: 1700000000000
                     },
                     tags: {
                         type: 'array',

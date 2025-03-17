@@ -12,7 +12,7 @@ describe('chords/updateAll', () => {
                     {
                         artist: 'a cool artist',
                         title: 'a cool title',
-                        creationDate: 123,
+                        creationDate: 1742128956403,
                         url: 'https://site.com/url',
                         tags: []
                     }
