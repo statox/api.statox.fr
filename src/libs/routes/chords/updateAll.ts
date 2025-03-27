@@ -34,8 +34,17 @@ const inputSchema = {
                         minLength: 1
                     },
                     creationDate: {
-                        type: 'number',
-                        minimum: 1700000000000
+                        oneOf: [
+                            {
+                                type: 'number',
+                                minimum: 1600000000000
+                            },
+                            {
+                                // The old entries have a default timestamp at 0
+                                type: 'number',
+                                enum: [0]
+                            }
+                        ]
                     },
                     tags: {
                         type: 'array',
