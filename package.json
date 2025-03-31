@@ -78,7 +78,7 @@
         "mocha-ctrf-json-reporter": "^0.0.9",
         "nodemon": "^3.1.9",
         "prettier": "^3.5.3",
-        "sinon": "^19.0.4",
+        "sinon": "^20.0.0",
         "supertest": "^7.1.0",
         "typescript": "^5.8.2"
     },
