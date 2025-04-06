@@ -16,6 +16,7 @@ import { route as Cookbook_listRecipes } from './cookbook/listRecipes.js';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime.js';
 import { route as HomeTracker_allSensorsWithLatestLog } from './homeTracker/allSensorsWithLatestLog.js';
 import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemerides.js';
+import { route as HomeTracker_getSensorsDataForDashboard } from './homeTracker/getSensorsDataForDashboard.js';
 import { route as HomeTracker_getWeatherForecast } from './homeTracker/getWeatherForecast.js';
 import { route as HomeTracker_histogramData } from './homeTracker/histogramData.js';
 import { route as HomeTracker_upload } from './homeTracker/upload.js';
@@ -53,6 +54,7 @@ export const routes: {
         Health_GetRemoteTime,
         HomeTracker_allSensorsWithLatestLog,
         HomeTracker_getEphemerides,
+        HomeTracker_getSensorsDataForDashboard,
         HomeTracker_getWeatherForecast,
         HomeTracker_histogramData,
         HomeTracker_upload,
