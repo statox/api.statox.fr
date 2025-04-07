@@ -44,7 +44,7 @@ describe('JSON schema validation middleware', () => {
     });
 
     it('should reject a missing parameter - 2', async () => {
-        await request(app).post('/postRoute').send().expect(400);
+        await request(app).post('/postRoute').send({}).expect(400);
         th.slog.checkLog('app', 'access-log', {
             context: {
                 error: sinon.match((error) => {
@@ -53,6 +53,23 @@ describe('JSON schema validation middleware', () => {
                     const bodyError = error?.validationErrors?.body[0];
                     const isCorrectMessage =
                         bodyError?.message === "must have required property 'param1'";
+
+                    return isValidationError && isCorrectMessage;
+                })
+            }
+        });
+    });
+
+    it('should reject a missing input', async () => {
+        await request(app).post('/postRoute').send().expect(400);
+        th.slog.checkLog('app', 'access-log', {
+            context: {
+                error: sinon.match((error) => {
+                    // Cant use assert in a matcher because it is called for several logs even ones without the error
+                    const isValidationError = error instanceof ValidationError;
+                    const bodyError = error?.validationErrors?.body[0];
+                    const isCorrectMessage =
+                        bodyError?.message === "must be object";
 
                     return isValidationError && isCorrectMessage;
                 })
