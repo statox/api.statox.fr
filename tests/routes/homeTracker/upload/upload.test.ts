@@ -4,7 +4,17 @@ import { th } from '../../../helpers/index.js';
 import { assert } from 'chai';
 
 describe('homeTracker/upload', () => {
-    it('should log the sent value to home tracker index and add sensor name in access log', async () => {
+    it('should log the sent value to home tracker index, add sensor name in access log and update the metadata table', async () => {
+        th.mysql.fixture({
+            HomeTrackerSensor: [
+                {
+                    id:1,
+                    name: 'foo',
+                    hexColor: '#FF0000'
+                }
+            ]
+        })
+
         const res = await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
@@ -56,9 +66,30 @@ describe('homeTracker/upload', () => {
                 sensorName: 'foo'
             }
         });
+
+        await th.mysql.checkContains({
+            HomeTrackerSensor: [
+                {
+                    id:1,
+                    name: 'foo',
+                    hexColor: '#FF0000',
+                    lastSyncDateUnix: th.mysql.aroundNowSec
+                }
+            ]
+        })
     });
 
     it('should add log for incorrect value but still log what is correct', async () => {
+        th.mysql.fixture({
+            HomeTrackerSensor: [
+                {
+                    id:1,
+                    name: 'foo',
+                    hexColor: '#FF0000'
+                }
+            ]
+        })
+
         const res = await request(app)
             .post('/homeTracker/upload')
             .set('Accept', 'application/json')
@@ -85,5 +116,15 @@ describe('homeTracker/upload', () => {
             invalidField: 'humidity',
             invalidValueStr: '200'
         });
+        await th.mysql.checkContains({
+            HomeTrackerSensor: [
+                {
+                    id:1,
+                    name: 'foo',
+                    hexColor: '#FF0000',
+                    lastSyncDateUnix: th.mysql.aroundNowSec
+                }
+            ]
+        })
     });
 });

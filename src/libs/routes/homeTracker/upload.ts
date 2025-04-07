@@ -1,11 +1,16 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
-import { ingestSensorData, sensorRawDataInputSchema } from '../../modules/homeTracker/index.js';
+import {
+    ingestSensorData,
+    sensorRawDataInputSchema,
+    updateSensorLastSyncDate
+} from '../../modules/homeTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     params.loggableContext.addData('sensorName', params.input.sensorName);
     params.loggableContext.addData('dataStr', JSON.stringify(params.input));
 
+    updateSensorLastSyncDate({ sensorName: params.input.sensorName });
     // Don't await for data ingestion to avoid keeping the sensor up for too long
     // I think it should make tests flaky but it doesn't seem to be the case. Not sure why.
     ingestSensorData(params.input);

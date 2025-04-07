@@ -21,21 +21,14 @@ export const getAllSensorsMetadata = async (): Promise<SensorMetaData[]> => {
     return rows;
 };
 
-export const getSensorMetadataByName = async (params: {
-    name: string;
-}): Promise<SensorMetaData> => {
-    const [rows] = await db.query<SensorMetaDataResults[]>(
-        `SELECT
-            id as sqlId, name, lastSyncDateUnix, hexColor
-        FROM HomeTrackerSensor
-        WHERE uiName = ?
+export const updateSensorLastSyncDate = async (params: { sensorName: string }) => {
+    const [rows] = await db.query(
+        `UPDATE HomeTrackerSensor
+         SET lastSyncDateUnix = UNIX_TIMESTAMP()
+         WHERE name = ?
     `,
-        [params.name]
+        [params.sensorName]
     );
 
-    if (!rows || rows.length !== 1) {
-        throw new Error('SENSOR_NOT_FOUND');
-    }
-
-    return rows[0];
+    return rows;
 };
