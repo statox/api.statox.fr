@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if ! command -v mysql >/dev/null 2>&1; then
+    echo "mysql client is not installed. Stoping here."
+    exit 1
+fi
+
+
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 TESTS=0
 
