@@ -32,7 +32,7 @@ const lunarPhasesDetails: {
     },
     'Last Quarter': {
         visibilityWindow: ['00:00', '12:00'],
-        frenchName: 'Last Quarter'
+        frenchName: 'Dernier quartier'
     },
     'Waning Crescent': {
         visibilityWindow: ['03:00', '15:00'],
