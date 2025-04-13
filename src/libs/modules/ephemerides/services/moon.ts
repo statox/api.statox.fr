@@ -1,5 +1,6 @@
 import { Hemisphere, LunarPhase, Moon, MoonOptions } from 'lunarphase-js';
 import { LunarPhaseDetails } from '../types.js';
+import { DateTime } from 'luxon';
 
 // Visibility windows coming from
 // https://en.wikipedia.org/wiki/Lunar_phase#Principal_and_intermediate_phases_of_the_Moon
@@ -60,4 +61,17 @@ export const getLunarState = (date: Date) => {
         moonPhaseFr,
         moonVisibilityWindow: visibility
     };
+};
+
+// Return the phases of the moon for the upcoming lunar cycle
+// (A cycle is 29.5 days, we compute for 30 days)
+export const getUpcomingLunarStates = (date: Date) => {
+    const start = DateTime.fromJSDate(date);
+    start.set({ hour: 0, minute: 0, second: 0 });
+
+    return Array.from({ length: 30 }).map((_, index) => {
+        const day = start.plus({ days: index });
+        const lunarState = getLunarState(day.toJSDate());
+        return { tsMillis: day.toMillis(), lunarState };
+    });
 };
