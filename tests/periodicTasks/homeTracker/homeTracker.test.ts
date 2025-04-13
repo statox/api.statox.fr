@@ -4,6 +4,30 @@ import { th } from '../../helpers/index.js';
 
 describe('periodic task - doHomeTrackerMonitoring', () => {
     it('Should create slack and push notifications for missing sensor data, and should notify only once', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    isMonitored: true
+                },
+                {
+                    name: 'jardiniere',
+                    isMonitored: true
+                },
+                {
+                    name: 'chambre',
+                    isMonitored: true
+                },
+                {
+                    name: 'sdb',
+                    isMonitored: true
+                },
+                {
+                    name: 'not_monitored',
+                    isMonitored: false
+                }
+            ]
+        });
         await th.elk.flush();
         await th.elk.fixture({
             'data-home-tracker': [

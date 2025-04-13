@@ -3,13 +3,15 @@ CREATE TABLE IF NOT EXISTS `HomeTrackerSensor` (
     `name` varchar(50) NOT NULL,
     `lastSyncDateUnix` int(11) unsigned NOT NULL default 0,
     `hexColor`varchar(10) NOT NULL default "#FF00FF",
+    `isMonitored` tinyint NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- INSERT INTO HomeTrackerSensor (name, hexColor)
+-- INSERT INTO HomeTrackerSensor (name, hexColor, isMonitored)
 -- VALUES
--- ( 'salon', '#8C003C' ),
--- ( 'chambre', '#005095' ),
--- ( 'jardiniere', '#008c00' ),
--- ( 'sdb', '#6E6E14' )
+-- ( 'salon', '#8C003C', 1 ),
+-- ( 'chambre', '#005095', 1 ),
+-- ( 'jardiniere', '#008c00', 1 ),
+-- ( 'sdb', '#6E6E14', 1 ),
+-- ( 'colonne', '#b4b4c1', 1 )
 -- ON DUPLICATE KEY UPDATE name = name;

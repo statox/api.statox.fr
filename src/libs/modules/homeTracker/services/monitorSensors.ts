@@ -1,10 +1,28 @@
+import { RowDataPacket } from 'mysql2/promise';
+import { db } from '../../../databases/db.js';
 import { elk } from '../../../databases/elk.js';
 import { pushNotifier, slackNotifier } from '../../notifier/index.js';
-import { monitoredSensorNames } from '../config.js';
 
 const missingSensorLogs_alertedSensors = new Set();
 
+type MonitoredSensorsResult = {
+    name: string;
+} & RowDataPacket;
+
+const getMonitoredSensorsName = async (): Promise<string[]> => {
+    const [rows] = await db.query<MonitoredSensorsResult[]>(
+        `SELECT name
+        FROM HomeTrackerSensor
+        WHERE isMonitored is true
+    `
+    );
+
+    return rows.map((r) => r.name);
+};
+
 export const doHomeTrackerMonitoring = async () => {
+    const monitoredSensorNames = await getMonitoredSensorsName();
+
     for (const sensorName of monitoredSensorNames) {
         const result = await elk.search<{ sensorName: string }>({
             index: 'data-home-tracker',
