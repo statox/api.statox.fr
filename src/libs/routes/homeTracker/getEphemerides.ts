@@ -38,7 +38,16 @@ const outputSchema = {
                         sunrise: { type: 'number' },
                         sunset: { type: 'number' },
                         solarNoon: { type: 'number' },
-                        goldenHour: { type: 'number' }
+                        goldenHour: { type: 'number' },
+                        dayLengthMs: {
+                            type: 'number',
+                            description: 'How many hours of sun this day (in ms)'
+                        },
+                        dayLengthDiffMs: {
+                            type: 'number',
+                            description:
+                                'The difference of day length compared to yesterday (in ms)'
+                        }
                     },
                     required: ['sunrise', 'sunset', 'solarNoon', 'goldenHour'],
                     additionalProperties: false

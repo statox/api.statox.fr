@@ -29,6 +29,9 @@ describe('/homeTracker/getEphemerides', () => {
                 sunset: 2209046760718,
                 solarNoon: 2209031694178,
                 goldenHour: 2209043488487,
+                dayLengthDiffMs: 52502,
+                dayLengthMs: 30133080
+
             },
             upcomingLunarStates: [
                 {
