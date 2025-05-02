@@ -19,6 +19,7 @@
         "heroku:deploy:skip-tests": "npm run check && git push heroku main",
         "heroku:force-deploy": "npm run check && npm run tests:all && git push -f heroku main",
         "heroku:force-deploy:skip-tests": "npm run check && git push -f heroku main",
+        "heroku:ssh": "npx heroku run bash",
         "postinstall": "tsc",
         "env": "./src/tools/containers-env.sh up",
         "env:stop": "./src/tools/containers-env.sh down",
