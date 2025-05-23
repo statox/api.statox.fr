@@ -5,6 +5,7 @@ type SensorMetaData = {
     sqlId: number;
     name: string;
     lastSyncDateUnix: number;
+    lastAlertDateUnix: number | null;
     hexColor: string;
 };
 
@@ -13,7 +14,7 @@ type SensorMetaDataResults = SensorMetaData & RowDataPacket;
 export const getAllSensorsMetadata = async (): Promise<SensorMetaData[]> => {
     const [rows] = await db.query<SensorMetaDataResults[]>(
         `SELECT
-            id as sqlId, name, lastSyncDateUnix, hexColor
+            id as sqlId, name, lastSyncDateUnix, lastAlertDateUnix, hexColor
         FROM HomeTrackerSensor
     `
     );

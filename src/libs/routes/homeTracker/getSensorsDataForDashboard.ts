@@ -16,7 +16,9 @@ const outputSchema = {
                 properties: {
                     sensorName: { type: 'string' },
                     lastLogTimestamp: { type: 'number' },
-                    hexcolor: {
+                    lastAlertDateUnix: { type: ['number', 'null'] },
+                    lastSyncDateUnix: { type: 'number' },
+                    hexColor: {
                         type: 'string',
                         description: 'RGB color in hex format. Example: #AA33CC',
                         pattern: '^#[A-F0-9]{6}$'
@@ -41,7 +43,8 @@ const outputSchema = {
                         required: ['sensorName'],
                         additionalProperties: false
                     }
-                }
+                },
+                additionalProperties: false
             }
         }
     },

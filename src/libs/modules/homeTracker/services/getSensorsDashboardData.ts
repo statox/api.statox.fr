@@ -6,6 +6,7 @@ interface SensorState {
     sensorName: string;
     hexColor: string;
     lastSyncDateUnix: number;
+    lastAlertDateUnix: number | null;
     lastLogData: SensorLogData;
 }
 
@@ -57,6 +58,7 @@ export const getSensorsDashboardData = async () => {
             sensorName,
             hexColor: sensorMetaData.hexColor,
             lastSyncDateUnix: sensorMetaData.lastSyncDateUnix,
+            lastAlertDateUnix: sensorMetaData.lastAlertDateUnix,
             lastLogData
         };
 
