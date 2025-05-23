@@ -8,12 +8,12 @@ describe('homeTracker/upload', () => {
         th.mysql.fixture({
             HomeTrackerSensor: [
                 {
-                    id:1,
+                    id: 1,
                     name: 'foo',
                     hexColor: '#FF0000'
                 }
             ]
-        })
+        });
 
         const res = await request(app)
             .post('/homeTracker/upload')
@@ -70,25 +70,25 @@ describe('homeTracker/upload', () => {
         await th.mysql.checkContains({
             HomeTrackerSensor: [
                 {
-                    id:1,
+                    id: 1,
                     name: 'foo',
                     hexColor: '#FF0000',
                     lastSyncDateUnix: th.mysql.aroundNowSec
                 }
             ]
-        })
+        });
     });
 
     it('should add log for incorrect value but still log what is correct', async () => {
         th.mysql.fixture({
             HomeTrackerSensor: [
                 {
-                    id:1,
+                    id: 1,
                     name: 'foo',
                     hexColor: '#FF0000'
                 }
             ]
-        })
+        });
 
         const res = await request(app)
             .post('/homeTracker/upload')
@@ -119,12 +119,12 @@ describe('homeTracker/upload', () => {
         await th.mysql.checkContains({
             HomeTrackerSensor: [
                 {
-                    id:1,
+                    id: 1,
                     name: 'foo',
                     hexColor: '#FF0000',
                     lastSyncDateUnix: th.mysql.aroundNowSec
                 }
             ]
-        })
+        });
     });
 });

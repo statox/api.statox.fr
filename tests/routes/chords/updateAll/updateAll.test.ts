@@ -42,20 +42,20 @@ describe('chords/updateAll', () => {
     });
     it('Rejects invalid timestamp', async () => {
         await request(app)
-        .post('/chords/updateAll')
-        .set('Accept', 'application/json')
-        .send({
-            chords: [
-                {
-                    artist: 'a cool artist',
-                    title: 'a cool title',
-                    creationDate: 1742126403,
-                    url: 'https://site.com/url',
-                    tags: []
-                },
-            ]
-        })
-        .expect(400);
+            .post('/chords/updateAll')
+            .set('Accept', 'application/json')
+            .send({
+                chords: [
+                    {
+                        artist: 'a cool artist',
+                        title: 'a cool title',
+                        creationDate: 1742126403,
+                        url: 'https://site.com/url',
+                        tags: []
+                    }
+                ]
+            })
+            .expect(400);
 
         th.s3.checkNbCalls({ nbCalls: 0 });
     });

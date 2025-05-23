@@ -68,8 +68,7 @@ describe('JSON schema validation middleware', () => {
                     // Cant use assert in a matcher because it is called for several logs even ones without the error
                     const isValidationError = error instanceof ValidationError;
                     const bodyError = error?.validationErrors?.body[0];
-                    const isCorrectMessage =
-                        bodyError?.message === "must be object";
+                    const isCorrectMessage = bodyError?.message === 'must be object';
 
                     return isValidationError && isCorrectMessage;
                 })
