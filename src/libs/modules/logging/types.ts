@@ -40,6 +40,8 @@ export type LoggableProperties = {
     instructSleepSec?: number;
     invalidField?: string;
     invalidValueStr?: string;
+    lastAlertDateUnix?: number;
+    lastSyncDateUnix?: number;
     linkId?: string;
     livemode?: boolean;
     meanWindDirectionDegrees?: number;

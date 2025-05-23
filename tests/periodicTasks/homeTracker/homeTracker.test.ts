@@ -14,7 +14,6 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
         });
 
         await doHomeTrackerMonitoring();
-        th.slack.checkNbNotifications(0);
         th.push.checkNbNotifications(0);
         await th.mysql.checkContains({
             HomeTrackerSensor: [
@@ -38,10 +37,12 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
 
         await doHomeTrackerMonitoring();
 
-        const expectedMessage = `🔴 salon - No data for 30 mn`;
-        th.slack.checkNotification({ message: expectedMessage });
-        th.slack.checkNbNotifications(1);
+        th.slog.checkLog('home-tracker', 'No data', {
+            sensorName: 'salon',
+            lastSyncDateUnix: thirtyMinutesAgo - 30
+        });
 
+        const expectedMessage = `🔴 salon - No data for 30 mn`;
         th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
         th.push.checkNbNotifications(1);
         await th.mysql.checkContains({
@@ -57,7 +58,6 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
 
         // On second call we shouldn't create another notification for the failing sensor
         await doHomeTrackerMonitoring();
-        th.slack.checkNbNotifications(1);
         th.push.checkNbNotifications(1);
     });
 
@@ -148,10 +148,12 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
             ]
         });
 
-        const expectedMessage = `🟢 salon - Back online after 30 mn`;
-        th.slack.checkNotification({ message: expectedMessage });
-        th.slack.checkNbNotifications(1);
+        th.slog.checkLog('home-tracker', 'Back online', {
+            sensorName: 'salon',
+            lastAlertDateUnix: thirtyMinutesAgo
+        });
 
+        const expectedMessage = `🟢 salon - Back online after 30 mn`;
         th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
         th.push.checkNbNotifications(1);
     });
@@ -170,13 +172,9 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
         await th.elk.flush();
 
         await doHomeTrackerMonitoring();
-        th.slack.checkNbNotifications(1);
-        th.push.checkNbNotifications(1);
 
+        th.slog.checkLog('home-tracker', 'Sync without data', { sensorName: 'salon' });
         const expectedMessage = '🔴 salon - Sync without data';
-        th.slack.checkNotification({ message: expectedMessage });
-        th.slack.checkNbNotifications(1);
-
         th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
         th.push.checkNbNotifications(1);
     });
