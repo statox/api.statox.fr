@@ -27,6 +27,31 @@ const setSensorAlertDate = (sensorName: string) =>
 const unsetSensorAlertDate = (sensorName: string) =>
     db.query(`UPDATE HomeTrackerSensor SET lastAlertDateUnix = null WHERE name = ?`, [sensorName]);
 
+const getLast30MinutesLogsForSensor = (sensorName: string) => elk.search<{ sensorName: string }>({
+            index: 'data-home-tracker',
+            query: {
+                bool: {
+                    should: [],
+                    must: [
+                        {
+                            term: {
+                                'document.sensorName': {
+                                    value: sensorName
+                                }
+                            }
+                        },
+                        {
+                            range: {
+                                '@timestamp': {
+                                    gte: 'now-30m'
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        })
+
 const MAX_SEC_WITHOUT_SYNC = 20 * 60;
 export const doHomeTrackerMonitoring = async () => {
     const monitoredSensors = await getMonitoredSensors();
@@ -56,30 +81,7 @@ export const doHomeTrackerMonitoring = async () => {
             await unsetSensorAlertDate(name);
         }
 
-        const result = await elk.search<{ sensorName: string }>({
-            index: 'data-home-tracker',
-            query: {
-                bool: {
-                    should: [],
-                    must: [
-                        {
-                            term: {
-                                'document.sensorName': {
-                                    value: name
-                                }
-                            }
-                        },
-                        {
-                            range: {
-                                '@timestamp': {
-                                    gte: 'now-30m'
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        });
+        const result = await getLast30MinutesLogsForSensor(name);
 
         // TODO I should be using result.hits.total but for a reason
         // I don't understand the typing is broken

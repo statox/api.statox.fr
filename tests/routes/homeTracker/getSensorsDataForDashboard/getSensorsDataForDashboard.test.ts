@@ -13,16 +13,19 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
         const twentyMinutesAgoMillis = DateTime.now().minus({ minutes: 20 }).toMillis();
 
         await th.mysql.fixture({
-            HomeTrackerSensor: [{
-                name: 'salon',
-                hexColor: "#FF0000",
-                lastSyncDateUnix: nowSec
-            },{
-                name: 'jardiniere',
-                hexColor: "#00FF00",
-                lastSyncDateUnix: tenMinutesAgoSec
-            }]
-        })
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    hexColor: '#FF0000',
+                    lastSyncDateUnix: nowSec
+                },
+                {
+                    name: 'jardiniere',
+                    hexColor: '#00FF00',
+                    lastSyncDateUnix: tenMinutesAgoSec
+                }
+            ]
+        });
 
         await th.elk.flush();
         await th.elk.fixture({
@@ -77,15 +80,15 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
         });
 
         const response = await request(app)
-        .get('/homeTracker/getSensorsDataForDashboard')
-        .expect(200)
+            .get('/homeTracker/getSensorsDataForDashboard')
+            .expect(200);
 
         const { sensors } = response.body;
 
         assert.sameDeepMembers(sensors, [
             {
                 sensorName: 'jardiniere',
-                hexColor: "#00FF00",
+                hexColor: '#00FF00',
                 lastSyncDateUnix: tenMinutesAgoSec,
                 lastLogData: {
                     sensorName: 'jardiniere',
@@ -96,7 +99,7 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
             },
             {
                 sensorName: 'salon',
-                hexColor: "#FF0000",
+                hexColor: '#FF0000',
                 lastSyncDateUnix: nowSec,
                 lastLogData: {
                     sensorName: 'salon',

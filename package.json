@@ -10,8 +10,8 @@
     "scripts": {
         "setup-githooks": "./githooks/setup.sh",
         "check": "npm run lint && npm run prettier",
-        "prettier": "prettier --check --cache '*.json' 'src/**/*.ts'",
-        "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts'",
+        "prettier": "prettier --check --cache '*.json' 'src/**/*.ts' 'tests/**/*.ts'",
+        "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts' 'tests/**/*.ts'",
         "lint": "eslint",
         "lint:fix": "npm run lint --fix",
         "heroku:login": "npx heroku login",
