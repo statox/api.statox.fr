@@ -3,27 +3,59 @@ import { db } from '../../../databases/db.js';
 import { elk } from '../../../databases/elk.js';
 import { pushNotifier, slackNotifier } from '../../notifier/index.js';
 
-const missingSensorLogs_alertedSensors = new Set();
-
 type MonitoredSensorsResult = {
     name: string;
-} & RowDataPacket;
+    lastSyncDateUnix: number;
+    lastAlertDateUnix: null | number;
+};
 
-const getMonitoredSensorsName = async (): Promise<string[]> => {
-    const [rows] = await db.query<MonitoredSensorsResult[]>(
-        `SELECT name
+const getMonitoredSensors = async (): Promise<MonitoredSensorsResult[]> => {
+    const [rows] = await db.query<(MonitoredSensorsResult & RowDataPacket)[]>(
+        `SELECT name, lastSyncDateUnix, lastAlertDateUnix
         FROM HomeTrackerSensor
         WHERE isMonitored is true
     `
     );
 
-    return rows.map((r) => r.name);
+    return rows;
 };
 
-export const doHomeTrackerMonitoring = async () => {
-    const monitoredSensorNames = await getMonitoredSensorsName();
+const setSensorAlertDate = (sensorName: string) =>
+    db.query(`UPDATE HomeTrackerSensor SET lastAlertDateUnix = UNIX_TIMESTAMP() WHERE name = ?`, [
+        sensorName
+    ]);
+const unsetSensorAlertDate = (sensorName: string) =>
+    db.query(`UPDATE HomeTrackerSensor SET lastAlertDateUnix = null WHERE name = ?`, [sensorName]);
 
-    for (const sensorName of monitoredSensorNames) {
+const MAX_SEC_WITHOUT_SYNC = 20 * 60;
+export const doHomeTrackerMonitoring = async () => {
+    const monitoredSensors = await getMonitoredSensors();
+
+    for (const sensor of monitoredSensors) {
+        const { lastSyncDateUnix, name, lastAlertDateUnix } = sensor;
+        const secondsSinceLastSync = Date.now() / 1000 - lastSyncDateUnix;
+        const isInAlert = lastAlertDateUnix != null;
+
+        if (secondsSinceLastSync > MAX_SEC_WITHOUT_SYNC) {
+            // Alert if sensor had not been alerted before
+            if (!isInAlert) {
+                const message = `🔴 ${name} - No data for ${Math.floor(secondsSinceLastSync / 60)} mn`;
+                await slackNotifier.notifySlack({ message });
+                await pushNotifier.notify({ title: 'Home Tracker', message });
+                await setSensorAlertDate(name);
+            }
+            return;
+        }
+
+        // Info if sensor is back online
+        if (isInAlert) {
+            const secondsSinceLastAlert = Date.now() / 1000 - lastAlertDateUnix;
+            const message = `🟢 ${name} - Back online after ${Math.floor(secondsSinceLastAlert / 60)} mn`;
+            await slackNotifier.notifySlack({ message });
+            await pushNotifier.notify({ title: 'Home Tracker', message });
+            await unsetSensorAlertDate(name);
+        }
+
         const result = await elk.search<{ sensorName: string }>({
             index: 'data-home-tracker',
             query: {
@@ -33,7 +65,7 @@ export const doHomeTrackerMonitoring = async () => {
                         {
                             term: {
                                 'document.sensorName': {
-                                    value: sensorName
+                                    value: name
                                 }
                             }
                         },
@@ -53,20 +85,14 @@ export const doHomeTrackerMonitoring = async () => {
         // I don't understand the typing is broken
         const nbLogs = result.hits.hits.length;
 
-        if (nbLogs < 2) {
-            if (!missingSensorLogs_alertedSensors.has(sensorName)) {
-                await slackNotifier.notifySlack({
-                    message: 'Missing home tracker data for sensor ' + sensorName,
-                    directMention: true
-                });
-                await pushNotifier.notify({
-                    title: 'Home Tracker',
-                    message: 'Missing home tracker data for sensor ' + sensorName
-                });
-                missingSensorLogs_alertedSensors.add(sensorName);
+        // Message if we received a sync but couldn't store a log
+        if (nbLogs < 1) {
+            if (!isInAlert) {
+                const message = `🔴 ${name} - Sync without data`;
+                await slackNotifier.notifySlack({ message });
+                await pushNotifier.notify({ title: 'Home Tracker', message });
+                await setSensorAlertDate(name);
             }
-        } else {
-            missingSensorLogs_alertedSensors.delete(sensorName);
         }
     }
 };

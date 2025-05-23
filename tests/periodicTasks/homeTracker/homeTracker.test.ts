@@ -2,90 +2,134 @@ import { DateTime } from 'luxon';
 import { doHomeTrackerMonitoring } from '../../../src/libs/modules/homeTracker/index.js';
 import { th } from '../../helpers/index.js';
 
+const tenMinutesAgo = Math.round(Date.now() / 1000) - 10 * 60;
+const thirtyMinutesAgo = Math.round(Date.now() / 1000) - 30 * 60;
+
 describe('periodic task - doHomeTrackerMonitoring', () => {
-    it('Should create slack and push notifications for missing sensor data, and should notify only once', async () => {
+    it('Not monitored - Do nothing', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
+                { name: 'salon', isMonitored: false, lastSyncDateUnix: thirtyMinutesAgo }
+            ]
+        });
+
+        await doHomeTrackerMonitoring();
+        th.slack.checkNbNotifications(0);
+        th.push.checkNbNotifications(0);
+        await th.mysql.checkContains({
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    isMonitored: false,
+                    lastSyncDateUnix: thirtyMinutesAgo,
+                    lastAlertDateUnix: null
+                }
+            ]
+        });
+    });
+
+    it('Last sync 30 minutes ago - Notify', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
+                // Remove 30 seconds to avoid flaky in minutes computation
+                { name: 'salon', isMonitored: true, lastSyncDateUnix: thirtyMinutesAgo - 30 }
+            ]
+        });
+
+        await doHomeTrackerMonitoring();
+
+        const expectedMessage = `🔴 salon - No data for 30 mn`;
+        th.slack.checkNotification({ message: expectedMessage });
+        th.slack.checkNbNotifications(1);
+
+        th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
+        th.push.checkNbNotifications(1);
+        await th.mysql.checkContains({
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    isMonitored: true,
+                    lastSyncDateUnix: thirtyMinutesAgo - 30,
+                    lastAlertDateUnix: th.mysql.aroundNowSec
+                }
+            ]
+        });
+
+        // On second call we shouldn't create another notification for the failing sensor
+        await doHomeTrackerMonitoring();
+        th.slack.checkNbNotifications(1);
+        th.push.checkNbNotifications(1);
+    });
+
+    it('Last sync 30 minutes ago, previously alerted - Do nothing', async () => {
         await th.mysql.fixture({
             HomeTrackerSensor: [
                 {
                     name: 'salon',
-                    isMonitored: true
-                },
+                    isMonitored: true,
+                    lastSyncDateUnix: thirtyMinutesAgo,
+                    lastAlertDateUnix: tenMinutesAgo
+                }
+            ]
+        });
+
+        await doHomeTrackerMonitoring();
+        th.slack.checkNbNotifications(0);
+        th.push.checkNbNotifications(0);
+    });
+
+    it('Last sync 10 minutes ago - Do nothing', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
                 {
-                    name: 'jardiniere',
-                    isMonitored: true
-                },
-                {
-                    name: 'chambre',
-                    isMonitored: true
-                },
-                {
-                    name: 'sdb',
-                    isMonitored: true
-                },
-                {
-                    name: 'not_monitored',
-                    isMonitored: false
+                    name: 'salon',
+                    isMonitored: true,
+                    lastSyncDateUnix: tenMinutesAgo,
+                    lastAlertDateUnix: null
                 }
             ]
         });
         await th.elk.flush();
         await th.elk.fixture({
             'data-home-tracker': [
-                // Salon: 2 very recent logs, should not alert
                 {
-                    '@timestamp': DateTime.now().toMillis(),
+                    '@timestamp': DateTime.now().minus({ minute: 10 }).toMillis(),
                     document: {
                         sensorName: 'salon',
                         batteryCharge: 4,
                         humidity: 30,
                         tempCelsius: 21
                     }
-                },
+                }
+            ]
+        });
+
+        await doHomeTrackerMonitoring();
+        th.slack.checkNbNotifications(0);
+        th.push.checkNbNotifications(0);
+    });
+
+    it('Last sync 10 minutes ago, previously alerted - Notify', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
                 {
-                    '@timestamp': DateTime.now().minus({ minutes: 10 }).toMillis(),
+                    name: 'salon',
+                    isMonitored: true,
+                    lastSyncDateUnix: tenMinutesAgo,
+                    lastAlertDateUnix: thirtyMinutesAgo
+                }
+            ]
+        });
+        await th.elk.flush();
+        await th.elk.fixture({
+            'data-home-tracker': [
+                {
+                    '@timestamp': DateTime.now().minus({ minute: 10 }).toMillis(),
                     document: {
                         sensorName: 'salon',
                         batteryCharge: 4,
                         humidity: 30,
-                        tempCelsius: 22
-                    }
-                },
-                // Chambre: 2 logs in the past 30 minutes, should not alert
-                {
-                    '@timestamp': DateTime.now().minus({ minutes: 20 }).toMillis(),
-                    document: {
-                        sensorName: 'chambre',
-                        batteryCharge: 4,
-                        humidity: 30,
                         tempCelsius: 21
-                    }
-                },
-                {
-                    '@timestamp': DateTime.now().minus({ minutes: 29 }).toMillis(),
-                    document: {
-                        sensorName: 'chambre',
-                        batteryCharge: 4,
-                        humidity: 30,
-                        tempCelsius: 22
-                    }
-                },
-                // jardiniere: only one log in the past 30 minutes and one older one, should alert
-                {
-                    '@timestamp': DateTime.now().minus({ minutes: 1 }).toMillis(),
-                    document: {
-                        sensorName: 'jardiniere',
-                        batteryCharge: 4,
-                        humidity: 30,
-                        tempCelsius: 22
-                    }
-                },
-                {
-                    '@timestamp': DateTime.now().minus({ hours: 1 }).toMillis(),
-                    document: {
-                        sensorName: 'jardiniere',
-                        batteryCharge: 4,
-                        humidity: 30,
-                        tempCelsius: 22
                     }
                 }
             ]
@@ -93,29 +137,47 @@ describe('periodic task - doHomeTrackerMonitoring', () => {
 
         await doHomeTrackerMonitoring();
 
-        th.slack.checkNotification({
-            message: 'Missing home tracker data for sensor jardiniere',
-            directMention: true
+        await th.mysql.checkContains({
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    isMonitored: true,
+                    lastSyncDateUnix: tenMinutesAgo,
+                    lastAlertDateUnix: null
+                }
+            ]
         });
-        th.slack.checkNotification({
-            message: 'Missing home tracker data for sensor sdb',
-            directMention: true
-        });
-        th.slack.checkNbNotifications(2);
 
-        th.push.checkNotification({
-            title: 'Home Tracker',
-            message: 'Missing home tracker data for sensor jardiniere'
-        });
-        th.push.checkNotification({
-            title: 'Home Tracker',
-            message: 'Missing home tracker data for sensor sdb'
-        });
-        th.push.checkNbNotifications(2);
+        const expectedMessage = `🟢 salon - Back online after 30 mn`;
+        th.slack.checkNotification({ message: expectedMessage });
+        th.slack.checkNbNotifications(1);
 
-        // On second call we shouldn't create another notification for the failing sensor
+        th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
+        th.push.checkNbNotifications(1);
+    });
+
+    it('Last sync 10 minutes ago, no logs - Notify', async () => {
+        await th.mysql.fixture({
+            HomeTrackerSensor: [
+                {
+                    name: 'salon',
+                    isMonitored: true,
+                    lastSyncDateUnix: tenMinutesAgo,
+                    lastAlertDateUnix: null
+                }
+            ]
+        });
+        await th.elk.flush();
+
         await doHomeTrackerMonitoring();
-        th.slack.checkNbNotifications(2);
-        th.push.checkNbNotifications(2);
+        th.slack.checkNbNotifications(1);
+        th.push.checkNbNotifications(1);
+
+        const expectedMessage = '🔴 salon - Sync without data';
+        th.slack.checkNotification({ message: expectedMessage });
+        th.slack.checkNbNotifications(1);
+
+        th.push.checkNotification({ title: 'Home Tracker', message: expectedMessage });
+        th.push.checkNbNotifications(1);
     });
 });
