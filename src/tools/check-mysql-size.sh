@@ -26,7 +26,6 @@ elif [ "$1" == '--prod' ]; then
     MYSQL_CMD=$("$SCRIPTPATH/mysql-prod")
 elif [ "$1" == '--tests' ]; then
     MYSQL_CMD=$("$SCRIPTPATH/mysql-tests")
-    TESTS=1
 else
     echo 'Usage check-mysql-size.sh [--prod | --tests]'
 fi
