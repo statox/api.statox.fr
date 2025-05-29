@@ -86,6 +86,7 @@ export type AppLogComponent =
     | 'app'
     | 'auth'
     | 'chords'
+    | 'debug'
     | 'env-helpers'
     | 'home-tracker'
     | 'meteo-france'

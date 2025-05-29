@@ -5,6 +5,8 @@ import { LoggableContext, slog } from '../modules/logging/index.js';
 import { config } from '../../packages/config/index.js';
 
 export const loggingHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const dataStr = JSON.stringify({ path: req.path });
+    slog.log('debug', 'loggingHandler', { dataStr });
     const path = req.path;
     const remoteIp = req.socket.remoteAddress ?? 'N/A';
     const cfRay = req.get('cf-ray') ?? 'N/A';
