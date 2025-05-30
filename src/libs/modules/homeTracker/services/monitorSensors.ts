@@ -71,7 +71,7 @@ export const doHomeTrackerMonitoring = async () => {
                 await pushNotifier.notify({ title: 'Home Tracker', message });
                 await setSensorAlertDate(name);
             }
-            return;
+            continue;
         }
 
         // Info if sensor is back online
