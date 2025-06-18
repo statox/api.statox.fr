@@ -93,10 +93,20 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                 lastSyncDateUnix: tenMinutesAgoSec,
                 lastAlertDateUnix: null,
                 lastLogData: {
+                    timestamp: tenMinutesAgoMillis,
                     sensorName: 'jardiniere',
                     batteryCharge: 4,
                     humidity: 30,
                     tempCelsius: 21
+                },
+                oneHourAgoLogData: {
+                    // We just _try_ to get the log the closest to one hours ago
+                    // Given the fixtures here it's the one from 20 minutes ago
+                    timestamp: twentyMinutesAgoMillis,
+                    sensorName: 'jardiniere',
+                    batteryCharge: 4,
+                    humidity: 0,
+                    tempCelsius: 0
                 }
             },
             {
@@ -105,10 +115,20 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                 lastSyncDateUnix: nowSec,
                 lastAlertDateUnix: tenMinutesAgoSec,
                 lastLogData: {
+                    timestamp: nowMillis,
                     sensorName: 'salon',
                     batteryCharge: 4,
                     humidity: 30,
                     tempCelsius: 21
+                },
+                oneHourAgoLogData: {
+                    // We just _try_ to get the log the closest to one hours ago
+                    // Given the fixtures here it's the one from 10 minutes ago
+                    timestamp: tenMinutesAgoMillis,
+                    sensorName: 'salon',
+                    batteryCharge: 4,
+                    humidity: 0,
+                    tempCelsius: 0
                 }
             }
         ]);

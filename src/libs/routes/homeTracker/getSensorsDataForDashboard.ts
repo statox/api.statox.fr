@@ -6,6 +6,28 @@ const handler = async () => {
     return getSensorsDashboardData();
 };
 
+const logDataSchema = {
+    type: 'object',
+    properties: {
+        timestamp: { type: 'number' },
+        sensorName: { type: 'string' },
+        batteryCharge: { type: 'number' },
+        batteryPercent: { type: 'number' },
+        detectedForcedReset: { type: 'boolean' },
+        detectedInternalSensorFailure: { type: 'boolean' },
+        detectedLowBattery: { type: 'boolean' },
+        detectedSensorFailure: { type: 'boolean' },
+        humidity: { type: 'number' },
+        internalHumidity: { type: 'number' },
+        internalTempCelsius: { type: 'number' },
+        pressurehPa: { type: 'number' },
+        tempCelsius: { type: 'number' },
+        timeToSendMs: { type: 'number' }
+    },
+    required: ['sensorName', 'timestamp'],
+    additionalProperties: false
+} as const;
+
 const outputSchema = {
     type: 'object',
     properties: {
@@ -15,7 +37,7 @@ const outputSchema = {
                 type: 'object',
                 properties: {
                     sensorName: { type: 'string' },
-                    lastLogTimestamp: { type: 'number' },
+                    // lastLogTimestamp: { type: 'number' },
                     lastAlertDateUnix: { type: ['number', 'null'] },
                     lastSyncDateUnix: { type: 'number' },
                     hexColor: {
@@ -23,26 +45,8 @@ const outputSchema = {
                         description: 'RGB color in hex format. Example: #AA33CC',
                         pattern: '^#[A-F0-9]{6}$'
                     },
-                    lastLogData: {
-                        type: 'object',
-                        properties: {
-                            sensorName: { type: 'string' },
-                            batteryCharge: { type: 'number' },
-                            batteryPercent: { type: 'number' },
-                            detectedForcedReset: { type: 'boolean' },
-                            detectedInternalSensorFailure: { type: 'boolean' },
-                            detectedLowBattery: { type: 'boolean' },
-                            detectedSensorFailure: { type: 'boolean' },
-                            humidity: { type: 'number' },
-                            internalHumidity: { type: 'number' },
-                            internalTempCelsius: { type: 'number' },
-                            pressurehPa: { type: 'number' },
-                            tempCelsius: { type: 'number' },
-                            timeToSendMs: { type: 'number' }
-                        },
-                        required: ['sensorName'],
-                        additionalProperties: false
-                    }
+                    lastLogData: logDataSchema,
+                    oneHourAgoLogData: logDataSchema
                 },
                 additionalProperties: false
             }

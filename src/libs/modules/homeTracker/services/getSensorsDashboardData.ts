@@ -16,50 +16,68 @@ interface SensorState {
  */
 export const getSensorsDashboardData = async () => {
     const metadata = await getAllSensorsMetadata();
-
-    // Aggregate by sensor name first to get all the various sensors
-    // then only keep the last log for each sensor
-    const logsBySensor = await elk.search({
-        index: 'data-home-tracker',
-        size: 0,
-        aggregations: {
-            sensorName: {
-                terms: {
-                    field: 'document.sensorName.keyword'
-                },
-                aggregations: {
-                    lastLog: {
-                        top_hits: {
-                            size: 1,
-                            sort: [
-                                {
-                                    '@timestamp': 'desc'
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        }
-    });
+    const oneHourAgo = Date.now() - 60 * 60 * 1000;
 
     const sensors: SensorState[] = [];
     for (const sensorMetaData of metadata) {
         const sensorName = sensorMetaData.name;
-        // @ts-expect-error Not sure why the `.buckets` member is not in the typing
-        const sensorBucket = logsBySensor.aggregations?.sensorName.buckets.find(
-            (bucket: { key: string }) => bucket.key === sensorName
-        );
 
-        const lastLog = sensorBucket.lastLog.hits.hits[0];
-        const lastLogData = lastLog._source.document;
+        const lastLogQuery = await elk.search<{ '@timestamp': number; document: SensorLogData }>({
+            index: 'data-home-tracker',
+            size: 1,
+            query: {
+                bool: {
+                    filter: [{ term: { 'document.sensorName': sensorName } }]
+                }
+            },
+            sort: [{ '@timestamp': { order: 'desc' } }]
+        });
+
+        const lastLog = lastLogQuery.hits.hits[0];
+        const lastLogData = {
+            ...lastLog._source!.document,
+            timestamp: lastLog._source!['@timestamp']
+        };
+
+        // We try to get the log closest to one hour ago
+        const oneHourAgoLogQuery = await elk.search<{
+            '@timestamp': number;
+            document: SensorLogData;
+        }>({
+            index: 'data-home-tracker',
+            size: 1,
+            query: {
+                bool: {
+                    filter: [{ term: { 'document.sensorName': sensorName } }]
+                }
+            },
+            sort: [
+                {
+                    _script: {
+                        type: 'number',
+                        script: {
+                            lang: 'painless',
+                            source: "Math.abs(doc['@timestamp'].value.millis - params.target)",
+                            params: { target: oneHourAgo }
+                        },
+                        order: 'asc'
+                    }
+                }
+            ]
+        });
+        const oneHourAgoLog = oneHourAgoLogQuery.hits.hits[0];
+        const oneHourAgoLogData = {
+            ...oneHourAgoLog._source!.document,
+            timestamp: oneHourAgoLog._source!['@timestamp']
+        };
 
         const sensorState = {
             sensorName,
             hexColor: sensorMetaData.hexColor,
             lastSyncDateUnix: sensorMetaData.lastSyncDateUnix,
             lastAlertDateUnix: sensorMetaData.lastAlertDateUnix,
-            lastLogData
+            lastLogData,
+            oneHourAgoLogData
         };
 
         sensors.push(sensorState);
