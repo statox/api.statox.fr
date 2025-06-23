@@ -32,8 +32,8 @@
         "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json"
     },
     "dependencies": {
-        "@aws-sdk/client-s3": "^3.828.0",
-        "@aws-sdk/s3-request-presigner": "^3.828.0",
+        "@aws-sdk/client-s3": "^3.832.0",
+        "@aws-sdk/s3-request-presigner": "^3.832.0",
         "@elastic/elasticsearch": "^8.17.1",
         "@slack/webhook": "^7.0.5",
         "ajv": "^8.17.1",
@@ -65,7 +65,7 @@
         "@types/mustache-express": "^1.2.5",
         "@types/sinon": "^17.0.4",
         "@types/supertest": "^6.0.3",
-        "@typescript-eslint/eslint-plugin": "^8.34.0",
+        "@typescript-eslint/eslint-plugin": "^8.34.1",
         "@typescript-eslint/parser": "^8.32.1",
         "aws-sdk-client-mock-jest": "^4.1.0",
         "chai": "^5.2.0",
@@ -75,10 +75,10 @@
         "github-actions-ctrf": "^0.0.58",
         "globals": "^16.2.0",
         "json-schema-to-ts": "^3.1.1",
-        "mocha": "^11.6.0",
+        "mocha": "^11.7.0",
         "mocha-ctrf-json-reporter": "^0.0.9",
         "nodemon": "^3.1.10",
-        "prettier": "^3.5.3",
+        "prettier": "^3.6.0",
         "sinon": "^21.0.0",
         "supertest": "^7.1.1",
         "typescript": "^5.8.3"
