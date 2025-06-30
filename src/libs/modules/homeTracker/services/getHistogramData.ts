@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import memoize from 'memoize';
 import { elk } from '../../../databases/elk.js';
 import { SensorLogData } from '../types.js';
 
@@ -222,3 +223,9 @@ export const getHistogramData = async (
 
     return { histogramData, sensorNames: [...sensorNames] };
 };
+
+const CACHE_TTL_MS = 5 * 60 * 1000; // Cache results for 5 minutes
+export const getCachedHistogramData = memoize(
+    (window: '30m' | '3h' | '12h' | '1d' | '3d' | '7d' | '2w') => getHistogramData(window),
+    { maxAge: CACHE_TTL_MS }
+);
