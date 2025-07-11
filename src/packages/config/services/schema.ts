@@ -10,7 +10,7 @@ export const configSchema = {
             properties: {
                 connectionUrl: {
                     type: 'string',
-                    pattern: '^mysql://[a-zA-Z0-9]+:.+@.+:[0-9]+/.+$'
+                    pattern: '^mysql://[-a-zA-Z0-9]+:.+@.+:[0-9]+/.+$'
                 }
             }
         },
