@@ -46,7 +46,8 @@ const outputSchema = {
                         pattern: '^#[A-F0-9]{6}$'
                     },
                     lastLogData: logDataSchema,
-                    oneHourAgoLogData: logDataSchema
+                    oneHourAgoLogData: logDataSchema,
+                    tempOffset: { type: 'number' }
                 },
                 additionalProperties: false
             }

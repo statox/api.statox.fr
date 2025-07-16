@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `HomeTrackerSensor` (
     `hexColor`varchar(10) NOT NULL default "#FF00FF",
     `isMonitored` tinyint NOT NULL DEFAULT 0,
     `lastAlertDateUnix` int(11) unsigned default null,
+    `tempOffset` float default 0.0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
