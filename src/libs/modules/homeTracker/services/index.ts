@@ -1,4 +1,3 @@
-export { getAllSensorsWithLatestLog } from './getAllSensorsWithLatestLog.js';
 export { getHistogramData, getCachedHistogramData } from './getHistogramData.js';
 export { getSensorsDashboardData } from './getSensorsDashboardData.js';
 export { ingestSensorData } from './ingestData.js';
