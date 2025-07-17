@@ -37,7 +37,6 @@ const outputSchema = {
                 type: 'object',
                 properties: {
                     sensorName: { type: 'string' },
-                    // lastLogTimestamp: { type: 'number' },
                     lastAlertDateUnix: { type: ['number', 'null'] },
                     lastSyncDateUnix: { type: 'number' },
                     hexColor: {
