@@ -7,7 +7,7 @@ ENVIRONMENT="$2"
 TMP_RESTORE_FILE='restore.sql'
 
 if [ -z "$FILE_TO_RESTORE" ]; then
-    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests]"
+    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests|--new-prod]"
     exit 1
 fi
 

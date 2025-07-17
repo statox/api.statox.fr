@@ -10,7 +10,9 @@ source "$SCRIPTPATH/set-db-creds.sh" "$1"
 echo "Got creds. Dumping DB"
 
 # --compress is used only in transit between client and server
-docker exec apistatox.mysql /usr/bin/mysqldump --compress -h "$host" -u "$user" --password="$password" --no-tablespaces "$db" >  "$TMP_BACKUP_FILE"
+# docker exec apistatox.mysql /usr/bin/mysqldump --compress -h "$host" -u "$user" --password="$password" --no-tablespaces "$db" >  "$TMP_BACKUP_FILE"
+# docker exec apistatox.mysql /usr/bin/mysqldump -h "$host" -u "$user" --password="$password" --no-tablespaces --compression-algorithms=zlib "$db" >  "$TMP_BACKUP_FILE"
+docker exec apistatox.mysql /usr/bin/mysqldump -h "$host" -u "$user" --password="$password" --no-tablespaces "$db" >  "$TMP_BACKUP_FILE"
 
 gzip -c "$TMP_BACKUP_FILE" > "$BACKUP_FILE"
 # rm "$TMP_BACKUP_FILE"

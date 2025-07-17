@@ -18,17 +18,9 @@ fi
 
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-TESTS=0
 
-if [ "$#" -eq 0 ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-local")
-elif [ "$1" == '--prod' ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-prod")
-elif [ "$1" == '--tests' ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-tests")
-else
-    echo 'Usage check-mysql-size.sh [--prod | --tests]'
-fi
+source "$SCRIPTPATH/set-db-creds.sh" "$1"
+MYSQL_CMD="mysql -h $host -u $user --port $port --password=$password"
 
 try_connect(){
     echo 'Try to connect to mysql'

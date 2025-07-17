@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC2317  # Don't warn about unreachable commands in this file (TODO understand why the source command creates this warning)
+
 if ! command -v mysql >/dev/null 2>&1; then
     echo "mysql client is not installed. Stoping here."
     exit 1
@@ -9,14 +11,19 @@ fi
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 TESTS=0
 
-if [ "$#" -eq 0 ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-local")
-elif [ "$1" == '--prod' ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-prod")
-elif [ "$1" == '--tests' ]; then
-    MYSQL_CMD=$("$SCRIPTPATH/mysql-tests")
+#if [ "$#" -eq 0 ]; then
+#    MYSQL_CMD=$("$SCRIPTPATH/mysql-local")
+#elif [ "$1" == '--prod' ]; then
+#    MYSQL_CMD=$("$SCRIPTPATH/mysql-prod")
+#elif [ "$1" == '--tests' ]; then
+#    MYSQL_CMD=$("$SCRIPTPATH/mysql-tests")
+
+source "$SCRIPTPATH/new_db_helpers/set-db-creds.sh" "$1"
+MYSQL_CMD="mysql -h $host -u $user --port $port --password=$password $db"
+
+if [ "$1" == '--tests' ]; then
     TESTS=1
-else
+elif [ -n "$1" ] && [ ! "$1" = "--prod" ]; then
     echo 'Usage init-sh.sh [--prod | --tests]'
 fi
 
