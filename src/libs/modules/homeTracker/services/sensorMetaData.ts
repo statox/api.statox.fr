@@ -1,5 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { db } from '../../../databases/db.js';
+import { slog } from '../../logging/index.js';
 
 type SensorMetaData = {
     sqlId: number;
@@ -31,4 +32,40 @@ export const updateSensorLastSyncDate = async (params: { sensorName: string }) =
         `,
         [params.sensorName]
     );
+};
+
+// If a sensor is not in the table we shouldn't fail the ingestion so
+// we set a default sleep time at 10 minutes -4 seconds.
+// The -4 seconds is to try to reduce the drift due to sensors restarting
+const SENSORS_DEFAULT_SLEEP_TIME_SEC = 10 * 60 - 4;
+
+export const getSensorSleepTimeSec = async (params: { sensorName: string }): Promise<number> => {
+    const [rows] = await db.query<({ sleepTimeSec: number } & RowDataPacket)[]>(
+        `SELECT sleepTimeSec FROM HomeTrackerSensor WHERE name = ?`,
+        [params.sensorName]
+    );
+
+    if (rows.length === 0) {
+        slog.log('home-tracker', 'Using default sleep time. Sensor name not found', {
+            sensorName: params.sensorName
+        });
+        return SENSORS_DEFAULT_SLEEP_TIME_SEC;
+    }
+    if (rows.length > 1) {
+        slog.log(
+            'home-tracker',
+            'Using default sleep time. Several lines found with the same sensor name',
+            { sensorName: params.sensorName }
+        );
+        return SENSORS_DEFAULT_SLEEP_TIME_SEC;
+    }
+
+    return rows[0].sleepTimeSec;
+};
+
+export const updateSensorSleepTimeSec = async (sensorName: string, sleepTimeSec: number) => {
+    return db.query('UPDATE HomeTrackerSensor SET sleepTimeSec = ? WHERE name = ?', [
+        sleepTimeSec,
+        sensorName
+    ]);
 };

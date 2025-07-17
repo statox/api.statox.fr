@@ -1,6 +1,7 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
 import {
+    getSensorSleepTimeSec,
     ingestSensorData,
     sensorRawDataInputSchema,
     updateSensorLastSyncDate
@@ -19,10 +20,7 @@ const handler: RouteHandler<Input> = async (params) => {
     ingestSensorData(params.input);
     slog.log('debug', 'After ingestSensorData', { sensorName: params.input.sensorName });
 
-    // For now sensors always sleep for 10 minutes between two uploads
-    // The -4 is to try to reduce drift due to sensors restarting
-    // TODO: Implement variable sleep time based on time of the day
-    const instructSleepSec = 10 * 60 - 4;
+    const instructSleepSec = await getSensorSleepTimeSec({ sensorName: params.input.sensorName });
     params.loggableContext.addData('instructSleepSec', instructSleepSec);
     return { instructSleepSec };
 };
