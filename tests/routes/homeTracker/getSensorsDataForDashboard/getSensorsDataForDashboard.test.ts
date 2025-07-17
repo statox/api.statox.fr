@@ -19,7 +19,8 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                     hexColor: '#FF0000',
                     lastSyncDateUnix: nowSec,
                     lastAlertDateUnix: tenMinutesAgoSec,
-                    tempOffset: -1.2
+                    tempOffset: -1.2,
+                    sleepTimeSec: 300
                 },
                 {
                     name: 'jardiniere',
@@ -93,6 +94,7 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                 sensorName: 'jardiniere',
                 hexColor: '#00FF00',
                 tempOffset: 0.2,
+                sleepTimeSec: 596,
                 lastSyncDateUnix: tenMinutesAgoSec,
                 lastAlertDateUnix: null,
                 lastLogData: {
@@ -116,6 +118,7 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                 sensorName: 'salon',
                 hexColor: '#FF0000',
                 tempOffset: -1.2,
+                sleepTimeSec: 300,
                 lastSyncDateUnix: nowSec,
                 lastAlertDateUnix: tenMinutesAgoSec,
                 lastLogData: {

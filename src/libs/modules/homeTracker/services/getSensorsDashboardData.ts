@@ -74,6 +74,7 @@ export const getSensorsDashboardData = async () => {
         const sensorState = {
             sensorName,
             tempOffset: sensorMetaData.tempOffset,
+            sleepTimeSec: sensorMetaData.sleepTimeSec,
             hexColor: sensorMetaData.hexColor,
             lastSyncDateUnix: sensorMetaData.lastSyncDateUnix,
             lastAlertDateUnix: sensorMetaData.lastAlertDateUnix,
