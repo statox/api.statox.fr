@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `HomeTrackerSensor` (
     `hexColor`varchar(10) NOT NULL default "#FF00FF",
     `isMonitored` tinyint NOT NULL DEFAULT 0,
     `lastAlertDateUnix` int(11) unsigned default null,
-    `tempOffset` float default 0.0,
+    `tempOffset` float default 0.0, -- TODO The float type is imprecise in mysql, that mess up the queries. TODO Replace the column with decimal type and use tenth of degrees
     `sleepTimeSec` int(5) default 596, -- The default if 10 minutes minutes 4 seconds to try to reduce drift due to sensors restarting
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

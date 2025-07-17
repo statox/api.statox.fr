@@ -19,6 +19,7 @@ import { route as HomeTracker_getSensorsDataForDashboard } from './homeTracker/g
 import { route as HomeTracker_getWeatherForecast } from './homeTracker/getWeatherForecast.js';
 import { route as HomeTracker_histogramData } from './homeTracker/histogramData.js';
 import { route as HomeTracker_histogramDataPublic } from './homeTracker/histogramDataPublic.js';
+import { route as HomeTracker_updateSensorMetadata } from './homeTracker/updateSensorMetadata.js';
 import { route as HomeTracker_upload } from './homeTracker/upload.js';
 import { route as PersonalTracker_GetAll } from './personalTracker/getAll.js';
 import { route as PersonalTracker_Upload } from './personalTracker/upload.js';
@@ -57,6 +58,7 @@ export const routes: {
         HomeTracker_getWeatherForecast,
         HomeTracker_histogramData,
         HomeTracker_histogramDataPublic,
+        HomeTracker_updateSensorMetadata,
         HomeTracker_upload,
         PersonalTracker_GetAll,
         PersonalTracker_Upload,

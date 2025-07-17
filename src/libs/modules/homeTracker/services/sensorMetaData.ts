@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2';
+import { OkPacket, RowDataPacket } from 'mysql2';
 import { db } from '../../../databases/db.js';
 import { slog } from '../../logging/index.js';
 
@@ -70,9 +70,29 @@ export const getSensorSleepTimeSec = async (params: { sensorName: string }): Pro
     return rows[0].sleepTimeSec;
 };
 
-export const updateSensorSleepTimeSec = async (sensorName: string, sleepTimeSec: number) => {
-    return db.query('UPDATE HomeTrackerSensor SET sleepTimeSec = ? WHERE name = ?', [
-        sleepTimeSec,
-        sensorName
-    ]);
+export class SensorDoesNotExistError extends Error {
+    constructor() {
+        super('SENSOR_NAME_DOES_NOT_EXISTS');
+    }
+}
+
+export const updateSensorMetadata = async (params: {
+    sensorName: string;
+    hexColor: string;
+    tempOffset: number;
+    sleepTimeSec: number;
+}) => {
+    const [result] = await db.execute(
+        `
+        UPDATE HomeTrackerSensor SET
+            hexColor = ?,
+            tempOffset = ?,
+            sleepTimeSec = ?
+        WHERE name = ?`,
+        [params.hexColor, params.tempOffset, params.sleepTimeSec, params.sensorName]
+    );
+
+    if ((result as OkPacket).affectedRows === 0) {
+        throw new SensorDoesNotExistError();
+    }
 };

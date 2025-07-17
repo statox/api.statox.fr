@@ -15,6 +15,7 @@ import {
 } from '../routes/errors.js';
 import { OutputValidationError } from './apiPipeline.middleware.js';
 import { DuplicateIngredientError, RecipeNotFoundError } from '../modules/cookbook/index.js';
+import { SensorDoesNotExistError } from '../modules/homeTracker/services/sensorMetaData.js';
 
 export const errorHandler = async (
     error: Error,
@@ -36,7 +37,8 @@ export const errorHandler = async (
         error instanceof EntryAlreadyExistsError ||
         error instanceof ItemNotFoundError ||
         error instanceof DuplicateIngredientError ||
-        error instanceof RecipeNotFoundError
+        error instanceof RecipeNotFoundError ||
+        error instanceof SensorDoesNotExistError
     ) {
         response.status(400).json({ message: error.message });
         return next();
