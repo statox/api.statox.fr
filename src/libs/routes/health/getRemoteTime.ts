@@ -1,19 +1,13 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyInput, GetRoute } from '../types.js';
+import { getNowSec } from '../../modules/monitoring/getRemoteTime.js';
 
 const handler = async () => {
-    return { time: Date.now() };
+    return await getNowSec();
 };
 
 const outputSchema = {
-    type: 'object',
-    properties: {
-        time: {
-            type: 'number'
-        }
-    },
-    required: ['time'],
-    additionalProperties: false
+    type: 'number'
 } as const;
 
 export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
