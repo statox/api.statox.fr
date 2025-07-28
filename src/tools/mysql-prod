@@ -8,7 +8,8 @@ if [ "$CONNECTED_USER" != "$EXPECTED_USER" ]; then
     exit 1
 fi
 
-URL=$(npx heroku config:get JAWSDB_URL)
+# URL=$(npx heroku config:get JAWSDB_URL)
+URL=$(npx heroku config:get APIDB_URL)
 
 # mysql://[user]:[password]@[host]:[port]/[db]
 DATA_STR=$(echo "$URL" | sed -E 's;mysql://(.*):(.*)@(.*):(.*)/(.*);\1 \2 \3 \4 \5;')
