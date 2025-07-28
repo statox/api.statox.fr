@@ -1,3 +1,4 @@
+import { RowDataPacket } from 'mysql2';
 import { db } from '../../databases/db.js';
 import { getPresignedURLForKey } from '../s3files/index.js';
 
@@ -14,7 +15,7 @@ type ClipboardEntry = {
 };
 
 export const getPublicEntries = async () => {
-    const [entries] = await db.query(
+    const [entries] = await db.query<(ClipboardEntry & RowDataPacket)[]>(
         `SELECT
             id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
         FROM Clipboard
@@ -22,16 +23,16 @@ export const getPublicEntries = async () => {
         AND creationDateUnix + ttl > UNIX_TIMESTAMP()
 `
     );
-    return await enrichEntries(entries as ClipboardEntry[]);
+    return await enrichEntries(entries);
 };
 
 export const getAllEntries = async () => {
-    const [entries] = await db.query(
+    const [entries] = await db.query<(ClipboardEntry & RowDataPacket)[]>(
         `SELECT
             id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
         FROM Clipboard`
     );
-    return await enrichEntries(entries as ClipboardEntry[]);
+    return await enrichEntries(entries);
 };
 
 const enrichEntries = async (entries: ClipboardEntry[]) => {
