@@ -96,10 +96,10 @@ export const initApp = () => {
 const configureServerTimeout = (server: Server) => {
     // https://betterstack.com/community/guides/scaling-nodejs/nodejs-timeouts/
     // requestTimeout: limit for how long the server should wait to receive the entire request (including the body) from the client
-    server.requestTimeout = 5000; // (default 300000)
+    server.requestTimeout = config.timeouts.requestTimeout; // (default 300000)
 
     // headersTimeout: time allowed for receiving request headers from the client.
-    server.headersTimeout = 2000; // (default 60000)
+    server.headersTimeout = config.timeouts.requestTimeout; // (default 60000)
 
     // keepAliveTimeout: how long a server holds a connection open after responding to a request.
     // It's key for HTTP Keep-Alive, which allows multiple requests over a single connection, boosting efficiency.
@@ -107,7 +107,7 @@ const configureServerTimeout = (server: Server) => {
     // server.keepAliveTimeout = 3000; (default 5000)
 
     // timeout: limit the inactivity period (no data sent or received) on an established socket connection
-    server.timeout = 10000; // (default 0 - no limit)
+    server.timeout = config.timeouts.socketTimeout; // (default 0 - no limit)
 
     server.on('timeout', (socket: Socket) => {
         slog.log('app', 'A request timedout');

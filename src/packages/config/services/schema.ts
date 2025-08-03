@@ -1,7 +1,7 @@
 export const configSchema = {
     type: 'object',
     additionalProperties: false,
-    required: ['mysql', 'elk', 'env', 'ntfy_sh', 'meteofrance', 'r2', 'slack'],
+    required: ['mysql', 'elk', 'env', 'ntfy_sh', 'meteofrance', 'r2', 'slack', 'timeouts'],
     properties: {
         mysql: {
             type: 'object',
@@ -118,6 +118,27 @@ export const configSchema = {
                 webhookUrl: {
                     type: 'string',
                     pattern: '^https?://.+'
+                }
+            }
+        },
+        timeouts: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['requestTimeout', 'headersTimeout', 'socketTimeout'],
+            properties: {
+                requestTimeout: {
+                    description:
+                        'Limit for how long the server should wait to receive the entire request (including the body) from the client',
+                    type: 'number'
+                },
+                headersTimeout: {
+                    description: 'Time allowed for receiving request headers from the client.',
+                    type: 'number'
+                },
+                socketTimeout: {
+                    description:
+                        'Limit the inactivity period (no data sent or received) on an established socket connection',
+                    type: 'number'
                 }
             }
         }

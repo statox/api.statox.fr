@@ -8,6 +8,7 @@ import { METEO_FRANCE_API_KEY } from '../sources/meteofrance.js';
 import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../sources/r2.js';
 import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../sources/slack.js';
 import { NTFY_SH_URL } from '../sources/ntfy_sh.js';
+import { HEADERS_TIMEOUT, REQUEST_TIMEOUT, SOCKET_TIMEOUT } from '../sources/timeouts.js';
 
 export const config: Config = {
     mysql: {
@@ -38,6 +39,11 @@ export const config: Config = {
     slack: {
         userId: SLACK_USERID,
         webhookUrl: SLACK_WEBHOOK_URL
+    },
+    timeouts: {
+        requestTimeout: REQUEST_TIMEOUT,
+        headersTimeout: HEADERS_TIMEOUT,
+        socketTimeout: SOCKET_TIMEOUT
     }
 };
 
