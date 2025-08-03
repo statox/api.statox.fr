@@ -76,8 +76,6 @@ export class UnkownApiKeyError extends ApiKeyError {
 // this livemode control whether or not we enforce the API keys validation
 const livemode = true;
 export const validateAPIKeyHeader = async (req: Request, _res: Response, next: NextFunction) => {
-    const dataStr = JSON.stringify({ path: req.path });
-    slog.log('debug', 'validateAPIKeyHeader', { dataStr });
     const authHeader = req.headers.authorization;
 
     let error;
