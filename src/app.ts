@@ -2,7 +2,6 @@ import cors from 'cors';
 import express from 'express';
 import mustacheExpress from 'mustache-express';
 import { DateTime } from 'luxon';
-import { Socket } from 'net';
 import { Server } from 'http';
 import { AllowedSchema, Validator } from 'express-json-validator-middleware';
 import { auth0middleware } from './libs/middleware/auth0.middleware.js';
@@ -108,9 +107,4 @@ const configureServerTimeout = (server: Server) => {
 
     // timeout: limit the inactivity period (no data sent or received) on an established socket connection
     server.timeout = config.timeouts.socketTimeout; // (default 0 - no limit)
-
-    server.on('timeout', (socket: Socket) => {
-        slog.log('app', 'A request timedout');
-        socket.destroy();
-    });
 };
