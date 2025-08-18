@@ -46,6 +46,7 @@ const outputSchema = {
                     },
                     lastLogData: logDataSchema,
                     oneHourAgoLogData: logDataSchema,
+                    oneDayAgoLogData: logDataSchema,
                     sleepTimeSec: { type: 'number' },
                     tempOffset: { type: 'number' }
                 },

@@ -11,6 +11,7 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
         const tenMinutesAgoMillis = DateTime.now().minus({ minutes: 10 }).toMillis();
         const tenMinutesAgoSec = Math.floor(tenMinutesAgoMillis / 1000);
         const twentyMinutesAgoMillis = DateTime.now().minus({ minutes: 20 }).toMillis();
+        const oneDayAgoMillis = DateTime.now().minus({ day: 1 }).toMillis();
 
         await th.mysql.fixture({
             HomeTrackerSensor: [
@@ -63,6 +64,15 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                     }
                 },
                 {
+                    '@timestamp': oneDayAgoMillis,
+                    document: {
+                        sensorName: 'salon',
+                        batteryCharge: 5,
+                        humidity: 10,
+                        tempCelsius: 10
+                    }
+                },
+                {
                     '@timestamp': tenMinutesAgoMillis,
                     document: {
                         sensorName: 'jardiniere',
@@ -105,7 +115,16 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                     tempCelsius: 21
                 },
                 oneHourAgoLogData: {
-                    // We just _try_ to get the log the closest to one hours ago
+                    // We just _try_ to get the log the closest to one hour ago
+                    // Given the fixtures here it's the one from 20 minutes ago
+                    timestamp: twentyMinutesAgoMillis,
+                    sensorName: 'jardiniere',
+                    batteryCharge: 4,
+                    humidity: 0,
+                    tempCelsius: 0
+                },
+                oneDayAgoLogData: {
+                    // We just _try_ to get the log the closest to one day ago
                     // Given the fixtures here it's the one from 20 minutes ago
                     timestamp: twentyMinutesAgoMillis,
                     sensorName: 'jardiniere',
@@ -129,13 +148,22 @@ describe('homeTracker/getSensorsDataForDashboard', () => {
                     tempCelsius: 21
                 },
                 oneHourAgoLogData: {
-                    // We just _try_ to get the log the closest to one hours ago
+                    // We just _try_ to get the log the closest to one hour ago
                     // Given the fixtures here it's the one from 10 minutes ago
                     timestamp: tenMinutesAgoMillis,
                     sensorName: 'salon',
                     batteryCharge: 4,
                     humidity: 0,
                     tempCelsius: 0
+                },
+                oneDayAgoLogData: {
+                    // We just _try_ to get the log the closest to one day ago
+                    // Given the fixtures here we do get the log from 1 day ago
+                    timestamp: oneDayAgoMillis,
+                    sensorName: 'salon',
+                    batteryCharge: 5,
+                    humidity: 10,
+                    tempCelsius: 10
                 }
             }
         ]);
