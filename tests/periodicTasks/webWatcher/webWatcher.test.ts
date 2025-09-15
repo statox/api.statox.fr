@@ -349,7 +349,7 @@ describe('periodic task - webWatcher', () => {
         th.slog.checkLog('web-watcher', 'Failed to run watcher', {
             watcherName: 'Web check 1',
             error: sinon.match((error) => {
-                return error.message === "'invalid @# > selector . adsf' is not a valid selector";
+                return error.message === 'Invalid selector invalid @# > selector . adsf';
             })
         });
 
@@ -367,7 +367,7 @@ describe('periodic task - webWatcher', () => {
                     lastUpdateDateUnix: 0,
                     checkIntervalSeconds: 0,
                     lastErrorDateUnix: th.mysql.aroundNowSec,
-                    lastErrorMessage: "'invalid @# > selector . adsf' is not a valid selector"
+                    lastErrorMessage: 'Invalid selector invalid @# > selector . adsf'
                 }
             ]
         });
