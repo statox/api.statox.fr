@@ -1,6 +1,14 @@
 import { slog } from '../logging/index.js';
 import { WebSocket } from 'ws';
-import { Board, BoardState, Cell, getBoardState, getNewBoard, makeMove } from './game.js';
+import {
+    Board,
+    BoardState,
+    Cell,
+    getBoardState,
+    getNewBoard,
+    getWinningCells,
+    makeMove
+} from './game.js';
 
 type Player = {
     id: number;
@@ -26,7 +34,7 @@ export const onconnection = (ws: WebSocket) => {
 
     if (players.length >= 2) {
         ws.send(JSON.stringify({ type: 'error', message: 'Game already full' }));
-        ws.close();
+        ws.close(1002, 'too_many_players');
         return;
     }
 
@@ -64,6 +72,7 @@ export const onconnection = (ws: WebSocket) => {
 
             board = makeMove(board, player.id as Cell, move);
             boardState = getBoardState(board);
+            const winningCells = getWinningCells(board);
 
             // Switch turn
             const other = players.find((p) => p.id !== player.id);
@@ -71,7 +80,13 @@ export const onconnection = (ws: WebSocket) => {
 
             players.forEach((p) => {
                 p.ws.send(
-                    JSON.stringify({ type: 'update_board', from: player.id, board, boardState })
+                    JSON.stringify({
+                        type: 'update_board',
+                        from: player.id,
+                        board,
+                        boardState,
+                        winningCells
+                    })
                 );
             });
 

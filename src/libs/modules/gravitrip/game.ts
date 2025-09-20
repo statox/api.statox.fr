@@ -10,8 +10,7 @@ export enum BoardState {
     notOver = 0,
     winPlayer1 = 1,
     winPlayer2 = 2,
-    draw = 3,
-    notStarted = 4
+    draw = 3
 }
 
 export const nbColumns = 7;
@@ -108,7 +107,8 @@ export const checkWinner = (board: Board) => {
 };
 
 export const getWinningCells = (board: Board) => {
-    if (getBoardState(board) === BoardState.notOver) {
+    const boardState = getBoardState(board);
+    if (boardState !== BoardState.winPlayer1 && boardState !== BoardState.winPlayer2) {
         return null;
     }
 
