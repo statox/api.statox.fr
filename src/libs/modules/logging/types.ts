@@ -97,6 +97,7 @@ export type AppLogComponent =
     | 'readingList'
     | 's3Files'
     | 'weather-forecast'
-    | 'web-watcher';
+    | 'web-watcher'
+    | 'ws';
 
 export type LogObject = { component: AppLogComponent; message: string } | LoggableProperties;

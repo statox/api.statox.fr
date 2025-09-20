@@ -15,6 +15,8 @@ import { slog } from './libs/modules/logging/index.js';
 import { startPeriodicTasks } from './libs/PeriodicTasks/index.js';
 import { validateAPIKeyHeader } from './libs/middleware/authIOT.middleware.js';
 import { apiPipeline } from './libs/middleware/apiPipeline.middleware.js';
+import { WebSocketServer } from 'ws';
+import { initWsServer } from './app-ws.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -86,6 +88,10 @@ export const initApp = () => {
     app.use(errorHandler);
     const server = app.listen(PORT, () => slog.log('app', 'App listening', { port: Number(PORT) }));
     configureServerTimeout(server);
+
+    // Attach WebSocket server to the same HTTP server so that ws listen on the same port
+    const wss = new WebSocketServer({ server });
+    initWsServer(wss);
 
     if (config.env.isProd) {
         startPeriodicTasks();
