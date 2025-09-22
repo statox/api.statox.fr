@@ -12,134 +12,134 @@
 name: Test and AutoMerge PRs
 
 on:
- pull_request:
-    types: [opened, synchronize, edited]
-    branches: [main]
- workflow_dispatch: # Only for tests, to remove
+    pull_request:
+        types: [opened, synchronize, edited]
+        branches: [main]
+    workflow_dispatch: # Only for tests, to remove
 
 permissions:
-  # This is needed to approve the PR
-  pull-requests: write
-  # This is needed to merge the PR https://github.com/cli/cli/issues/6695#issuecomment-1348430969
-  contents: write
+    # This is needed to approve the PR
+    pull-requests: write
+    # This is needed to merge the PR https://github.com/cli/cli/issues/6695#issuecomment-1348430969
+    contents: write
 
 jobs:
- lint-and-format:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.head_ref }}
+    lint-and-format:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.head_ref }}
 
-      - name: Install node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: '22'
-          cache: 'npm'
+            - name: Install node.js
+              uses: actions/setup-node@v5
+              with:
+                  node-version: '22'
+                  cache: 'npm'
 
-      - name: Cache node modules
-        id: cache-nodemodules
-        uses: actions/cache@v4
-        env:
-            cache-name: cache-node-modules
-        with:
-            # caching node_modules
-            path: node_modules
-            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-                ${{ runner.os }}-build-${{ env.cache-name }}-
-                ${{ runner.os }}-build-
-                ${{ runner.os }}-
+            - name: Cache node modules
+              id: cache-nodemodules
+              uses: actions/cache@v4
+              env:
+                  cache-name: cache-node-modules
+              with:
+                  # caching node_modules
+                  path: node_modules
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-
+                      ${{ runner.os }}-build-
+                      ${{ runner.os }}-
 
-      - name: Install Dependencies
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+            - name: Install Dependencies
+              if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+              run: npm ci
 
-      - name: Check lint
-        run: npm run lint
+            - name: Check lint
+              run: npm run lint
 
-      - name: Check prettier
-        run: npm run prettier
+            - name: Check prettier
+              run: npm run prettier
 
- tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.head_ref }}
+    tests:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{ github.head_ref }}
 
-      - name: Install node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 'latest'
-          cache: 'npm'
+            - name: Install node.js
+              uses: actions/setup-node@v5
+              with:
+                  node-version: 'latest'
+                  cache: 'npm'
 
-      - name: Cache node modules
-        id: cache-nodemodules
-        uses: actions/cache@v4
-        env:
-            cache-name: cache-node-modules
-        with:
-            # caching node_modules
-            path: node_modules
-            key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-                ${{ runner.os }}-build-${{ env.cache-name }}-
-                ${{ runner.os }}-build-
-                ${{ runner.os }}-
+            - name: Cache node modules
+              id: cache-nodemodules
+              uses: actions/cache@v4
+              env:
+                  cache-name: cache-node-modules
+              with:
+                  # caching node_modules
+                  path: node_modules
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-
+                      ${{ runner.os }}-build-
+                      ${{ runner.os }}-
 
-      - name: Install Dependencies
-        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
-        run: npm ci
+            - name: Install Dependencies
+              if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+              run: npm ci
 
-      - name: Start docker environment
-        run: npm run env
+            - name: Start docker environment
+              run: npm run env
 
-      - name: Build app
-        run: npm run postinstall
+            - name: Build app
+              run: npm run postinstall
 
-      - name: Init mysql
-        run: ./src/tools/init-db.sh
+            - name: Init mysql
+              run: ./src/tools/init-db.sh
 
-      - name: Init elk
-        run: ./src/tools/init-elk.sh
+            - name: Init elk
+              run: ./src/tools/init-elk.sh
 
-      - name: Run tests
-        run: npm run tests:ci
+            - name: Run tests
+              run: npm run tests:ci
 
-      - name: Merge test reports
-        if: always()
-        run: npx ctrf merge ctrf/
+            - name: Merge test reports
+              if: always()
+              run: npx ctrf merge ctrf/
 
-      - name: Generate tests report
-        if: always()
-        run: npx github-actions-ctrf ctrf/ctrf-report.json
+            - name: Generate tests report
+              if: always()
+              run: npx github-actions-ctrf ctrf/ctrf-report.json
 
-      - name: Publish CTRF pull request comment
-        run: npx github-actions-ctrf pull-request ctrf/ctrf-report.json
-        if: always()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Publish CTRF pull request comment
+              run: npx github-actions-ctrf pull-request ctrf/ctrf-report.json
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Stop containers
-        if: always()
-        run: npm run env:stop
+            - name: Stop containers
+              if: always()
+              run: npm run env:stop
 
- auto-merge-dependabot:
-    needs: [lint-and-format, tests]
-    runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
-    steps:
-      - name: Approve the PR
-        run: gh pr review --approve "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    auto-merge-dependabot:
+        needs: [lint-and-format, tests]
+        runs-on: ubuntu-latest
+        if: github.actor == 'dependabot[bot]'
+        steps:
+            - name: Approve the PR
+              run: gh pr review --approve "$PR_URL"
+              env:
+                  PR_URL: ${{github.event.pull_request.html_url}}
+                  GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Auto merge the PR
-        run: gh pr merge --rebase --auto "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+            - name: Auto merge the PR
+              run: gh pr merge --rebase --auto "$PR_URL"
+              env:
+                  PR_URL: ${{github.event.pull_request.html_url}}
+                  GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
