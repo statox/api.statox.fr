@@ -19,7 +19,7 @@ let players: Player[];
 let currentTurn: number;
 let board: Board;
 
-export const initGravitrip = () => {
+export const resetGravitrip = () => {
     players = [];
     currentTurn = 0;
     board = getNewBoard();
@@ -29,10 +29,57 @@ interface MessagePlayerMove {
     move: number;
 }
 
-export const onconnection = (ws: WebSocket) => {
-    slog.log('ws', 'Client connected');
+const onGravitripMessage = (ws: WebSocket, message: string, player: Player) => {
+    slog.log('ws', `Received from ${player.id}`, { dataStr: message });
+
+    if (players.length < 2) return; // wait for opponent
+    if (player.id !== currentTurn) return; // not your turn
+
+    const { move } = JSON.parse(message) as MessagePlayerMove;
+    try {
+        let boardState = getBoardState(board);
+        if (boardState !== BoardState.notOver) {
+            ws.send(JSON.stringify({ type: 'game_already_over' }));
+            return;
+        }
+
+        board = makeMove(board, player.id as Cell, move);
+        boardState = getBoardState(board);
+        const winningCells = getWinningCells(board);
+
+        // Switch turn
+        const other = players.find((p) => p.id !== player.id);
+        currentTurn = other ? other.id : currentTurn;
+
+        players.forEach((p) => {
+            p.ws.send(
+                JSON.stringify({
+                    type: 'update_board',
+                    from: player.id,
+                    board,
+                    boardState,
+                    winningCells
+                })
+            );
+        });
+
+        if (boardState !== BoardState.notOver) {
+            players.forEach((p) => {
+                p.ws.close(1000, 'game_over');
+            });
+
+            resetGravitrip();
+        }
+    } catch (e) {
+        slog.log('ws', `Failed to make move`, { error: e as Error });
+    }
+};
+
+export const onGravitripConnection = (ws: WebSocket) => {
+    slog.log('ws', 'Gravitrip client connected');
 
     if (players.length >= 2) {
+        slog.log('ws', 'Gravitrip client rejected because not slot available');
         ws.send(JSON.stringify({ type: 'error', message: 'Game already full' }));
         ws.close(1002, 'too_many_players');
         return;
@@ -56,50 +103,7 @@ export const onconnection = (ws: WebSocket) => {
     }
 
     ws.on('message', (message: string) => {
-        const text = message.toString();
-        slog.log('ws', `Received from ${player.id}`, { dataStr: text });
-
-        if (players.length < 2) return; // wait for opponent
-        if (player.id !== currentTurn) return; // not your turn
-
-        const { move } = JSON.parse(text) as MessagePlayerMove;
-        try {
-            let boardState = getBoardState(board);
-            if (boardState !== BoardState.notOver) {
-                ws.send(JSON.stringify({ type: 'game_already_over' }));
-                return;
-            }
-
-            board = makeMove(board, player.id as Cell, move);
-            boardState = getBoardState(board);
-            const winningCells = getWinningCells(board);
-
-            // Switch turn
-            const other = players.find((p) => p.id !== player.id);
-            currentTurn = other ? other.id : currentTurn;
-
-            players.forEach((p) => {
-                p.ws.send(
-                    JSON.stringify({
-                        type: 'update_board',
-                        from: player.id,
-                        board,
-                        boardState,
-                        winningCells
-                    })
-                );
-            });
-
-            if (boardState !== BoardState.notOver) {
-                players.forEach((p) => {
-                    p.ws.close(1000, 'game_over');
-                });
-
-                initGravitrip();
-            }
-        } catch (e) {
-            slog.log('ws', `Failed to make move`, { error: e as Error });
-        }
+        onGravitripMessage(ws, message, player);
     });
 
     ws.on('close', () => {
@@ -108,6 +112,6 @@ export const onconnection = (ws: WebSocket) => {
         players.forEach((p) => {
             p.ws.close(1001, 'other_player_disconnected');
         });
-        initGravitrip();
+        resetGravitrip();
     });
 };
