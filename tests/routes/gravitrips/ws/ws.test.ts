@@ -1,6 +1,6 @@
 import { th } from '../../../helpers/index.js';
 import { TestWebSocket } from '../../../helpers/ws/TestWebSocket.js';
-import { BoardState } from '../../../../src/libs/modules/gravitrip/game.js';
+import { BoardState } from '../../../../src/libs/modules/gravitrip/board.js';
 
 // Good medium article with a suggestion of class to handle WebSocket tests
 // https://thomason-isaiah.medium.com/writing-integration-tests-for-websocket-servers-using-jest-and-ws-8e5c61726b2a

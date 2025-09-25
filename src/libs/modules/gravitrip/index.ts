@@ -8,7 +8,7 @@ import {
     getNewBoard,
     getWinningCells,
     makeMove
-} from './game.js';
+} from './board.js';
 
 type Player = {
     id: number;
