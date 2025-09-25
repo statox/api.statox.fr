@@ -33,7 +33,10 @@ class TestHelper_Slog extends TestHelper {
     }
 
     checkLog = (component: string, message: string, data?: TestLogObject) => {
-        const calledWithCorrectArgs = slogSpy.calledWithMatch(component, message, data);
+        const calledWithCorrectArgs = data
+            ? slogSpy.calledWithMatch(component, message, data)
+            : slogSpy.calledWithMatch(component, message);
+
         if (!calledWithCorrectArgs) {
             if (isDebug) {
                 console.log('slog calls:');
