@@ -13,7 +13,7 @@ const routeWebsocket = (ws: WebSocket, req: IncomingMessage) => {
     const url = req.url || '';
     slog.log('ws', 'access-log-ws', { path: url });
 
-    if (url === '/gravitrip') {
+    if (url === '/gravitrips/ws') {
         onGravitripConnection(ws);
         return;
     }
