@@ -35,6 +35,7 @@ export type LoggableProperties = {
     executionTimeMs?: number;
     failedCalls?: number;
     forecast?: string;
+    gameId?: string;
     id?: number;
     insertTime?: string;
     instructSleepSec?: number;
@@ -51,6 +52,7 @@ export type LoggableProperties = {
     originalError?: Error;
     originalMessage?: string;
     path?: string;
+    playerId?: number;
     port?: number;
     precipitationMM?: number;
     pressureLatest?: number;
@@ -89,6 +91,7 @@ export type AppLogComponent =
     | 'chords'
     | 'debug'
     | 'env-helpers'
+    | 'gravitrips'
     | 'home-tracker'
     | 'meteo-france'
     | 'middleware'

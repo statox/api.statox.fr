@@ -1,23 +1,23 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import { IncomingMessage } from 'node:http';
 import { slog } from './libs/modules/logging/index.js';
-import { resetGravitrip, onGravitripConnection } from './libs/modules/gravitrip/index.js';
+import { onGravitripsConnection } from './libs/modules/gravitrip/index.js';
 
 export const initWsServer = (wss: WebSocketServer) => {
     slog.log('app', 'Init WebSocket server');
-    resetGravitrip();
     wss.on('connection', routeWebsocket);
 };
 
 const routeWebsocket = (ws: WebSocket, req: IncomingMessage) => {
-    const url = req.url || '';
-    slog.log('ws', 'access-log-ws', { path: url });
+    const [path, params] = (req.url || '').split('?');
+    slog.log('ws', 'access-log-ws', { url: req.url });
 
-    if (url === '/gravitrips/ws') {
-        onGravitripConnection(ws);
+    if (path === '/gravitrips/ws') {
+        onGravitripsConnection(ws, params);
         return;
     }
 
-    slog.log('ws', 'Rejected websocket with invalid path', { url });
-    ws.close(999, 'invalid_path');
+    slog.log('ws', 'Rejected websocket with invalid path', { url: req.url });
+    ws.send(JSON.stringify({ error: 'invalid_path' }));
+    ws.close();
 };
