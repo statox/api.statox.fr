@@ -1,20 +1,18 @@
+import { slog } from '../logging/slog.js';
 import { generate4BytesHex } from '../random.js';
 import { Game } from './Game.js';
 
 const currentGames: {
     [game_id: string]: Game;
 } = {};
-
-// DO NOT COMMIT
-currentGames['boofar'] = new Game('boofar');
-
-export const getGameById = (id: string) => {
-    return currentGames[id];
-};
+const currentGameIds: string[] = [];
 
 export const getNewGame = () => {
-    if (Object.keys(currentGames).length >= 5) {
+    if (currentGameIds.length >= 5) {
         // Prevent too many concurrent games
+        // TODO Properly stop game if it is ongoing
+        const oldestGameId = currentGameIds.shift()!;
+        delete currentGames[oldestGameId];
         return;
     }
 
@@ -25,4 +23,11 @@ export const getNewGame = () => {
     }
 
     currentGames[id] = new Game(id);
+    currentGameIds.push(id);
+    slog.log('gravitrips', 'New game created', { gameId: id });
+    return id;
+};
+
+export const getGameById = (id: string) => {
+    return currentGames[id];
 };

@@ -13,6 +13,7 @@ import { route as Cookbook_addRecipe } from './cookbook/addRecipe.js';
 import { route as Cookbook_getRecipe } from './cookbook/getRecipe.js';
 import { route as Cookbook_listIngredients } from './cookbook/listIngredients.js';
 import { route as Cookbook_listRecipes } from './cookbook/listRecipes.js';
+import { route as Gravitrips_getNewGame } from './gravitrips/getNewGame.js';
 import { route as Health_GetRemoteTime } from './health/getRemoteTime.js';
 import { route as HomeTracker_getEphemerides } from './homeTracker/getEphemerides.js';
 import { route as HomeTracker_getSensorsDataForDashboard } from './homeTracker/getSensorsDataForDashboard.js';
@@ -52,6 +53,7 @@ export const routes: {
         Cookbook_getRecipe,
         Cookbook_listIngredients,
         Cookbook_listRecipes,
+        Gravitrips_getNewGame,
         Health_GetRemoteTime,
         HomeTracker_getEphemerides,
         HomeTracker_getSensorsDataForDashboard,
