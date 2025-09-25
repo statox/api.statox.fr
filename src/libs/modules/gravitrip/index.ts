@@ -30,7 +30,7 @@ interface MessagePlayerMove {
 }
 
 const onGravitripMessage = (ws: WebSocket, message: string, player: Player) => {
-    slog.log('ws', `Received from ${player.id}`, { dataStr: message });
+    slog.log('ws', `Received from ${player.id}`, { dataStr: message.toString() });
 
     if (players.length < 2) return; // wait for opponent
     if (player.id !== currentTurn) return; // not your turn
@@ -65,7 +65,8 @@ const onGravitripMessage = (ws: WebSocket, message: string, player: Player) => {
 
         if (boardState !== BoardState.notOver) {
             players.forEach((p) => {
-                p.ws.close(1000, 'game_over');
+                p.ws.send(JSON.stringify({ type: 'game_over', reason: boardState }));
+                p.ws.close();
             });
 
             resetGravitrip();
@@ -79,9 +80,9 @@ export const onGravitripConnection = (ws: WebSocket) => {
     slog.log('ws', 'Gravitrip client connected');
 
     if (players.length >= 2) {
-        slog.log('ws', 'Gravitrip client rejected because not slot available');
+        slog.log('ws', 'Gravitrip client rejected because no slot available');
         ws.send(JSON.stringify({ type: 'error', message: 'Game already full' }));
-        ws.close(1002, 'too_many_players');
+        ws.close();
         return;
     }
 
@@ -110,7 +111,8 @@ export const onGravitripConnection = (ws: WebSocket) => {
         slog.log('ws', `Player ${player.id} disconnected`);
         players = players.filter((p) => p !== player);
         players.forEach((p) => {
-            p.ws.close(1001, 'other_player_disconnected');
+            p.ws.send(JSON.stringify({ type: 'game_over', reason: 'other_player_disconnected' }));
+            p.ws.close();
         });
         resetGravitrip();
     });
