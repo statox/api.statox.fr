@@ -13,7 +13,6 @@ export const getNewGame = () => {
         // TODO Properly stop game if it is ongoing
         const oldestGameId = currentGameIds.shift()!;
         delete currentGames[oldestGameId];
-        return;
     }
 
     let id = generate4BytesHex();

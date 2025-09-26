@@ -3,6 +3,7 @@ import { WebSocket } from 'ws';
 import { getGameById } from './gameService.js';
 
 export * from './gameService.js';
+
 export const onGravitripsConnection = (ws: WebSocket, gameId: string) => {
     slog.log('gravitrips', 'Gravitrips client connected', { gameId });
 

@@ -97,4 +97,33 @@ export class TestWebSocket extends WebSocket {
             }, timeout);
         });
     }
+
+    waitForNewMessage(timeout = 1000) {
+        const originalMessagesLength = this._messages.length;
+
+        return new Promise<string>((resolve, reject) => {
+            const checkForMessage = (event: MessageEvent) => {
+                clearTimeout(timerId);
+                this.removeEventListener('message', checkForMessage);
+                resolve(event.data.toString('utf8'));
+            };
+
+            this.addEventListener('message', checkForMessage);
+
+            const timerId = setTimeout(() => {
+                this.removeEventListener('message', checkForMessage);
+
+                const success = this._messages.length > originalMessagesLength;
+
+                if (success) return resolve(this._messages[this._messages.length - 1]);
+                if (isDebug) {
+                    console.log('WebSocket did not receive message in time');
+                    console.log('Expected: Any message');
+                    console.log('Got: none after these:');
+                    console.log(this._messages);
+                }
+                reject(new Error(`WebSocket did not receive a message in time.`));
+            }, timeout);
+        });
+    }
 }
