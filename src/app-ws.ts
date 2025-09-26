@@ -1,7 +1,7 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import { IncomingMessage } from 'node:http';
 import { slog } from './libs/modules/logging/index.js';
-import { onGravitripsConnection } from './libs/modules/gravitrip/index.js';
+import { onGravitripsConnection } from './libs/modules/gravitrips/index.js';
 
 export const initWsServer = (wss: WebSocketServer) => {
     slog.log('app', 'Init WebSocket server');

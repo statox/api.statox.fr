@@ -1,6 +1,6 @@
 import { th } from '../../../helpers/index.js';
 import { TestWebSocket } from '../../../helpers/ws/TestWebSocket.js';
-import { BoardState } from '../../../../src/libs/modules/gravitrip/board.js';
+import { BoardState } from '../../../../src/libs/modules/gravitrips/board.js';
 
 // Good medium article with a suggestion of class to handle WebSocket tests
 // https://thomason-isaiah.medium.com/writing-integration-tests-for-websocket-servers-using-jest-and-ws-8e5c61726b2a
@@ -36,7 +36,7 @@ describe('gravitrips/ws', () => {
         const client3 = new TestWebSocket(WS_SERVER_URL + '/gravitrips/ws');
         await client3.waitUntil('close');
 
-        th.slog.checkLog('ws', 'Gravitrip client rejected because no slot available');
+        th.slog.checkLog('ws', 'Gravitrips client rejected because no slot available');
     });
 
     it('should warn a player when the other disconnects', async () => {

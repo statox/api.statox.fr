@@ -90,10 +90,10 @@ export class Game {
         this.gameState = GameState.playing;
 
         this.player1.ws.on('message', (message: string) => {
-            this.onGravitripMessage(message, this.player1!);
+            this.onGravitripsMessage(message, this.player1!);
         });
         this.player2.ws.on('message', (message: string) => {
-            this.onGravitripMessage(message, this.player2!);
+            this.onGravitripsMessage(message, this.player2!);
         });
 
         this.player1.ws.on('close', () => {
@@ -124,7 +124,7 @@ export class Game {
         });
     }
 
-    onGravitripMessage(message: string, player: Player) {
+    onGravitripsMessage(message: string, player: Player) {
         slog.log('gravitrips', 'new move', {
             dataStr: message.toString(),
             gameId: this.id,
@@ -183,7 +183,7 @@ export class Game {
                 });
             }
         } catch (e) {
-            slog.log('ws', `Failed to make move`, { error: e as Error });
+            slog.log('gravitrips', `Failed to make move`, { error: e as Error });
         }
     }
 }

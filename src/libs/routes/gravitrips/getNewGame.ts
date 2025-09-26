@@ -1,6 +1,6 @@
 import { FromSchema } from 'json-schema-to-ts';
 import { EmptyInput, GetRoute } from '../types.js';
-import { getNewGame } from '../../modules/gravitrip/gameService.js';
+import { getNewGame } from '../../modules/gravitrips/index.js';
 
 const handler = async () => {
     return { gameId: getNewGame() };
