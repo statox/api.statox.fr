@@ -24,17 +24,59 @@ export type Player = {
     ws: WebSocket;
 };
 
-const moveInputSchema = {
-    type: 'object',
-    required: ['move'],
-    additionalProperties: false,
-    properties: {
-        move: {
-            type: 'number'
+const inputSchema = {
+    oneOf: [
+        {
+            type: 'object',
+            properties: {
+                type: {
+                    const: 'restart'
+                }
+            },
+            required: ['type'],
+            additionalProperties: false
+        },
+        {
+            type: 'object',
+            properties: {
+                type: {
+                    const: 'move'
+                },
+                column: {
+                    type: 'number'
+                }
+            },
+            required: ['type', 'column'],
+            additionalProperties: false
         }
-    }
+    ]
 } as const;
-type Move = FromSchema<typeof moveInputSchema>;
+type Input = FromSchema<typeof inputSchema>;
+
+type InputMove = {
+    type: 'move';
+    column: number;
+};
+// type InputRestart = {
+//     type: 'restart';
+// }
+
+function isInputMove(obj: unknown): obj is InputMove {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        (obj as InputMove).type === 'move' &&
+        typeof (obj as any).column === 'number'
+    );
+}
+
+// function isInputRestart(obj: unknown): obj is InputRestart {
+//     return (
+//         typeof obj === "object" &&
+//         obj !== null &&
+//         (obj as InputRestart).type === "restart"
+//     );
+// }
 
 export class Game {
     id: string;
@@ -162,47 +204,55 @@ export class Game {
             return;
         }
 
-        let move: number;
+        let input: Input;
         try {
-            const input = JSON.parse(message) as Move;
-            validateAgainstJsonSchema(input, moveInputSchema as unknown as AllowedSchema);
-            move = input.move;
+            input = JSON.parse(message) as Input;
+            validateAgainstJsonSchema(input, inputSchema as unknown as AllowedSchema);
         } catch {
             player.ws.send(JSON.stringify({ error: 'invalid_input_message' }));
             return;
         }
 
-        try {
-            const board = makeMove(this.board, player.id, move);
-            const boardState = getBoardState(this.board);
-            const winningCells = getWinningCells(this.board);
+        if (isInputMove(input)) {
+            const { column } = input;
+            try {
+                const board = makeMove(this.board, player.id, column);
+                const boardState = getBoardState(this.board);
+                const winningCells = getWinningCells(this.board);
 
-            // Switch turn
-            this.board = board;
-            this.boardState = boardState;
-            this.changeCurrentTurn();
+                // Switch turn
+                this.board = board;
+                this.boardState = boardState;
+                this.changeCurrentTurn();
 
-            [this.player1, this.player2].forEach((p) => {
-                p.ws.send(
-                    JSON.stringify({
-                        type: 'update_board',
-                        from: player.id,
-                        board,
-                        boardState,
-                        winningCells
-                    })
-                );
-            });
-
-            if (boardState !== BoardState.notOver) {
                 [this.player1, this.player2].forEach((p) => {
-                    p.ws.send(JSON.stringify({ type: 'game_over', reason: boardState }));
-                    p.ws.close();
+                    p.ws.send(
+                        JSON.stringify({
+                            type: 'update_board',
+                            from: player.id,
+                            board,
+                            boardState,
+                            winningCells
+                        })
+                    );
                 });
+
+                if (boardState !== BoardState.notOver) {
+                    [this.player1, this.player2].forEach((p) => {
+                        p.ws.send(JSON.stringify({ type: 'game_over', reason: boardState }));
+                        p.ws.close();
+                    });
+                }
+            } catch (e) {
+                slog.log('gravitrips', `Failed to make move`, { error: e as Error });
+                player.ws.send(JSON.stringify({ error: 'invalid_move' }));
             }
-        } catch (e) {
-            slog.log('gravitrips', `Failed to make move`, { error: e as Error });
-            player.ws.send(JSON.stringify({ error: 'invalid_move' }));
+            return;
         }
+
+        throw new Error('input is not a move');
+        // if (isInputRestart(input)) {
+        //     console.log(input);
+        // }
     }
 }

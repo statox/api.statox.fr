@@ -127,7 +127,7 @@ describe('gravitrips', () => {
     it('should send board updates to both players each time a player make moves', async () => {
         await setupValidGame();
 
-        client1.send(JSON.stringify({ move: 3 }));
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
         const firstMoveMessage = JSON.stringify({
             type: 'update_board',
             from: 1,
@@ -138,7 +138,7 @@ describe('gravitrips', () => {
         await client1.waitForMessage(firstMoveMessage);
         await client2.waitForMessage(firstMoveMessage);
 
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         const secondMoveMessage = JSON.stringify({
             type: 'update_board',
             from: 2,
@@ -149,7 +149,7 @@ describe('gravitrips', () => {
         await client1.waitForMessage(secondMoveMessage);
         await client2.waitForMessage(secondMoveMessage);
 
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         const thirdMoveMessage = JSON.stringify({
             type: 'update_board',
             from: 1,
@@ -164,10 +164,10 @@ describe('gravitrips', () => {
     it('should reject a player move when its not their turn', async () => {
         await setupValidGame();
 
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client2.waitForMessage(JSON.stringify({ error: 'not_your_turn' }));
 
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         const firstMoveMessage = JSON.stringify({
             type: 'update_board',
             from: 1,
@@ -178,7 +178,7 @@ describe('gravitrips', () => {
         await client1.waitForMessage(firstMoveMessage);
         await client2.waitForMessage(firstMoveMessage);
 
-        client1.send(JSON.stringify({ move: 3 }));
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForMessage(JSON.stringify({ error: 'not_your_turn' }));
     });
 
@@ -192,10 +192,10 @@ describe('gravitrips', () => {
     it('should reject an invalid move', async () => {
         await setupValidGame();
 
-        client1.send(JSON.stringify({ move: 100 }));
+        client1.send(JSON.stringify({ type: 'move', column: 100 }));
         await client1.waitForMessage(JSON.stringify({ error: 'invalid_move' }));
 
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         const firstMoveMessage = JSON.stringify({
             type: 'update_board',
             from: 1,
@@ -210,19 +210,19 @@ describe('gravitrips', () => {
     it('should notify the players when the game is over - player1 wins', async () => {
         await setupValidGame();
 
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
 
         const lastUpdateMessage = JSON.stringify({
             type: 'update_board',
@@ -250,21 +250,21 @@ describe('gravitrips', () => {
     it('should notify the players when the game is over - player2 wins', async () => {
         await setupValidGame();
 
-        client1.send(JSON.stringify({ move: 0 }));
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 1 }));
+        client2.send(JSON.stringify({ type: 'move', column: 1 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 6 }));
+        client1.send(JSON.stringify({ type: 'move', column: 6 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 2 }));
+        client2.send(JSON.stringify({ type: 'move', column: 2 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 6 }));
+        client1.send(JSON.stringify({ type: 'move', column: 6 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 6 }));
+        client1.send(JSON.stringify({ type: 'move', column: 6 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 4 }));
+        client2.send(JSON.stringify({ type: 'move', column: 4 }));
         await client1.waitForNewMessage();
 
         const lastUpdateMessage = JSON.stringify({
@@ -293,27 +293,27 @@ describe('gravitrips', () => {
     it('should notify the players when the game is over - draw', async () => {
         await setupValidGame();
 
-        client1.send(JSON.stringify({ move: 3 }));
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 3 }));
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
-        client1.send(JSON.stringify({ move: 3 }));
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
 
         for (const col of [0, 1, 2, 4, 5, 6]) {
             for (let i = 0; i < 3; i++) {
-                client2.send(JSON.stringify({ move: col }));
+                client2.send(JSON.stringify({ type: 'move', column: col }));
                 await client1.waitForNewMessage();
-                client1.send(JSON.stringify({ move: col }));
+                client1.send(JSON.stringify({ type: 'move', column: col }));
                 await client1.waitForNewMessage();
             }
         }
 
-        client2.send(JSON.stringify({ move: 3 }));
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
         await client1.waitForNewMessage();
 
         const lastUpdateMessage = JSON.stringify({
