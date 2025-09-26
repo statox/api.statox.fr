@@ -9,6 +9,8 @@ import {
     getWinningCells,
     makeMove
 } from './board.js';
+import { FromSchema } from 'json-schema-to-ts';
+import { AllowedSchema, validateAgainstJsonSchema } from '../ajv/index.js';
 
 export enum GameState {
     created = 0,
@@ -22,9 +24,17 @@ export type Player = {
     ws: WebSocket;
 };
 
-interface MessagePlayerMove {
-    move: number;
-}
+const moveInputSchema = {
+    type: 'object',
+    required: ['move'],
+    additionalProperties: false,
+    properties: {
+        move: {
+            type: 'number'
+        }
+    }
+} as const;
+type Move = FromSchema<typeof moveInputSchema>;
 
 export class Game {
     id: string;
@@ -152,8 +162,16 @@ export class Game {
             return;
         }
 
-        // TODO Validate move
-        const { move } = JSON.parse(message) as MessagePlayerMove;
+        let move: number;
+        try {
+            const input = JSON.parse(message) as Move;
+            validateAgainstJsonSchema(input, moveInputSchema as unknown as AllowedSchema);
+            move = input.move;
+        } catch {
+            player.ws.send(JSON.stringify({ error: 'invalid_input_message' }));
+            return;
+        }
+
         try {
             const board = makeMove(this.board, player.id, move);
             const boardState = getBoardState(this.board);

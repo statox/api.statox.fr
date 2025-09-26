@@ -210,6 +210,26 @@ describe('gravitrips/ws', () => {
         await client1.waitForMessage(JSON.stringify({ error: 'not_your_turn' }));
     });
 
+    it('should reject an invalid input', async () => {
+        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
+        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
+        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
+        await client1.waitUntil('open');
+        await client2.waitUntil('open');
+
+        // Wait for the game to start
+        await client1.waitForMessage(
+            JSON.stringify({
+                type: 'game_ready',
+                youAre: 1,
+                board: [[], [], [], [], [], [], []]
+            })
+        );
+
+        client1.send('Foo bar');
+        await client1.waitForMessage(JSON.stringify({ error: 'invalid_input_message' }));
+    });
+
     it('should notify the players when the game is over', async () => {
         const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
         client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
