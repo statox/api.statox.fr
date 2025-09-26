@@ -12,9 +12,35 @@ import { GameState } from '../../../../src/libs/modules/gravitrips/Game.js';
 
 const WS_SERVER_URL = 'ws://localhost:3001';
 
-describe('gravitrips/ws', () => {
+describe('gravitrips', () => {
     let client1: TestWebSocket;
     let client2: TestWebSocket;
+
+    const setupValidGame = async () => {
+        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
+        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
+        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
+        await client1.waitUntil('open');
+        await client2.waitUntil('open');
+
+        // Wait for the game to start
+        await client1.waitForMessage(
+            JSON.stringify({
+                type: 'game_ready',
+                youAre: 1,
+                board: [[], [], [], [], [], [], []]
+            })
+        );
+        await client2.waitForMessage(
+            JSON.stringify({
+                type: 'game_ready',
+                youAre: 2,
+                board: [[], [], [], [], [], [], []]
+            })
+        );
+
+        return gameId;
+    };
 
     afterEach(() => {
         client1?.close();
@@ -62,38 +88,18 @@ describe('gravitrips/ws', () => {
     });
 
     it('should register the second player correctly', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
+        const gameId = await setupValidGame();
         const game = getGameById(gameId);
-
-        // Register player 1
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client1.waitUntil('open');
-
-        // Register player 2
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client2.waitUntil('open');
 
         assert.isDefined(game.player1);
         assert.isDefined(game.player2);
+        assert.equal(game.player1.id, 1);
         assert.equal(game.player2.id, 2);
         assert.equal(game.gameState, GameState.playing);
-
-        // Notified both players that game is ready
-        await client1.waitForMessage(
-            JSON.stringify({ type: 'game_ready', youAre: 1, board: [[], [], [], [], [], [], []] })
-        );
-        await client2.waitForMessage(
-            JSON.stringify({ type: 'game_ready', youAre: 2, board: [[], [], [], [], [], [], []] })
-        );
     });
 
     it('should reject the registration of a third player', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client1.waitUntil('open');
-        await client2.waitUntil('open');
+        const gameId = await setupValidGame();
 
         const client3 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
         await client3.waitForMessage(JSON.stringify({ error: 'game_already_full' }));
@@ -101,12 +107,7 @@ describe('gravitrips/ws', () => {
 
     it('should notify a player when the other disconnects', async () => {
         it('should work for player1', async () => {
-            const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-
-            client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-            client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-            await client1.waitUntil('open');
-            await client2.waitUntil('open');
+            await setupValidGame();
 
             client1.close();
             await client2.waitForMessage(
@@ -114,12 +115,7 @@ describe('gravitrips/ws', () => {
             );
         });
         it('should work for player2', async () => {
-            const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-
-            client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-            client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-            await client1.waitUntil('open');
-            await client2.waitUntil('open');
+            await setupValidGame();
 
             client2.close();
             await client1.waitForMessage(
@@ -129,18 +125,7 @@ describe('gravitrips/ws', () => {
     });
 
     it('should send board updates to both players each time a player make moves', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-
-        // Wait for the game to start
-        await client1.waitForMessage(
-            JSON.stringify({
-                type: 'game_ready',
-                youAre: 1,
-                board: [[], [], [], [], [], [], []]
-            })
-        );
+        await setupValidGame();
 
         client1.send(JSON.stringify({ move: 3 }));
         const firstMoveMessage = JSON.stringify({
@@ -177,20 +162,7 @@ describe('gravitrips/ws', () => {
     });
 
     it('should reject a player move when its not their turn', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client1.waitUntil('open');
-        await client2.waitUntil('open');
-
-        // Wait for the game to start
-        await client1.waitForMessage(
-            JSON.stringify({
-                type: 'game_ready',
-                youAre: 1,
-                board: [[], [], [], [], [], [], []]
-            })
-        );
+        await setupValidGame();
 
         client2.send(JSON.stringify({ move: 3 }));
         await client2.waitForMessage(JSON.stringify({ error: 'not_your_turn' }));
@@ -211,40 +183,14 @@ describe('gravitrips/ws', () => {
     });
 
     it('should reject an invalid input', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client1.waitUntil('open');
-        await client2.waitUntil('open');
-
-        // Wait for the game to start
-        await client1.waitForMessage(
-            JSON.stringify({
-                type: 'game_ready',
-                youAre: 1,
-                board: [[], [], [], [], [], [], []]
-            })
-        );
+        await setupValidGame();
 
         client1.send('Foo bar');
         await client1.waitForMessage(JSON.stringify({ error: 'invalid_input_message' }));
     });
 
-    it('should notify the players when the game is over', async () => {
-        const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
-        client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        await client1.waitUntil('open');
-        await client2.waitUntil('open');
-
-        // Wait for the game to start
-        await client1.waitForMessage(
-            JSON.stringify({
-                type: 'game_ready',
-                youAre: 1,
-                board: [[], [], [], [], [], [], []]
-            })
-        );
+    it('should notify the players when the game is over - player1 wins', async () => {
+        await setupValidGame();
 
         client1.send(JSON.stringify({ move: 0 }));
         await client1.waitForNewMessage();
