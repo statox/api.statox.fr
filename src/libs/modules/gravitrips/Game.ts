@@ -15,7 +15,8 @@ import { AllowedSchema, validateAgainstJsonSchema } from '../ajv/index.js';
 export enum GameState {
     created = 0,
     waitingForPlayer2 = 1,
-    playing = 2
+    playing = 2,
+    gameOver = 3
 }
 
 export type Player = {
@@ -57,26 +58,17 @@ type InputMove = {
     type: 'move';
     column: number;
 };
-// type InputRestart = {
-//     type: 'restart';
-// }
+type InputRestart = {
+    type: 'restart';
+};
 
 function isInputMove(obj: unknown): obj is InputMove {
-    return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        (obj as InputMove).type === 'move' &&
-        typeof (obj as any).column === 'number'
-    );
+    return typeof obj === 'object' && obj !== null && (obj as InputMove).type === 'move';
 }
 
-// function isInputRestart(obj: unknown): obj is InputRestart {
-//     return (
-//         typeof obj === "object" &&
-//         obj !== null &&
-//         (obj as InputRestart).type === "restart"
-//     );
-// }
+function isInputRestart(obj: unknown): obj is InputRestart {
+    return typeof obj === 'object' && obj !== null && (obj as InputRestart).type === 'restart';
+}
 
 export class Game {
     id: string;
@@ -177,30 +169,18 @@ export class Game {
     }
 
     onGravitripsMessage(message: string, player: Player) {
-        slog.log('gravitrips', 'new move', {
+        slog.log('gravitrips', 'new message', {
             dataStr: message.toString(),
             gameId: this.id,
             playerId: player.id
         });
-
-        if (this.gameState !== GameState.playing) {
-            player.ws.send(JSON.stringify({ error: 'game_not_ready' }));
-            return;
-        }
-        if (this.boardState !== BoardState.notOver) {
-            player.ws.send(JSON.stringify({ error: 'game_already_over' }));
-            return;
-        }
-        if (player.id !== this.currentTurn) {
-            player.ws.send(JSON.stringify({ error: 'not_your_turn' }));
-            return;
-        }
 
         if (!this.player1 || !this.player2) {
             slog.log('gravitrips', 'Invalid game state at least one player missing', {
                 gameId: this.id
             });
             player.ws.send(JSON.stringify({ error: 'something_went_wrong' }));
+            player.ws.close();
             return;
         }
 
@@ -214,6 +194,19 @@ export class Game {
         }
 
         if (isInputMove(input)) {
+            if (this.gameState !== GameState.playing) {
+                player.ws.send(JSON.stringify({ error: 'game_not_ready' }));
+                return;
+            }
+            if (this.boardState !== BoardState.notOver) {
+                player.ws.send(JSON.stringify({ error: 'game_already_over' }));
+                return;
+            }
+            if (player.id !== this.currentTurn) {
+                player.ws.send(JSON.stringify({ error: 'not_your_turn' }));
+                return;
+            }
+
             const { column } = input;
             try {
                 const board = makeMove(this.board, player.id, column);
@@ -240,8 +233,8 @@ export class Game {
                 if (boardState !== BoardState.notOver) {
                     [this.player1, this.player2].forEach((p) => {
                         p.ws.send(JSON.stringify({ type: 'game_over', reason: boardState }));
-                        p.ws.close();
                     });
+                    this.gameState = GameState.gameOver;
                 }
             } catch (e) {
                 slog.log('gravitrips', `Failed to make move`, { error: e as Error });
@@ -250,9 +243,31 @@ export class Game {
             return;
         }
 
-        throw new Error('input is not a move');
-        // if (isInputRestart(input)) {
-        //     console.log(input);
-        // }
+        if (isInputRestart(input)) {
+            if (this.boardState === BoardState.notOver) {
+                player.ws.send(JSON.stringify({ error: 'game_is_not_over' }));
+                return;
+            }
+            if (this.gameState !== GameState.gameOver) {
+                player.ws.send(JSON.stringify({ error: 'game_is_not_over' }));
+                return;
+            }
+
+            this.board = getNewBoard();
+            this.boardState = BoardState.notOver;
+            this.currentTurn = 1;
+            this.gameState = GameState.playing;
+
+            const tmp = this.player1.id;
+            this.player1.id = this.player2.id;
+            this.player2.id = tmp;
+
+            this.player1.ws.send(
+                JSON.stringify({ type: 'game_ready', youAre: this.player1.id, board: this.board })
+            );
+            this.player2.ws.send(
+                JSON.stringify({ type: 'game_ready', youAre: this.player2.id, board: this.board })
+            );
+        }
     }
 }

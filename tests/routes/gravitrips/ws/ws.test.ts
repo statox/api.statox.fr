@@ -341,4 +341,72 @@ describe('gravitrips', () => {
             JSON.stringify({ type: 'game_over', reason: BoardState.draw })
         );
     });
+
+    it('should allow restarting the game if its over', async () => {
+        const gameId = await setupValidGame();
+        const game = getGameById(gameId);
+
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForNewMessage();
+        assert.equal(game.gameState, GameState.gameOver);
+
+        client1.send(JSON.stringify({ type: 'restart' }));
+        await client1.waitForMessage(
+            JSON.stringify({ type: 'game_ready', youAre: 2, board: [[], [], [], [], [], [], []] })
+        );
+        await client2.waitForMessage(
+            JSON.stringify({ type: 'game_ready', youAre: 1, board: [[], [], [], [], [], [], []] })
+        );
+
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForMessage(JSON.stringify({ error: 'not_your_turn' }));
+
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForMessage(
+            JSON.stringify({
+                type: 'update_board',
+                from: 1,
+                board: [[1], [], [], [], [], [], []],
+                boardState: BoardState.notOver,
+                winningCells: null
+            })
+        );
+    });
+
+    it('should reject restarting the game if its not over', async () => {
+        const gameId = await setupValidGame();
+        const game = getGameById(gameId);
+
+        client1.send(JSON.stringify({ type: 'move', column: 0 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForNewMessage();
+
+        client1.send(JSON.stringify({ type: 'restart' }));
+        await client1.waitForMessage(JSON.stringify({ error: 'game_is_not_over' }));
+        assert.equal(game.gameState, GameState.playing);
+
+        client1.send(JSON.stringify({ type: 'move', column: 3 }));
+        await client1.waitForMessage(
+            JSON.stringify({
+                type: 'update_board',
+                from: 1,
+                board: [[1], [], [], [2, 1], [], [], []],
+                boardState: BoardState.notOver,
+                winningCells: null
+            })
+        );
+    });
 });
