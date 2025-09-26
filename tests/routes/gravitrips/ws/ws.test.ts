@@ -228,4 +228,99 @@ describe('gravitrips', () => {
             JSON.stringify({ type: 'game_over', reason: BoardState.winPlayer1 })
         );
     });
+
+    it('should notify the players when the game is over - player2 wins', async () => {
+        await setupValidGame();
+
+        client1.send(JSON.stringify({ move: 0 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 1 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ move: 6 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 2 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ move: 6 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ move: 6 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 4 }));
+        await client1.waitForNewMessage();
+
+        const lastUpdateMessage = JSON.stringify({
+            type: 'update_board',
+            from: 2,
+            board: [[1], [2], [2], [2], [2], [], [1, 1, 1]],
+            boardState: BoardState.winPlayer2,
+            winningCells: [
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 4]
+            ]
+        });
+        await client1.waitForMessage(lastUpdateMessage);
+        await client2.waitForMessage(lastUpdateMessage);
+
+        await client1.waitForMessage(
+            JSON.stringify({ type: 'game_over', reason: BoardState.winPlayer2 })
+        );
+        await client2.waitForMessage(
+            JSON.stringify({ type: 'game_over', reason: BoardState.winPlayer2 })
+        );
+    });
+
+    it('should notify the players when the game is over - draw', async () => {
+        await setupValidGame();
+
+        client1.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+        client2.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+        client1.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+
+        for (const col of [0, 1, 2, 4, 5, 6]) {
+            for (let i = 0; i < 3; i++) {
+                client2.send(JSON.stringify({ move: col }));
+                await client1.waitForNewMessage();
+                client1.send(JSON.stringify({ move: col }));
+                await client1.waitForNewMessage();
+            }
+        }
+
+        client2.send(JSON.stringify({ move: 3 }));
+        await client1.waitForNewMessage();
+
+        const lastUpdateMessage = JSON.stringify({
+            type: 'update_board',
+            from: 2,
+            board: [
+                [2, 1, 2, 1, 2, 1],
+                [2, 1, 2, 1, 2, 1],
+                [2, 1, 2, 1, 2, 1],
+                [1, 2, 1, 2, 1, 2],
+                [2, 1, 2, 1, 2, 1],
+                [2, 1, 2, 1, 2, 1],
+                [2, 1, 2, 1, 2, 1]
+            ],
+            boardState: BoardState.draw,
+            winningCells: null
+        });
+        await client1.waitForMessage(lastUpdateMessage);
+        await client2.waitForMessage(lastUpdateMessage);
+
+        await client1.waitForMessage(
+            JSON.stringify({ type: 'game_over', reason: BoardState.draw })
+        );
+        await client2.waitForMessage(
+            JSON.stringify({ type: 'game_over', reason: BoardState.draw })
+        );
+    });
 });
