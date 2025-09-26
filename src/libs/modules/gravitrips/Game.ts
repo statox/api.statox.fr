@@ -202,6 +202,7 @@ export class Game {
             }
         } catch (e) {
             slog.log('gravitrips', `Failed to make move`, { error: e as Error });
+            player.ws.send(JSON.stringify({ error: 'invalid_move' }));
         }
     }
 }

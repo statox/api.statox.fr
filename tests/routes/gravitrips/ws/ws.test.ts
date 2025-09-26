@@ -189,6 +189,24 @@ describe('gravitrips', () => {
         await client1.waitForMessage(JSON.stringify({ error: 'invalid_input_message' }));
     });
 
+    it('should reject an invalid move', async () => {
+        await setupValidGame();
+
+        client1.send(JSON.stringify({ move: 100 }));
+        await client1.waitForMessage(JSON.stringify({ error: 'invalid_move' }));
+
+        client1.send(JSON.stringify({ move: 0 }));
+        const firstMoveMessage = JSON.stringify({
+            type: 'update_board',
+            from: 1,
+            board: [[1], [], [], [], [], [], []],
+            boardState: BoardState.notOver,
+            winningCells: null
+        });
+        await client1.waitForMessage(firstMoveMessage);
+        await client2.waitForMessage(firstMoveMessage);
+    });
+
     it('should notify the players when the game is over - player1 wins', async () => {
         await setupValidGame();
 
