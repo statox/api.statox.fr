@@ -34,6 +34,8 @@ import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher.js
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers.js';
 import { route as WebWatcher_toggleWatcherEnabled } from './webWatcher/toggleWatcherEnabled.js';
 
+import { route as Gravitrips_WSGame } from './gravitrips/ws_game.js';
+
 export const routes: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     list: Route<any, any>[];
@@ -74,4 +76,8 @@ export const routes: {
         WebWatcher_getAllWatcher,
         WebWatcher_toggleWatcherEnabled
     ]
+};
+
+export const routesWS = {
+    list: [Gravitrips_WSGame]
 };

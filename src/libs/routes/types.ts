@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
+import { WebSocket } from 'ws';
 import { emptyObjectSchema } from './helpers.js';
 import { LoggableContext } from '../modules/logging/index.js';
 
@@ -33,3 +34,8 @@ export type PostRoute<Input, Output> = BaseRoute<Input, Output> & {
 };
 
 export type Route<Input, Output> = GetRoute<Input, Output> | PostRoute<Input, Output>;
+
+export type RouteWS = {
+    onConnection: (ws: WebSocket, gameId: string) => void;
+    path: string;
+};
