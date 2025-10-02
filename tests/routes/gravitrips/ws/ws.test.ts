@@ -54,6 +54,8 @@ describe('gravitrips', () => {
         th.slog.checkLog('gravitrips', 'Couldnt find game by id', {
             gameId: undefined
         });
+        await client1.waitForMessage('{"type":"error","message":"game_not_found"}');
+        await client1.waitUntil('close');
     });
 
     it('should reject an unknown gameId', async () => {
@@ -63,6 +65,8 @@ describe('gravitrips', () => {
         th.slog.checkLog('gravitrips', 'Couldnt find game by id', {
             gameId: 'foobar'
         });
+        await client1.waitForMessage('{"type":"error","message":"game_not_found"}');
+        await client1.waitUntil('close');
     });
 
     it('should register the first player correctly', async () => {
