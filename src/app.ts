@@ -20,6 +20,7 @@ import { initWsServer } from './app-ws.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
+export let wss: WebSocketServer;
 
 const PORT = process.env.PORT || 3000;
 
@@ -90,7 +91,7 @@ export const initApp = () => {
     configureServerTimeout(server);
 
     // Attach WebSocket server to the same HTTP server so that ws listen on the same port
-    const wss = new WebSocketServer({ server });
+    wss = new WebSocketServer({ server });
     initWsServer(wss);
 
     if (config.env.isProd) {
