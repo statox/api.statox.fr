@@ -1,8 +1,14 @@
 import { FromSchema } from 'json-schema-to-ts';
 import sinon from 'sinon';
 import { TestHelper } from '../TestHelper.js';
-import { routes } from '../../../src/libs/routes/index.js';
-import { EmptyInput, EmptyOutput, GetRoute, PostRoute } from '../../../src/libs/routes/types.js';
+import { routes, routesWS } from '../../../src/libs/routes/index.js';
+import {
+    EmptyInput,
+    EmptyOutput,
+    GetRoute,
+    PostRoute,
+    RouteWS
+} from '../../../src/libs/routes/types.js';
 import { initApp } from '../../../src/app.js';
 import { emptyObjectSchema } from '../../../src/libs/routes/helpers.js';
 
@@ -139,13 +145,27 @@ const testRoutes = [
 
 let routesStub: sinon.SinonStub;
 
+const validRouteWS: RouteWS = {
+    path: '/valid',
+    onConnection(ws) {
+        ws.on('message', (message: string) => {
+            ws.send('Received ' + message);
+        });
+    }
+};
+const testRoutesWS = [validRouteWS];
+
+let routesWSStub: sinon.SinonStub;
+
 const setupAppStub = async () => {
     routesStub = sinon.stub(routes, 'list').value(testRoutes);
+    routesWSStub = sinon.stub(routesWS, 'list').value(testRoutesWS);
     initApp();
 };
 
 const restoreAppStub = async () => {
     routesStub.restore();
+    routesWSStub.restore();
 };
 
 export const testHelper_App = new TestHelper({

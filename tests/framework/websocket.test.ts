@@ -6,19 +6,32 @@ import { wss } from '../../src/app.js';
 const WS_SERVER_URL = 'ws://localhost:3001';
 
 describe('WebSocket endpoint routing', async () => {
-    it('should create a log on new connection', async () => {
-        const client = new TestWebSocket(WS_SERVER_URL + '/foobar');
-        await client.waitUntil('open');
+    let client: TestWebSocket;
+    afterEach(async () => {
+        client.close();
+        await client.waitUntil('close');
+    });
 
-        await client.waitForMessage(JSON.stringify({ error: 'invalid_path' }));
+    it('should create a log on new connection', async () => {
+        client = new TestWebSocket(WS_SERVER_URL + '/foobar');
+        await client.waitUntil('close');
+
         th.slog.checkLog('ws', 'access-log-ws', {
             url: '/foobar',
             requestId: '00000000-0000-0000-0000-000000000001'
         });
     });
 
+    it('should connect to a valid route', async () => {
+        client = new TestWebSocket(WS_SERVER_URL + '/valid');
+        await client.waitUntil('open');
+
+        client.send('hello world');
+        await client.waitForMessage('Received hello world');
+    });
+
     it('should reject a non existing route with a 404 code', async () => {
-        const client = new TestWebSocket(WS_SERVER_URL + '/foobar');
+        client = new TestWebSocket(WS_SERVER_URL + '/foobar');
         await client.waitUntil('open');
         assert.lengthOf(wss.clients, 1);
 
