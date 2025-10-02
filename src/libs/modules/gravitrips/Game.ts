@@ -104,7 +104,7 @@ export class Game {
             return;
         }
 
-        ws.send(JSON.stringify({ error: 'game_already_full' }));
+        ws.sendJson({ error: 'game_already_full' });
         ws.close();
     }
 
@@ -115,7 +115,7 @@ export class Game {
         slog.log('gravitrips', 'Register player 1', { gameId: this.id });
         this.player1 = { id: 1, name, ws };
         this.gameState = GameState.waitingForPlayer2;
-        ws.send(JSON.stringify({ type: 'waiting_for_opponent', youAre: 1, board: this.board }));
+        ws.sendJson({ type: 'waiting_for_opponent', youAre: 1, board: this.board });
     }
 
     _registerPlayer2(name: string, ws: WebSocket) {
@@ -123,7 +123,7 @@ export class Game {
             throw new Error('Trying to add player 2 to a game in state ' + this.gameState);
         }
         if (!this.player1) {
-            ws.send(JSON.stringify({ error: 'invalid_game_state' }));
+            ws.sendJson({ error: 'invalid_game_state' });
             ws.close();
             throw new Error(
                 'Trying to add player 2 but player 1 is not registered' + this.gameState
@@ -153,8 +153,8 @@ export class Game {
             this.onPlayerDisconnect(this.player2);
         });
 
-        this.player1.ws.send(JSON.stringify({ type: 'game_ready', youAre: 1, board: this.board }));
-        this.player2.ws.send(JSON.stringify({ type: 'game_ready', youAre: 2, board: this.board }));
+        this.player1.ws.sendJson({ type: 'game_ready', youAre: 1, board: this.board });
+        this.player2.ws.sendJson({ type: 'game_ready', youAre: 2, board: this.board });
     }
 
     onPlayerDisconnect(player: Player) {
@@ -163,7 +163,7 @@ export class Game {
             if (!p || p.id === player.id) {
                 return;
             }
-            p.ws.send(JSON.stringify({ type: 'game_over', reason: 'other_player_disconnected' }));
+            p.ws.sendJson({ type: 'game_over', reason: 'other_player_disconnected' });
             p.ws.close();
         });
     }
@@ -179,7 +179,7 @@ export class Game {
             slog.log('gravitrips', 'Invalid game state at least one player missing', {
                 gameId: this.id
             });
-            player.ws.send(JSON.stringify({ error: 'something_went_wrong' }));
+            player.ws.sendJson({ error: 'something_went_wrong' });
             player.ws.close();
             return;
         }
@@ -189,21 +189,21 @@ export class Game {
             input = JSON.parse(message) as Input;
             validateAgainstJsonSchema(input, inputSchema as unknown as AllowedSchema);
         } catch {
-            player.ws.send(JSON.stringify({ error: 'invalid_input_message' }));
+            player.ws.sendJson({ error: 'invalid_input_message' });
             return;
         }
 
         if (isInputMove(input)) {
             if (this.gameState !== GameState.playing) {
-                player.ws.send(JSON.stringify({ error: 'game_not_ready' }));
+                player.ws.sendJson({ error: 'game_not_ready' });
                 return;
             }
             if (this.boardState !== BoardState.notOver) {
-                player.ws.send(JSON.stringify({ error: 'game_already_over' }));
+                player.ws.sendJson({ error: 'game_already_over' });
                 return;
             }
             if (player.id !== this.currentTurn) {
-                player.ws.send(JSON.stringify({ error: 'not_your_turn' }));
+                player.ws.sendJson({ error: 'not_your_turn' });
                 return;
             }
 
@@ -232,24 +232,24 @@ export class Game {
 
                 if (boardState !== BoardState.notOver) {
                     [this.player1, this.player2].forEach((p) => {
-                        p.ws.send(JSON.stringify({ type: 'game_over', reason: boardState }));
+                        p.ws.sendJson({ type: 'game_over', reason: boardState });
                     });
                     this.gameState = GameState.gameOver;
                 }
             } catch (e) {
                 slog.log('gravitrips', `Failed to make move`, { error: e as Error });
-                player.ws.send(JSON.stringify({ error: 'invalid_move' }));
+                player.ws.sendJson({ error: 'invalid_move' });
             }
             return;
         }
 
         if (isInputRestart(input)) {
             if (this.boardState === BoardState.notOver) {
-                player.ws.send(JSON.stringify({ error: 'game_is_not_over' }));
+                player.ws.sendJson({ error: 'game_is_not_over' });
                 return;
             }
             if (this.gameState !== GameState.gameOver) {
-                player.ws.send(JSON.stringify({ error: 'game_is_not_over' }));
+                player.ws.sendJson({ error: 'game_is_not_over' });
                 return;
             }
 
