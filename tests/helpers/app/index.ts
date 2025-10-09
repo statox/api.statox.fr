@@ -148,6 +148,7 @@ let routesStub: sinon.SinonStub;
 const validRouteWS: RouteWS = {
     path: '/valid',
     onConnection(ws) {
+        ws.send('connected');
         ws.on('message', (message: string) => {
             ws.send('Received ' + message);
         });

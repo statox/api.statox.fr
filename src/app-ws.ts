@@ -34,8 +34,31 @@ declare module 'ws' {
          * for the first time**
          */
         sendJson(data: unknown): void;
+        /**
+         * Keep an interval running ping/pong checks. The checks update
+         * the `isAlive` property
+         */
+        pingPongInterval?: NodeJS.Timeout;
+        /**
+         * Set to false if the websocket stops answering to ping events
+         */
+        isAlive?: boolean;
     }
 }
+
+const pingPongCheck = function (ws: WebSocket) {
+    if (!ws.isAlive) {
+        // TODO We need to test this mecanism but I don't know yet
+        // how to prevent a socket to send pong events
+        slog.log('ws', 'WS lost connection', { requestId: ws.uuid });
+        clearInterval(ws.pingPongInterval);
+        return ws.terminate();
+    }
+
+    ws.isAlive = false;
+    // slog.log('ws', 'send ping', { requestId: ws.uuid });
+    ws.ping();
+};
 
 const routeWebsocket = (ws: WebSocket, req: IncomingMessage) => {
     ws.uuid = config.env.isTests ? '00000000-0000-0000-0000-000000000001' : randomUUID();
@@ -44,6 +67,19 @@ const routeWebsocket = (ws: WebSocket, req: IncomingMessage) => {
     ws.sendJson = function (data: unknown) {
         this.send(JSON.stringify(data));
     };
+
+    ws.isAlive = true;
+    const pingPongIntervalSec = config.env.isProd ? 60 : 5;
+    ws.pingPongInterval = setInterval(
+        () => pingPongCheck(ws),
+        // Add a random interval to pingPongIntervalSec to avoid having clients
+        // answering all at the same time
+        pingPongIntervalSec * 1000 + Math.random() * 5 * 1000
+    );
+    ws.on('pong', function () {
+        // slog.log('ws', 'got pong', { requestId: ws.uuid });
+        this.isAlive = true;
+    });
 
     const [path, params] = (req.url || '').split('?');
     for (const route of routesWS.list) {

@@ -12,6 +12,26 @@ describe('WebSocket endpoint routing', async () => {
         await client.waitUntil('close');
     });
 
+    describe('WebSocket ping pong', async () => {
+        it('pong response should reset isAlive to true', async () => {
+            client = new TestWebSocket(WS_SERVER_URL + '/valid');
+            await client.waitUntil('open');
+            assert.lengthOf(wss.clients, 1);
+            const serverSocket = wss.clients.values().next().value!;
+
+            serverSocket.isAlive = false;
+            client.pong();
+            return new Promise<void>((resolve) => {
+                const i = setInterval(() => {
+                    if (serverSocket.isAlive) {
+                        clearInterval(i);
+                        return resolve();
+                    }
+                }, 20);
+            });
+        });
+    });
+
     it('should create a log on new connection', async () => {
         client = new TestWebSocket(WS_SERVER_URL + '/foobar');
         await client.waitUntil('close');
