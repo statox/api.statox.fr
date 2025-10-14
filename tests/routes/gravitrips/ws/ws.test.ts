@@ -19,8 +19,19 @@ describe('gravitrips', () => {
     const setupValidGame = async () => {
         const { gameId } = (await request(app).get('/gravitrips/getNewGame')).body;
         client1 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
-        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
         await client1.waitUntil('open');
+        // Wait for 'waiting_for_opponent' confirmation before connecting client 2 to
+        // avoid conccurency issues in tests.
+        // TODO Better handling potential conccurency issues in the real route.
+        await client1.waitForMessage(
+            JSON.stringify({
+                type: 'waiting_for_opponent',
+                youAre: 1,
+                board: [[], [], [], [], [], [], []]
+            })
+        );
+
+        client2 = new TestWebSocket(WS_SERVER_URL + `/gravitrips/ws?${gameId}`);
         await client2.waitUntil('open');
 
         // Wait for the game to start
