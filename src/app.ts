@@ -17,6 +17,11 @@ import { validateAPIKeyHeader } from './libs/middleware/authIOT.middleware.js';
 import { apiPipeline } from './libs/middleware/apiPipeline.middleware.js';
 import { WebSocketServer } from 'ws';
 import { initWsServer } from './app-ws.js';
+import {
+    doPassportSession,
+    validatePassportAuth,
+    validatePassportSession
+} from './libs/middleware/auth_passport.middleware.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -68,6 +73,16 @@ export const initApp = () => {
             pipeline.push(auth0middleware.checkRequiredPermissions(['author']));
         } else if (route.authentication === 'apikey-iot') {
             pipeline.push(validateAPIKeyHeader);
+        } else if (route.authentication === 'user2') {
+            // First configure how the sessions will be stored
+            pipeline.push(doPassportSession);
+            if (route.path === '/auth/login') {
+                // The login endpoint creates the session and returns a session id in cookie
+                pipeline.push(validatePassportAuth);
+            } else {
+                // The other authenticated endpoints only check the session to authenticate the user
+                pipeline.push(validatePassportSession);
+            }
         }
 
         if (route.method === 'post') {

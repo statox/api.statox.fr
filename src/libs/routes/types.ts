@@ -7,6 +7,7 @@ import { LoggableContext } from '../modules/logging/index.js';
 export type RouteHandler<Input> = (params: {
     input: Input;
     loggableContext: LoggableContext;
+    authenticatedUser?: Express.User;
 }) => Promise<unknown>;
 
 export type ApiJsonSchema = JSONSchema;
@@ -18,7 +19,7 @@ export type EmptyOutput = FromSchema<typeof emptyObjectSchema>;
 type BaseRoute<Input, Output> = {
     path: string;
     handler: RouteHandler<Input>;
-    authentication: 'none' | 'user' | 'apikey-iot';
+    authentication: 'none' | 'user' | 'user2' | 'apikey-iot';
     outputSchema: ApiJsonSchema;
     // TODO at one point we might want to wrap the response in a custom object
     customResponseHandler?: (output: Output, res: Response) => void;

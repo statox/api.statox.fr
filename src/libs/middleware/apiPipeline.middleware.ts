@@ -27,7 +27,11 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
             }
 
             const routeResult =
-                (await route.handler({ input, loggableContext: res.locals.loggableContext })) || {};
+                (await route.handler({
+                    input,
+                    loggableContext: res.locals.loggableContext,
+                    authenticatedUser: req.user // req.user is populated by the passport authentication middleware
+                })) || {};
 
             // Only do output validation if we are not in prod
             if (!isProd) {

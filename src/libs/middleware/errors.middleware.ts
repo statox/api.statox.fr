@@ -16,6 +16,7 @@ import {
 import { OutputValidationError } from './apiPipeline.middleware.js';
 import { DuplicateIngredientError, RecipeNotFoundError } from '../modules/cookbook/index.js';
 import { SensorDoesNotExistError } from '../modules/homeTracker/services/sensorMetaData.js';
+import { AuthUnauthorizedError } from './auth_passport.middleware.js';
 
 export const errorHandler = async (
     error: Error,
@@ -41,6 +42,11 @@ export const errorHandler = async (
         error instanceof SensorDoesNotExistError
     ) {
         response.status(400).json({ message: error.message });
+        return next();
+    }
+
+    if (error instanceof AuthUnauthorizedError) {
+        response.status(401).json({ message: error.message });
         return next();
     }
 
