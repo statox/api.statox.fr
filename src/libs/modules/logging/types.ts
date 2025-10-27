@@ -78,6 +78,7 @@ export type LoggableProperties = {
     timewindow?: string;
     trend?: string;
     url?: string;
+    userId?: number;
     validityTime?: string;
     visitedUrl?: string;
     watcherName?: string;

@@ -25,20 +25,32 @@ const inputSchema = {
     type: 'object',
     required: [],
     additionalProperties: false,
-    properties: {
-        val: {
-            type: 'number'
-        }
-    }
+    properties: {}
 } as const;
 
 type Input = FromSchema<typeof inputSchema>;
 
 const outputSchema = {
     type: 'object',
-    properties: {},
-    required: [],
-    additionalProperties: true
+    properties: {
+        status: {
+            type: 'string',
+            enum: ['logged_out', 'logged_in']
+        },
+        user: {
+            type: 'object',
+            properties: {
+                id: {
+                    type: 'number'
+                },
+                username: {
+                    type: 'string'
+                }
+            }
+        }
+    },
+    required: ['status'],
+    additionalProperties: false
 } as const;
 
 type Output = FromSchema<typeof outputSchema>;

@@ -4,33 +4,55 @@ import path from 'node:path';
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import { User, validateUser } from '../modules/auth/index.js';
+import { getUserById, User, validateUserPassword } from '../modules/auth/index.js';
 
 import session from 'express-session';
 import connectSqlite3 from 'connect-sqlite3';
+import { slog } from '../modules/logging/slog.js';
+import { slackNotifier } from '../modules/notifier/slack.js';
 const SQLiteStore = connectSqlite3(session);
 
 passport.use(
     new LocalStrategy.Strategy(async function verify(username, password, done) {
-        console.log('Applying local strategy');
-        const user = await validateUser(username, password);
+        const user = await validateUserPassword(username, password);
         if (!user) {
-            console.log('local strat: no user');
             return done(null, false, { message: 'Invalid username or password' });
         }
-        console.log('local strat: user', user);
         return done(null, user);
     })
 );
 
-passport.serializeUser(function (user, cb) {
-    process.nextTick(function () {
-        cb(null, { id: (user as User).id, username: (user as User).username });
+passport.serializeUser(function (userId, cb) {
+    process.nextTick(async function () {
+        // Store only the user id in the session, complete user profile is retrieved in deserializeUser()
+        return cb(null, userId);
     });
 });
 
-passport.deserializeUser(function (user, cb) {
-    process.nextTick(function () {
+passport.deserializeUser(function (userId: number, cb) {
+    process.nextTick(async function () {
+        // Get the data of the user we want to pass to the route
+        const user = await getUserById(userId);
+
+        if (!user) {
+            // That should not happen since sessions are created for existing users.
+            // If we are here potential issues are:
+            //     - We deleted a user which had an active session
+            //     - Somehow we messed up the user id
+            // For now I'm not sure how to handle the error path so I'll with throw
+            // and Error and find a way to handler that properly when the case happens.
+            //
+            slog.log('auth', "Couldn't find user when deserializing a session", { userId });
+            slackNotifier.notifySlack({
+                directMention: true,
+                message: `Error in auth proces - Couldn't find user when deserializing a session. UserId: ${userId}`
+            });
+
+            throw new Error(
+                `Error in auth proces - Couldn't find user when deserializing a session. UserId: ${userId}`
+            );
+        }
+
         return cb(null, user as User);
     });
 });
