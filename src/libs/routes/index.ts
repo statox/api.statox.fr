@@ -1,5 +1,6 @@
 import { Route } from './types.js';
 import { route as Auth_Login } from './auth/login.js';
+import { route as Auth_Logout } from './auth/logout.js';
 import { route as Auth_Me } from './auth/me.js';
 import { route as Chords_addLinkVisit } from './chords/addLinkVisit.js';
 import { route as Chords_checkLinks } from './chords/checkLinks.js';
@@ -44,6 +45,7 @@ export const routes: {
 } = {
     list: [
         Auth_Login,
+        Auth_Logout,
         Auth_Me,
         Chords_addLinkVisit,
         Chords_checkLinks,

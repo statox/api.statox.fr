@@ -88,6 +88,18 @@ export class AuthUnauthorizedError extends Error {
     }
 }
 
+export const logoutPassportRequest = async (req: Request, res: Response, next: NextFunction) =>
+    passport.authenticate('session')(req, res, () => {
+        // passport.authenticate('session') populates req.isUnauthenticated and req.user
+        if (req.isUnauthenticated()) {
+            // If the user didn't call login to trigger validatePassportAuth and initialize a session before
+            // or if the session expired then we reject the auth
+            return next(new AuthUnauthorizedError());
+        }
+
+        return req.logout(next);
+    });
+
 export const validatePassportAuth = async (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate(
         'local',

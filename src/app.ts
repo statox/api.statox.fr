@@ -19,6 +19,7 @@ import { WebSocketServer } from 'ws';
 import { initWsServer } from './app-ws.js';
 import {
     doPassportSession,
+    logoutPassportRequest,
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
@@ -79,6 +80,9 @@ export const initApp = () => {
             if (route.path === '/auth/login') {
                 // The login endpoint creates the session and returns a session id in cookie
                 pipeline.push(validatePassportAuth);
+            } else if (route.path === '/auth/logout') {
+                // The logout endpoint delete the session associated to the cookie
+                pipeline.push(logoutPassportRequest);
             } else {
                 // The other authenticated endpoints only check the session to authenticate the user
                 pipeline.push(validatePassportSession);

@@ -4,29 +4,16 @@ import { slog } from '../../modules/logging/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { authenticatedUser } = params;
-    console.log('login', { authenticatedUser });
-
-    if (!authenticatedUser) {
-        slog.log('auth', 'login error - No authenticated user at the end of process');
-        throw new Error();
-    }
-
-    slog.log('auth', 'login success');
+    console.log('logout', { authenticatedUser });
+    slog.log('auth', 'logout success');
     return {};
 };
 
 const inputSchema = {
     type: 'object',
-    required: ['username', 'password'],
+    required: [],
     additionalProperties: false,
-    properties: {
-        username: {
-            type: 'string'
-        },
-        password: {
-            type: 'string'
-        }
-    }
+    properties: {}
 } as const;
 
 type Input = FromSchema<typeof inputSchema>;
@@ -42,7 +29,7 @@ type Output = FromSchema<typeof outputSchema>;
 
 export const route: PostRoute<Input, Output> = {
     method: 'post',
-    path: '/auth/login',
+    path: '/auth/logout',
     handler,
     authentication: 'user2',
     outputSchema,
