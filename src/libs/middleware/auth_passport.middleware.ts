@@ -149,23 +149,41 @@ export const validatePassportAuth = async (req: Request, res: Response, next: Ne
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (err: Error, user?: Express.User | false | null, _info?: { message: string }) => {
             if (err) {
+                slog.log('auth', 'Authenticate local - error', {
+                    error: err,
+                    dataStr: JSON.stringify(user)
+                });
                 return next(err);
             }
             if (!user) {
+                slog.log('auth', 'Authenticate local - rejected', {
+                    dataStr: JSON.stringify(user)
+                });
                 return next(new AuthUnauthorizedError());
             }
+            slog.log('auth', 'Authenticate local - login', {
+                dataStr: JSON.stringify(user)
+            });
             req.logIn(user, (err) => (err ? next(err) : next()));
         }
     )(req, res, next);
 
 export const validatePassportSession = async (req: Request, res: Response, next: NextFunction) =>
-    passport.authenticate('session')(req, res, () => {
+    passport.authenticate('session')(req, res, (error: Error) => {
+        if (error) {
+            slog.log('auth', 'Authenticate session - error', {
+                error
+            });
+            return next(error);
+        }
         // passport.authenticate('session') populates req.isUnauthenticated and req.user
         if (req.isUnauthenticated()) {
+            slog.log('auth', 'Authenticate session - rejected', {});
             // If the user didn't call login to trigger validatePassportAuth and initialize a session before
             // or if the session expired then we reject the auth
             return next(new AuthUnauthorizedError());
         }
 
+        slog.log('auth', 'Authenticate session - accepted', {});
         return next();
     });
