@@ -92,9 +92,9 @@ const getSessionDBConnection = () => {
 // @ts-expect-error For some reason the typing of the connection seems wrong
 const sessionStore = new MySQLStore({}, await getSessionDBConnection()) as unknown as session.Store;
 
-const allowedOrigins = ['https://apps.statox.fr', 'http://localhost:8080'];
+const allowedOrigins = ['https://apps.statox.fr', 'https://localhost:8080'];
 
-export const setPassportHeaders = (_req: Request, res: Response, next: NextFunction) => {
+export const setPassportHeaders = (req: Request, res: Response, next: NextFunction) => {
     // To send the creds alongside the request, the client need to use `credentials: 'include'`
     // for that to work the server needs to set the following headers
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -105,6 +105,7 @@ export const setPassportHeaders = (_req: Request, res: Response, next: NextFunct
     );
 
     // Only set Access-Control-Allow-Origin if the origin is in our whitelist
+    const origin = req.headers.origin;
     if (typeof origin === 'string' && allowedOrigins.includes(origin) && origin !== 'null') {
         res.header('Access-Control-Allow-Origin', origin);
     }
@@ -119,8 +120,15 @@ export const doPassportSession = session({
     saveUninitialized: false, // don't create session until something stored
     store: sessionStore,
     cookie: {
+        // Secure: true = Require the frontend to be servers with https (even localhost for dev)
         secure: isProd,
-        httpOnly: isProd
+        // httpOnly: true = JS can't access the session cookie on the client
+        httpOnly: true,
+        // sameSite: 'none' = Allow localhost:8080 to get a cookie from api.tatox.fr
+        // We use 'lax' locally because `sameSite: 'none'` requires `secure: true` which
+        // we don't want to do with local dev frontend
+        // TODO: Find a way to enforce samesite while allowing dev frontend to call the real API
+        sameSite: isProd ? 'none' : 'lax'
     }
 });
 

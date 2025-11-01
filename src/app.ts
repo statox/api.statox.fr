@@ -51,7 +51,7 @@ export const initApp = () => {
     app.use(
         cors({
             // TODO have a proper local setup to avoid localhost in prod
-            origin: ['https://apps.statox.fr', 'http://localhost:8080'],
+            origin: ['https://apps.statox.fr', 'https://localhost:8080'],
             credentials: true // Required to let client send creds via the session cookie for passport auth
         })
     );
@@ -118,6 +118,13 @@ export const initApp = () => {
 
     if (config.env.isProd) {
         startPeriodicTasks();
+
+        // POTENTIALLY DANGEROUS
+        // Added when configuring passport auth. I want to set the cookie to `secure`
+        // so that only https frontend get the cookie. When running on heroku the app
+        // doesn't set the cookie on the https frontend without this trust proxy setting
+        // See the doc for details: https://expressjs.com/en/guide/behind-proxies.html
+        app.set('trust proxy', true);
     }
 };
 
