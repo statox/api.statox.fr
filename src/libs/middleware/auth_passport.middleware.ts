@@ -9,6 +9,7 @@ import { slog } from '../modules/logging/slog.js';
 import { slackNotifier } from '../modules/notifier/slack.js';
 import { config } from '../../packages/config/index.js';
 import mysql, { PoolOptions } from 'mysql2/promise';
+import { isProd } from '../../packages/config/sources/env.js';
 const MySQLStore = connectMysql(session);
 
 passport.use(
@@ -95,7 +96,11 @@ export const doPassportSession = session({
     secret: config.express.sessionsSecret,
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
-    store: sessionStore
+    store: sessionStore,
+    cookie: {
+        secure: isProd,
+        httpOnly: isProd
+    }
 });
 
 export class AuthUnauthorizedError extends Error {
