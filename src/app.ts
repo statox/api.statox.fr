@@ -20,6 +20,7 @@ import { initWsServer } from './app-ws.js';
 import {
     doPassportSession,
     logoutPassportRequest,
+    setPassportHeaders,
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
@@ -50,7 +51,8 @@ export const initApp = () => {
     app.use(
         cors({
             // TODO have a proper local setup to avoid localhost in prod
-            origin: ['https://apps.statox.fr', 'http://localhost:8080']
+            origin: ['https://apps.statox.fr', 'http://localhost:8080'],
+            credentials: true // Required to let client send creds via the session cookie for passport auth
         })
     );
 
@@ -75,6 +77,7 @@ export const initApp = () => {
         } else if (route.authentication === 'apikey-iot') {
             pipeline.push(validateAPIKeyHeader);
         } else if (route.authentication === 'user2') {
+            pipeline.push(setPassportHeaders);
             // First configure how the sessions will be stored
             pipeline.push(doPassportSession);
             if (route.path === '/auth/login') {

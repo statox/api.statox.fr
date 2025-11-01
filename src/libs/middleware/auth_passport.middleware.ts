@@ -92,6 +92,27 @@ const getSessionDBConnection = () => {
 // @ts-expect-error For some reason the typing of the connection seems wrong
 const sessionStore = new MySQLStore({}, await getSessionDBConnection()) as unknown as session.Store;
 
+const allowedOrigins = ['https://apps.statox.fr', 'http://localhost:8080'];
+
+export const setPassportHeaders = (_req: Request, res: Response, next: NextFunction) => {
+    // To send the creds alongside the request, the client need to use `credentials: 'include'`
+    // for that to work the server needs to set the following headers
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+    );
+
+    // Only set Access-Control-Allow-Origin if the origin is in our whitelist
+    if (typeof origin === 'string' && allowedOrigins.includes(origin) && origin !== 'null') {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+
+    slog.log('auth', 'setPassportHeaders');
+    next();
+};
+
 export const doPassportSession = session({
     secret: config.express.sessionsSecret,
     resave: false, // don't save session if unmodified
