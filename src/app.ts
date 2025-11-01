@@ -20,6 +20,7 @@ import { initWsServer } from './app-ws.js';
 import {
     doPassportSession,
     logoutPassportRequest,
+    setPassportHeaders,
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
@@ -75,6 +76,7 @@ export const initApp = () => {
         } else if (route.authentication === 'apikey-iot') {
             pipeline.push(validateAPIKeyHeader);
         } else if (route.authentication === 'user2') {
+            pipeline.push(setPassportHeaders);
             // First configure how the sessions will be stored
             pipeline.push(doPassportSession);
             if (route.path === '/auth/login') {
