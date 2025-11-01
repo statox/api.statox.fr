@@ -1,7 +1,17 @@
 export const configSchema = {
     type: 'object',
     additionalProperties: false,
-    required: ['mysql', 'elk', 'env', 'ntfy_sh', 'meteofrance', 'r2', 'slack', 'timeouts'],
+    required: [
+        'mysql',
+        'elk',
+        'env',
+        'express',
+        'ntfy_sh',
+        'meteofrance',
+        'r2',
+        'slack',
+        'timeouts'
+    ],
     properties: {
         mysql: {
             type: 'object',
@@ -58,6 +68,18 @@ export const configSchema = {
                     description:
                         'Should be set to true only when running tests and more details is needed',
                     type: 'boolean'
+                }
+            }
+        },
+        express: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['sessionsSecret'],
+            properties: {
+                sessionsSecret: {
+                    description:
+                        'The secret to use to validate express sessions. Changing this value will invalidate all existing sessions.',
+                    type: 'string'
                 }
             }
         },

@@ -9,6 +9,7 @@ import { R2_ACCESS_KEY_ID, R2_ENDPOINT, R2_SECRET_KEY } from '../sources/r2.js';
 import { SLACK_USERID, SLACK_WEBHOOK_URL } from '../sources/slack.js';
 import { NTFY_SH_URL } from '../sources/ntfy_sh.js';
 import { HEADERS_TIMEOUT, REQUEST_TIMEOUT, SOCKET_TIMEOUT } from '../sources/timeouts.js';
+import { EXPRESS_SESSION_SECRET } from '../sources/expressSessionSecret.js';
 
 export const config: Config = {
     mysql: {
@@ -24,6 +25,9 @@ export const config: Config = {
         isProd: isProd,
         isTests: isTests,
         isDebug: isDebug
+    },
+    express: {
+        sessionsSecret: EXPRESS_SESSION_SECRET
     },
     ntfy_sh: {
         topicUrl: NTFY_SH_URL

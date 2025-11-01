@@ -1,16 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import { getUserById, User, validateUserPassword } from '../modules/auth/index.js';
 
 import session from 'express-session';
-import connectSqlite3 from 'connect-sqlite3';
+import connectMysql from 'express-mysql-session';
 import { slog } from '../modules/logging/slog.js';
 import { slackNotifier } from '../modules/notifier/slack.js';
-const SQLiteStore = connectSqlite3(session);
+import { config } from '../../packages/config/index.js';
+import mysql, { PoolOptions } from 'mysql2/promise';
+const MySQLStore = connectMysql(session);
 
 passport.use(
     new LocalStrategy.Strategy(async function verify(username, password, done) {
@@ -57,26 +56,43 @@ passport.deserializeUser(function (userId: number, cb) {
     });
 });
 
-const sqliteDbsPath = path.resolve('/tmp/db/');
-const sessionsDbName = 'session.db';
-const dbFilePath = path.join(sqliteDbsPath, sessionsDbName);
+const getSessionDBConnection = () => {
+    // We store the express sessions in the mysql DB but we don't use the same
+    // connection pool object as the rest of the application (en partie because
+    // we haven't called initDb() yet when we are here)
+    // So we create the connection object here
+    const parsedUrl = new URL(config.mysql.connectionUrl);
 
-// Ensure directory exists
-if (!fs.existsSync(sqliteDbsPath)) fs.mkdirSync(sqliteDbsPath, { recursive: true });
+    if (!parsedUrl) {
+        throw new Error('Couldnt parse DB url');
+    }
 
-// Ensure file exists (touch)
-if (!fs.existsSync(dbFilePath)) fs.closeSync(fs.openSync(dbFilePath, 'w'));
+    const requiredFields: (keyof URL)[] = ['hostname', 'port', 'username', 'password', 'pathname'];
+    for (const field of requiredFields) {
+        if (!parsedUrl[field]) {
+            throw new Error(`Missing ${field} in DB url`);
+        }
+    }
 
-const sessionStore = new SQLiteStore({
-    db: sessionsDbName,
-    dir: sqliteDbsPath
-}) as unknown as session.Store;
+    const connectionOptions: PoolOptions = {
+        host: parsedUrl.hostname!,
+        port: Number(parsedUrl.port!),
+        user: parsedUrl.username,
+        password: parsedUrl.password,
+        database: parsedUrl.pathname.replace(/^\//, ''),
+        waitForConnections: true,
+        connectionLimit: 5,
+        queueLimit: 1000
+    };
+
+    return mysql.createConnection(connectionOptions);
+};
+
+// @ts-expect-error For some reason the typing of the connection seems wrong
+const sessionStore = new MySQLStore({}, await getSessionDBConnection()) as unknown as session.Store;
 
 export const doPassportSession = session({
-    // /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\
-    // IMPORTANT TODO: CHANGE THAT BEFORE GOING TO PROD
-    secret: 'keyboard cat',
-    // /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\ /!\
+    secret: config.express.sessionsSecret,
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     store: sessionStore
