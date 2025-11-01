@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { createUser } from '../../../src/libs/modules/auth/index.js';
 import { app } from '../../../src/app.js';
 import { assert } from 'chai';
 
@@ -7,10 +6,6 @@ import { assert } from 'chai';
  * This should be moved to tests/framework
  */
 describe('/auth/me', () => {
-    beforeEach(async () => {
-        await createUser('user', 'passwd');
-    });
-
     it('Returns when not authenticated', async () => {
         const res = await request(app).post('/auth/me').send({}).expect(401);
 

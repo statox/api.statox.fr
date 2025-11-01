@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { createUser } from '../../../src/libs/modules/auth/index.js';
 import { app } from '../../../src/app.js';
 
 /*
@@ -7,33 +6,29 @@ import { app } from '../../../src/app.js';
  */
 describe('auth-passport', () => {
     describe('auth/login', () => {
-        beforeEach(async () => {
-            await createUser('user', 'passwd');
-        });
-
-        it(' User does not exist', async () => {
+        it('User does not exist', async () => {
             await request(app)
                 .post('/auth/login')
                 .set('Accept', 'application/json')
                 .send({
-                    username: 'foo',
+                    username: 'carmensandiego',
                     password: 'bar'
                 })
                 .expect(401);
         });
 
-        it(' User exists - Wrong password', async () => {
+        it('User exists - Wrong password', async () => {
             await request(app)
                 .post('/auth/login')
                 .set('Accept', 'application/json')
                 .send({
                     username: 'user',
-                    password: 'pouet'
+                    password: 'nottherightpassword'
                 })
                 .expect(401);
         });
 
-        it(' User exists - Correct password', async () => {
+        it('User exists - Correct password', async () => {
             await request(app)
                 .post('/auth/login')
                 .set('Accept', 'application/json')
@@ -55,7 +50,6 @@ describe('auth-passport', () => {
 
             // Get the session cookie returned to client
             const cookie = res.headers['set-cookie'];
-            console.log('Cookie', cookie);
 
             // use the cookie in a subsequent authenticated request
             await request(app).post('/auth/me').send({}).set('Cookie', cookie).expect(200);
@@ -68,8 +62,11 @@ describe('auth-passport', () => {
     });
 
     describe('auth/logout', () => {
-        beforeEach(async () => {
-            await createUser('user', 'passwd');
+        it('reject a not loggedin user', async () => {
+            await request(app)
+                .post('/auth/login')
+                .send({ username: 'carmensandiego', password: 'passwd' })
+                .expect(401);
         });
 
         it('logout existing user', async () => {

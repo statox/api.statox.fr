@@ -4,7 +4,6 @@ import { slog } from '../../modules/logging/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const { authenticatedUser } = params;
-    console.log('login', { authenticatedUser });
 
     if (!authenticatedUser) {
         slog.log('auth', 'login error - No authenticated user at the end of process');

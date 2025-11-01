@@ -25,6 +25,7 @@ describe('personalTracker/getAll', () => {
         // Upload a new event in addition to the fixture
         await request(app)
             .post('/personalTracker/upload')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 event: {
@@ -37,6 +38,7 @@ describe('personalTracker/getAll', () => {
 
         const response = await request(app)
             .get('/personalTracker/getAll')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .expect(200);
 

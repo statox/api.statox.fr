@@ -45,6 +45,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     path: '/personalTracker/upload',
     inputSchema,
     handler,
-    authentication: 'user',
+    authentication: 'user2',
     outputSchema: emptyObjectSchema
 };

@@ -3,6 +3,7 @@ import { initApp } from '../../../src/app.js';
 import { initDb } from '../../../src/libs/databases/db.js';
 import { initELK } from '../../../src/libs/databases/elk.js';
 import { testHelper_Auth } from '../auth/index.js';
+import { testHelper_Auth2 } from '../auth2/index.js';
 import { testHelper_ELK } from '../elk/index.js';
 import { testHelper_Mysql } from '../mysql/index.js';
 import { testHelper_PushNotifier } from '../notifier/push.js';
@@ -17,6 +18,7 @@ import { testHelper_Slog } from '../slog/index.js';
 const helpers: TestHelper[] = [
     testHelper_Mysql,
     testHelper_Auth,
+    testHelper_Auth2,
     testHelper_SlackNotifier,
     testHelper_PushNotifier,
     testHelper_S3,

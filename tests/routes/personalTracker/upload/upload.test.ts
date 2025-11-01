@@ -6,6 +6,7 @@ describe('personalTracker/upload', () => {
     it('Should ingest an event', async () => {
         await request(app)
             .post('/personalTracker/upload')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 event: {
@@ -50,6 +51,7 @@ describe('personalTracker/upload', () => {
 
         await request(app)
             .post('/personalTracker/upload')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 event: {
