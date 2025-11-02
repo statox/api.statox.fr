@@ -26,6 +26,7 @@ describe('homeTracker/updateSensorMetadata', () => {
 
         await request(app)
             .post('/homeTracker/updateSensorMetadata')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send(newMetaData)
             .expect(200);
@@ -70,6 +71,7 @@ describe('homeTracker/updateSensorMetadata', () => {
 
         const res = await request(app)
             .post('/homeTracker/updateSensorMetadata')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send(newMetaData)
             .expect(400);

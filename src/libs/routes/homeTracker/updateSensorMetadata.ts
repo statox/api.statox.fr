@@ -29,6 +29,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     path: '/homeTracker/updateSensorMetadata',
     inputSchema: inputSchema,
     handler,
-    authentication: 'user',
+    authentication: 'user2',
     outputSchema: emptyObjectSchema
 };

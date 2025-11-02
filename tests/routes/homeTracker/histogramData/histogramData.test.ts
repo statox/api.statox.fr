@@ -61,6 +61,7 @@ describe('/homeTracker/histogramData', () => {
 
         await request(app)
             .post('/homeTracker/histogramData')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({ timeWindow: '3h' })
             .expect(200)
@@ -126,6 +127,7 @@ describe('/homeTracker/histogramData', () => {
         await request(app)
             .post('/homeTracker/histogramData')
             .set('Accept', 'application/json')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .send({ timeWindow: '3h' })
             .expect(200)
             .then((response) => {
