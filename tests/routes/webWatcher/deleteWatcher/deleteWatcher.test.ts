@@ -24,6 +24,7 @@ describe('webWatcher/deleteWatcher', () => {
 
         await request(app)
             .post('/webWatcher/deleteWatcher')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({ id: 1 })
             .expect(200)

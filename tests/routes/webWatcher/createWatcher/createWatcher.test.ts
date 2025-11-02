@@ -25,6 +25,7 @@ describe('webWatcher/createWatcher', () => {
 
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Web check 1',
@@ -44,6 +45,7 @@ describe('webWatcher/createWatcher', () => {
         it('on CSS check without css selector', async () => {
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Web check 1',
@@ -66,6 +68,7 @@ describe('webWatcher/createWatcher', () => {
         it('on HASH check with css selector', async () => {
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Web check 1',
@@ -96,6 +99,7 @@ describe('webWatcher/createWatcher', () => {
 
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Web check 1',
@@ -136,6 +140,7 @@ describe('webWatcher/createWatcher', () => {
 
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Hash check 1',
@@ -188,6 +193,7 @@ describe('webWatcher/createWatcher', () => {
 
             await request(app)
                 .post('/webWatcher/createWatcher')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Hash check 1',

@@ -24,6 +24,7 @@ describe('webWatcher/toggleWatcherEnabled', () => {
 
         await request(app)
             .post('/webWatcher/toggleWatcherEnabled')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 watcherId: 1,
@@ -71,6 +72,7 @@ describe('webWatcher/toggleWatcherEnabled', () => {
 
         await request(app)
             .post('/webWatcher/toggleWatcherEnabled')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 watcherId: 1,
