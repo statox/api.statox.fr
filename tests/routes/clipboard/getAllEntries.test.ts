@@ -22,6 +22,7 @@ describe('clipboard/getAllEntries', () => {
 
             await request(app)
                 .get('/clipboard/getAllEntries')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .expect(400)
                 .then((response) => {
@@ -54,6 +55,7 @@ describe('clipboard/getAllEntries', () => {
 
             await request(app)
                 .get('/clipboard/getAllEntries')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .expect(500)
                 .then((response) => {
@@ -138,6 +140,7 @@ describe('clipboard/getAllEntries', () => {
 
         await request(app)
             .get('/clipboard/getAllEntries')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {

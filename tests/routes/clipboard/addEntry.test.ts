@@ -10,6 +10,7 @@ describe('clipboard/addEntry', () => {
         it('Query with no file and no content', async () => {
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({ name: 'A cool entry' })
                 .expect(400)
@@ -34,6 +35,7 @@ describe('clipboard/addEntry', () => {
 
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'A cool entry',
@@ -75,6 +77,7 @@ describe('clipboard/addEntry', () => {
 
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('content-type', 'multipart/form-data')
                 .field('name', 'A cool entry')
                 .field('content', 'entry content')
@@ -106,6 +109,7 @@ describe('clipboard/addEntry', () => {
 
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('content-type', 'multipart/form-data')
                 .field('name', 'should_fail')
                 .field('content', 'entry content')
@@ -125,6 +129,7 @@ describe('clipboard/addEntry', () => {
         it('private entry - default ttl is set to 5 minutes', async () => {
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'A cool entry',
@@ -152,6 +157,7 @@ describe('clipboard/addEntry', () => {
         it('public entry - with custom ttl', async () => {
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'A cool entry',
@@ -183,6 +189,7 @@ describe('clipboard/addEntry', () => {
 
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('content-type', 'multipart/form-data')
                 .field('name', 'entry name')
                 .attach('file', buffer)
@@ -221,6 +228,7 @@ describe('clipboard/addEntry', () => {
             await request(app)
                 .post('/clipboard/addEntry')
                 .set('content-type', 'multipart/form-data')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .field('name', 'entry name')
                 .field('content', 'entry content')
                 .attach('file', buffer)
@@ -258,6 +266,7 @@ describe('clipboard/addEntry', () => {
         it('png', async () => {
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('content-type', 'multipart/form-data')
                 .field('name', 'image')
                 .field('content', 'image')
@@ -291,6 +300,7 @@ describe('clipboard/addEntry', () => {
         it('gif', async () => {
             await request(app)
                 .post('/clipboard/addEntry')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('content-type', 'multipart/form-data')
                 .field('name', 'animated_image')
                 .field('content', 'animated_image')

@@ -28,6 +28,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     path: '/clipboard/deleteEntry',
     inputSchema,
     handler,
-    authentication: 'user',
+    authentication: 'user2',
     outputSchema: emptyObjectSchema
 };

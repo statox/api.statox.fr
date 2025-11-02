@@ -27,6 +27,7 @@ describe('clipboard/deleteEntry', () => {
 
         await request(app)
             .post('/clipboard/deleteEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 name: 'entry 1'
@@ -76,6 +77,7 @@ describe('clipboard/deleteEntry', () => {
 
         await request(app)
             .post('/clipboard/deleteEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 name: 'entry 1'
