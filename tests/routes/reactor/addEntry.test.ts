@@ -20,6 +20,7 @@ describe('reactor/addEntry', () => {
 
         await request(app)
             .post('/reactor/addEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('content-type', 'multipart/form-data')
             .field('name', 'A cool entry')
             .field('commaSeparatedTags', 'tag1,tag2')
@@ -51,6 +52,7 @@ describe('reactor/addEntry', () => {
 
         await request(app)
             .post('/reactor/addEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('content-type', 'multipart/form-data')
             .field('name', 'should_fail')
             .field('commaSeparatedTags', 'tag1,tag2')
@@ -68,6 +70,7 @@ describe('reactor/addEntry', () => {
     it('should create new entry and upload the file to S3', async () => {
         await request(app)
             .post('/reactor/addEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('content-type', 'multipart/form-data')
             .field('name', 'entry name')
             .field('commaSeparatedTags', 'tag1,tag2')
@@ -108,6 +111,7 @@ describe('reactor/addEntry', () => {
     it('should create entry with empty tags array if no tags are provided', async () => {
         await request(app)
             .post('/reactor/addEntry')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('content-type', 'multipart/form-data')
             .field('name', 'entry name')
             .field('commaSeparatedTags', '')

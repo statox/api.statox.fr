@@ -41,6 +41,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     path: '/reactor/addEntry',
     inputSchema,
     handler,
-    authentication: 'user',
+    authentication: 'user2',
     outputSchema: emptyObjectSchema
 };
