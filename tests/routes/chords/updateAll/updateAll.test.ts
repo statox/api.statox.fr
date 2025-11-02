@@ -6,6 +6,7 @@ describe('chords/updateAll', () => {
     it('Accepts valid entries', async () => {
         await request(app)
             .post('/chords/updateAll')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 chords: [
@@ -43,6 +44,7 @@ describe('chords/updateAll', () => {
     it('Rejects invalid timestamp', async () => {
         await request(app)
             .post('/chords/updateAll')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 chords: [

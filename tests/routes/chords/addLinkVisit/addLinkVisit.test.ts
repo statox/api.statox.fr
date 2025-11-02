@@ -7,6 +7,7 @@ describe('chords/addLinkVisit', () => {
     it('should create new entry with count 1', async () => {
         await request(app)
             .post('/chords/addLinkVisit')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 url: 'https://bar.com'
@@ -51,6 +52,7 @@ describe('chords/addLinkVisit', () => {
 
         await request(app)
             .post('/chords/addLinkVisit')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({
                 url: 'https://bar.com'
