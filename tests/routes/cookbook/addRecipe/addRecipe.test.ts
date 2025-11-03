@@ -11,6 +11,7 @@ describe('cookbook/addRecipe', () => {
 
             await request(app)
                 .post('/cookbook/addRecipe')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'Carot Cake',
@@ -36,6 +37,7 @@ describe('cookbook/addRecipe', () => {
 
             await request(app)
                 .post('/cookbook/addRecipe')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'New recipe',
@@ -77,6 +79,7 @@ describe('cookbook/addRecipe', () => {
 
             await request(app)
                 .post('/cookbook/addRecipe')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'New recipe',
@@ -111,6 +114,7 @@ describe('cookbook/addRecipe', () => {
 
             await request(app)
                 .post('/cookbook/addRecipe')
+                .set('Cookie', th.auth2.getPassportSessionCookie())
                 .set('Accept', 'application/json')
                 .send({
                     name: 'New recipe',

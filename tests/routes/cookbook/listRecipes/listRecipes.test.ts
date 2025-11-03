@@ -10,6 +10,7 @@ describe('/cookbook/listRecipes', () => {
 
         await request(app)
             .get('/cookbook/listRecipes')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .expect(200)
             .then((response) => {

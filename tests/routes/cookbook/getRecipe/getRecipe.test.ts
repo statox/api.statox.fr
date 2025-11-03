@@ -10,6 +10,7 @@ describe('/cookbook/getRecipe', () => {
 
         await request(app)
             .post('/cookbook/getRecipe')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({ recipeId: 99 })
             .expect(400)
@@ -22,6 +23,7 @@ describe('/cookbook/getRecipe', () => {
 
         await request(app)
             .post('/cookbook/getRecipe')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({ recipeId: 3 })
             .expect(200)
@@ -42,6 +44,7 @@ describe('/cookbook/getRecipe', () => {
 
         await request(app)
             .post('/cookbook/getRecipe')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
             .set('Accept', 'application/json')
             .send({ recipeId: 2 })
             .expect(200)

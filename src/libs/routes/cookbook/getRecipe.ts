@@ -71,6 +71,6 @@ export const route: PostRoute<Input, FromSchema<typeof outputSchema>> = {
     path: '/cookbook/getRecipe',
     inputSchema,
     handler,
-    authentication: 'user',
+    authentication: 'user2',
     outputSchema
 };
