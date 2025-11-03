@@ -1,5 +1,7 @@
 import request from 'supertest';
 import { app } from '../../../src/app.js';
+import { assert } from 'chai';
+import { th } from '../../helpers/index.js';
 
 /*
  * This should be moved to tests/framework
@@ -82,7 +84,17 @@ describe('auth-passport', () => {
             await request(app).post('/auth/me').send({}).set('Cookie', cookie).expect(200);
 
             // Logout
-            await request(app).post('/auth/logout').send({}).set('Cookie', cookie).expect(200);
+            const res2 = await request(app)
+                .post('/auth/logout')
+                .send({})
+                .set('Cookie', cookie)
+                .expect(200);
+
+            const cookie2 = res2.headers['set-cookie'];
+            assert.equal(
+                cookie2,
+                'connect.sid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax'
+            );
 
             // Cookie should not work anymore
             await request(app).post('/auth/me').send({}).set('Cookie', cookie).expect(401);

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { CookieOptions, NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import { getUserById, User, validateUserPassword } from '../modules/auth/index.js';
@@ -114,22 +114,24 @@ export const setPassportHeaders = (req: Request, res: Response, next: NextFuncti
     next();
 };
 
+const cookieOptions: CookieOptions = {
+    // Secure: true = Require the frontend to be servers with https (even localhost for dev)
+    secure: isProd,
+    // httpOnly: true = JS can't access the session cookie on the client
+    httpOnly: true,
+    // sameSite: 'none' = Allow localhost:8080 to get a cookie from api.tatox.fr
+    // We use 'lax' locally because `sameSite: 'none'` requires `secure: true` which
+    // we don't want to do with local dev frontend
+    // TODO: Find a way to enforce samesite while allowing dev frontend to call the real API
+    sameSite: isProd ? 'none' : 'lax'
+};
+
 export const doPassportSession = session({
     secret: config.express.sessionsSecret,
     resave: false, // don't save session if unmodified
     saveUninitialized: false, // don't create session until something stored
     store: sessionStore,
-    cookie: {
-        // Secure: true = Require the frontend to be servers with https (even localhost for dev)
-        secure: isProd,
-        // httpOnly: true = JS can't access the session cookie on the client
-        httpOnly: true,
-        // sameSite: 'none' = Allow localhost:8080 to get a cookie from api.tatox.fr
-        // We use 'lax' locally because `sameSite: 'none'` requires `secure: true` which
-        // we don't want to do with local dev frontend
-        // TODO: Find a way to enforce samesite while allowing dev frontend to call the real API
-        sameSite: isProd ? 'none' : 'lax'
-    }
+    cookie: cookieOptions
 });
 
 export class AuthUnauthorizedError extends Error {
@@ -147,7 +149,12 @@ export const logoutPassportRequest = async (req: Request, res: Response, next: N
             return next(new AuthUnauthorizedError());
         }
 
-        return req.logout(next);
+        return req.logout(() => {
+            req.session.destroy(() => {
+                res.clearCookie('connect.sid', cookieOptions);
+                return next();
+            });
+        });
     });
 
 export const validatePassportAuth = async (req: Request, res: Response, next: NextFunction) =>
