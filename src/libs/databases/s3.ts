@@ -32,7 +32,7 @@ export const getPresignedUrl = async (params: { bucket: string; key: string }) =
     return url;
 };
 
-const requiredBuckets = ['clipboard', 'reactor', 'songbook', 'reading-list'];
+const requiredBuckets = ['clipboard', 'reactor', 'songbook'];
 const requiredFiles = [
     {
         bucket: 'songbook',

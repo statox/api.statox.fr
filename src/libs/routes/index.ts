@@ -30,8 +30,6 @@ import { route as PersonalTracker_Upload } from './personalTracker/upload.js';
 import { route as Reactor_addEntry } from './reactor/addEntry.js';
 import { route as Reactor_getEntriesForPublic } from './reactor/getEntriesForPublic.js';
 import { route as Reactor_getEntry } from './reactor/getEntry.js';
-import { route as ReadingList_addEntry } from './readingList/addEntry.js';
-import { route as ReadingList_getAllEntries } from './readingList/getAllEntries.js';
 import { route as WebWatcher_createWatcher } from './webWatcher/createWatcher.js';
 import { route as WebWatcher_deleteWatcher } from './webWatcher/deleteWatcher.js';
 import { route as WebWatcher_getAllWatcher } from './webWatcher/getAllWatchers.js';
@@ -75,8 +73,6 @@ export const routes: {
         Reactor_addEntry,
         Reactor_getEntriesForPublic,
         Reactor_getEntry,
-        ReadingList_addEntry,
-        ReadingList_getAllEntries,
         WebWatcher_createWatcher,
         WebWatcher_deleteWatcher,
         WebWatcher_getAllWatcher,

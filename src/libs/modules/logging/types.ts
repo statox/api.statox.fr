@@ -99,7 +99,6 @@ export type AppLogComponent =
     | 'notifier'
     | 'periodic-tasks'
     | 'reactor'
-    | 'readingList'
     | 's3Files'
     | 'weather-forecast'
     | 'web-watcher'
