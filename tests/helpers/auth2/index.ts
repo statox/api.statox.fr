@@ -28,6 +28,8 @@ class TestHelper_Auth2 extends TestHelper {
         });
     }
 
+    setupAuth2User = setupAuth2User;
+
     getPassportSessionCookie = () => {
         if (!passportSessionCookie) {
             new Error('Setup Auth2 before trying to get the cookie');

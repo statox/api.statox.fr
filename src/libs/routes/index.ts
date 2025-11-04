@@ -37,6 +37,18 @@ import { route as WebWatcher_toggleWatcherEnabled } from './webWatcher/toggleWat
 
 import { route as Gravitrips_WSGame } from './gravitrips/ws_game.js';
 
+/*
+ * For now routesAuth is exported only for tests in tests/frameworks
+ * TODO Maybe we should remove the auth routes from the regular route
+ * and have a custom api pipeline
+ */
+export const routesAuth: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    list: Route<any, any>[];
+} = {
+    list: [Auth_Login, Auth_Logout, Auth_Me]
+};
+
 export const routes: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     list: Route<any, any>[];

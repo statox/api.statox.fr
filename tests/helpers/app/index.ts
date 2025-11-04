@@ -9,6 +9,7 @@ import {
     PostRoute,
     RouteWS
 } from '../../../src/libs/routes/types.js';
+import { routesAuth } from '../../../src/libs/routes/index.js';
 import { initApp } from '../../../src/app.js';
 import { emptyObjectSchema } from '../../../src/libs/routes/helpers.js';
 
@@ -132,6 +133,7 @@ const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput>
 };
 
 const testRoutes = [
+    ...routesAuth.list,
     getRoute,
     getRouteWithResult,
     getRouteWithCustomOutputHandler,
