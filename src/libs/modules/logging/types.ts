@@ -64,6 +64,7 @@ export type LoggableProperties = {
     remoteIp?: string;
     requestId?: string;
     requestInterrupted?: boolean;
+    requiredScope?: string;
     s3Key?: string;
     sensorName?: string;
     shutdownOrigin?: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin;
@@ -79,6 +80,7 @@ export type LoggableProperties = {
     trend?: string;
     url?: string;
     userId?: number;
+    userScopes?: string[];
     validityTime?: string;
     visitedUrl?: string;
     watcherName?: string;

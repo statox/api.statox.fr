@@ -132,6 +132,25 @@ const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput>
     outputSchema: emptyObjectSchema
 };
 
+const postRouteNoScope: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
+    method: 'post',
+    authentication: 'user2',
+    path: '/post/noscope',
+    inputSchema: emptyObjectSchema,
+    handler: async () => {},
+    outputSchema: emptyObjectSchema
+};
+
+const postRouteOneScope: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
+    method: 'post',
+    authentication: 'user2',
+    path: '/post/onescope',
+    scope: 'scope1',
+    inputSchema: emptyObjectSchema,
+    handler: async () => {},
+    outputSchema: emptyObjectSchema
+};
+
 const testRoutes = [
     ...routesAuth.list,
     getRoute,
@@ -141,6 +160,8 @@ const testRoutes = [
     getRouteThatThrows,
     getRouteWithInvalidOutput,
     postRoute,
+    postRouteNoScope,
+    postRouteOneScope,
     userAuthenticatedGetRoute,
     apiiotAuthenticatedGetRoute
 ];

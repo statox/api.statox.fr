@@ -21,6 +21,7 @@ import {
     doPassportSession,
     logoutPassportRequest,
     setPassportHeaders,
+    validateEndpointScope,
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
@@ -89,6 +90,8 @@ export const initApp = () => {
             } else {
                 // The other authenticated endpoints only check the session to authenticate the user
                 pipeline.push(validatePassportSession);
+                // Once the session populate the user, check the required scopes
+                pipeline.push(validateEndpointScope(route.scope));
             }
         }
 

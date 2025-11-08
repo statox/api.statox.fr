@@ -1,6 +1,6 @@
 import { pbkdf2Sync, randomBytes } from 'node:crypto';
 import { db } from '../../databases/db.js';
-import { RowDataPacket } from 'mysql2/promise';
+import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import crypto from 'node:crypto';
 import { User, UserWithAuth } from './types.js';
 
@@ -8,8 +8,10 @@ import { User, UserWithAuth } from './types.js';
  * Creates a user in the DB which can be authentified with passport.
  * Since this is a personnal API I don't want a signup page so this
  * should only be run manually and not from an endpoint.
+ *
+ * Returns the id of the created user
  */
-export const createUser = async (username: string, password: string) => {
+export const createUser = async (username: string, password: string, scopes: string[]) => {
     if (!username || !username.length) {
         throw new Error('Username must be defined');
     }
@@ -17,16 +19,17 @@ export const createUser = async (username: string, password: string) => {
         throw new Error('Password must be defined');
     }
     const salt = randomBytes(16);
-    return db.query('INSERT INTO User (username, hashedPassword, salt) VALUES (?, ?, ?)', [
-        username,
-        pbkdf2Sync(password, salt, 310000, 32, 'sha256'),
-        salt
-    ]);
+    const [res] = await db.query(
+        'INSERT INTO User (username, hashedPassword, salt, scopes) VALUES (?, ?, ?, ?)',
+        [username, pbkdf2Sync(password, salt, 310000, 32, 'sha256'), salt, JSON.stringify(scopes)]
+    );
+
+    return (res as ResultSetHeader).insertId;
 };
 
 const getAuthUserByUsername = async (username: string) => {
     const [rows] = await db.query<(UserWithAuth & RowDataPacket)[]>(
-        'SELECT id, username, hashedPassword, salt FROM User WHERE username = ?',
+        'SELECT id, username, scopes, hashedPassword, salt FROM User WHERE username = ?',
         [username]
     );
 
@@ -38,13 +41,14 @@ const getAuthUserByUsername = async (username: string) => {
         id: rows[0].id,
         username: rows[0].username,
         hashedPassword: rows[0].hashedPassword,
-        salt: rows[0].salt
+        salt: rows[0].salt,
+        scopes: rows[0].scopes
     };
 };
 
 export const getUserById = async (id: number): Promise<User | undefined> => {
     const [rows] = await db.query<(User & RowDataPacket)[]>(
-        'SELECT id, username FROM User WHERE id = ?',
+        'SELECT id, username, scopes FROM User WHERE id = ?',
         [id]
     );
 
@@ -54,7 +58,8 @@ export const getUserById = async (id: number): Promise<User | undefined> => {
 
     return {
         id: rows[0].id,
-        username: rows[0].username
+        username: rows[0].username,
+        scopes: rows[0].scopes
     };
 };
 

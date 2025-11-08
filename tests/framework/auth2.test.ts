@@ -5,7 +5,11 @@ import { th } from '../helpers/index.js';
 
 describe('auth-passport', () => {
     beforeEach(async () => {
-        await th.auth2.setupAuth2User();
+        await th.auth2.setupAuth2User({
+            username: 'user',
+            password: 'passwd',
+            scopes: ['admin']
+        });
     });
 
     describe('auth/login', () => {
@@ -134,12 +138,70 @@ describe('auth-passport', () => {
                 .send({})
                 .set('Cookie', cookie)
                 .expect(200);
+
             assert.deepEqual(res2.body, {
                 status: 'logged_in',
                 user: {
                     id: 1,
-                    username: 'user'
+                    username: 'user',
+                    scopes: ['admin']
                 }
+            });
+        });
+    });
+
+    describe('scopes', () => {
+        it('no scope required', async () => {
+            await request(app)
+                .post('/post/noscope')
+                .send({})
+                .set('Cookie', th.auth2.getPassportSessionCookie())
+                .expect(200);
+
+            th.slog.checkLog('auth', 'Endpoint doesnt require a scope', { url: '/post/noscope' });
+        });
+
+        it('user is admin', async () => {
+            await request(app)
+                .post('/post/onescope')
+                .send({})
+                .set('Cookie', th.auth2.getPassportSessionCookie())
+                .expect(200);
+
+            th.slog.checkLog('auth', 'User is admin', { userId: 1, url: '/post/onescope' });
+        });
+
+        it('user doesnt have the right scope', async () => {
+            const { cookie, userId } = await th.auth2.setupAuth2User({
+                username: 'foo',
+                password: 'bar',
+                scopes: ['invalid']
+            });
+
+            await request(app).post('/post/onescope').send({}).set('Cookie', cookie).expect(401);
+
+            th.slog.checkLog('auth', 'User has no allowed scope', {
+                userId,
+                url: '/post/onescope',
+                userScopes: ['invalid'],
+                requiredScope: 'scope1'
+            });
+        });
+
+        it('user has the right scope', async () => {
+            const { cookie, userId } = await th.auth2.setupAuth2User({
+                username: 'foo',
+                password: 'bar',
+                scopes: ['scope1']
+            });
+
+            await request(app).post('/post/onescope').send({}).set('Cookie', cookie).expect(200);
+
+            th.slog.checkLog('auth', 'User has allowed scope', {
+                userId,
+                url: '/post/onescope',
+                userScopes: ['scope1'],
+                requiredScope: 'scope1'
             });
         });
     });

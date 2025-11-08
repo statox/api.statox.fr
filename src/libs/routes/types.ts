@@ -21,6 +21,7 @@ type BaseRoute<Input, Output> = {
     handler: RouteHandler<Input>;
     authentication: 'none' | 'user' | 'user2' | 'apikey-iot';
     outputSchema: ApiJsonSchema;
+    scope?: string;
     // TODO at one point we might want to wrap the response in a custom object
     customResponseHandler?: (output: Output, res: Response) => void;
 };

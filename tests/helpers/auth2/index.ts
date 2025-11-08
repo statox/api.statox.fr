@@ -32,15 +32,18 @@ const makeSessionCookie = async (sessionStore: session.Store, userId: number) =>
     return cookie;
 };
 
-let passportSessionCookie = '';
+const passportSessionCookies = {} as { [username: string]: string };
 
-const setupAuth2User = async () => {
+const setupAuth2User = async (user: { username: string; password: string; scopes: string[] }) => {
+    const { username, password, scopes } = user;
     // We rely on the mysql test helper to clean the table before this hook to recreate the user
     // without violating the uniq username constraint
-    await createUser('user', 'passwd');
+    const userId = await createUser(username, password, scopes);
 
     // Generate the cookie, store it in the session/sore and make it available to tests
-    passportSessionCookie = await makeSessionCookie(sessionStore, 1);
+    const cookie = await makeSessionCookie(sessionStore, userId);
+    passportSessionCookies[username] = cookie;
+    return { userId, cookie };
 };
 
 class TestHelper_Auth2 extends TestHelper {
@@ -48,19 +51,31 @@ class TestHelper_Auth2 extends TestHelper {
         super({
             name: 'Auth2',
             hooks: {
-                beforeEach: setupAuth2User
+                beforeEach: async () => {
+                    await setupAuth2User({
+                        username: 'user',
+                        password: 'passwd',
+                        scopes: ['admin']
+                    });
+                }
             }
         });
     }
 
     setupAuth2User = setupAuth2User;
 
-    getPassportSessionCookie = () => {
-        if (!passportSessionCookie) {
-            new Error('Setup Auth2 before trying to get the cookie');
+    /**
+     * @returns The session cookie of a user too be used in tests
+     * @param username Default is 'user' which is created by `setupAuth2User` by default in beforeEach hook.
+     *                 This param is useful to get the cookie of a user created specifically for a test
+     *                 with a custom call to `setupAuth2User`
+     */
+    getPassportSessionCookie = (username = 'user') => {
+        if (!passportSessionCookies[username]) {
+            new Error(`Setup Auth2 before trying to get the cookie for user ${username}`);
         }
 
-        return passportSessionCookie;
+        return passportSessionCookies[username];
     };
 }
 
