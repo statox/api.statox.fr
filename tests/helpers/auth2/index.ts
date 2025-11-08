@@ -1,7 +1,36 @@
-import request from 'supertest';
 import { createUser } from '../../../src/libs/modules/auth/index.js';
 import { TestHelper } from '../TestHelper.js';
-import { app } from '../../../src/app.js';
+
+import session from 'express-session';
+import signature from 'cookie-signature';
+import { config } from '../../../src/packages/config/index.js';
+import { sessionStore } from '../../../src/libs/middleware/auth_passport.middleware.js';
+
+/**
+ * Creates a creates a session for a given userId, store it in the session store and returns
+ * the value of the cookie
+ */
+const makeSessionCookie = async (sessionStore: session.Store, userId: number) => {
+    const sid = `sessioncookieuser${userId}`;
+
+    const sessionObj = {
+        cookie: {
+            originalMaxAge: null,
+            expires: null,
+            secure: false, // We don't have https in tests
+            httpOnly: true,
+            path: '/',
+            sameSite: 'none'
+        },
+        passport: { user: userId }
+    };
+    //@ts-expect-error TODO Better type sameSite
+    sessionStore.set(sid, sessionObj);
+
+    const signed = signature.sign(sid, config.express.sessionsSecret);
+    const cookie = `connect.sid=${encodeURIComponent('s:' + signed)}; Path=/; HttpOnly; SameSite=Lax`;
+    return cookie;
+};
 
 let passportSessionCookie = '';
 
@@ -9,13 +38,9 @@ const setupAuth2User = async () => {
     // We rely on the mysql test helper to clean the table before this hook to recreate the user
     // without violating the uniq username constraint
     await createUser('user', 'passwd');
-    // TODO This is slow. I should look into generating the session without calling the endpoint
-    // I might want to wait to use a mysql store for express-session before trying to do that
-    const res = await request(app)
-        .post('/auth/login')
-        .send({ username: 'user', password: 'passwd' })
-        .expect(200);
-    passportSessionCookie = res.headers['set-cookie'];
+
+    // Generate the cookie, store it in the session/sore and make it available to tests
+    passportSessionCookie = await makeSessionCookie(sessionStore, 1);
 };
 
 class TestHelper_Auth2 extends TestHelper {

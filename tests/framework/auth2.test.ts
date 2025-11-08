@@ -62,6 +62,14 @@ describe('auth-passport', () => {
             // Should not work without a ocokie
             await request(app).post('/auth/me').send({}).expect(401);
         });
+
+        it('logs in and uses session cookie from helper', async () => {
+            // Get the session cookie from the helper
+            const cookie = th.auth2.getPassportSessionCookie();
+
+            // use the cookie in a subsequent authenticated request
+            await request(app).post('/auth/me').send({}).set('Cookie', cookie).expect(200);
+        });
     });
 
     describe('auth/logout', () => {

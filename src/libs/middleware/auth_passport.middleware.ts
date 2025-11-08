@@ -89,8 +89,12 @@ const getSessionDBConnection = () => {
     return mysql.createConnection(connectionOptions);
 };
 
-// @ts-expect-error For some reason the typing of the connection seems wrong
-const sessionStore = new MySQLStore({}, await getSessionDBConnection()) as unknown as session.Store;
+// Exported for tests
+export const sessionStore = new MySQLStore(
+    {},
+    // @ts-expect-error For some reason the typing of the connection seems wrong
+    await getSessionDBConnection()
+) as unknown as session.Store;
 
 const allowedOrigins = ['https://apps.statox.fr', 'https://localhost:8080'];
 
