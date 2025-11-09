@@ -1,11 +1,17 @@
 /**
- * Create a user in the table User to be authenticated in the API
+ * Create a user in the table User to be authenticated in the API.
+ * This script is used both in local dev and on production.
+ *
+ * It prompts from a username, password and suggests a list of scopes
+ * to assign to the user and creates an entry in the connected db.
  *
  * Usage:
+ *      # You should be using npm run create:user instead
  *      node dist/src/tools/auth/createUser.js
  *
- * TODO: Test it on the prod db
  * TODO: Largely vibe-coded, I need to better understand the input handling code
+ * TODO: The interactive prompt for the scopes is a bit broken I can't add a
+ *       new line between the prompt and the first option of the list.
  */
 import { initDb } from '../../libs/databases/db.js';
 import { createUser } from '../../libs/modules/auth/index.js';
