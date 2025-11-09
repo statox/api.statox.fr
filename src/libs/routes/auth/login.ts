@@ -44,6 +44,7 @@ export const route: PostRoute<Input, Output> = {
     path: '/auth/login',
     handler,
     authentication: 'user2',
+    scope: 'public',
     outputSchema,
     inputSchema
 };

@@ -151,57 +151,123 @@ describe('auth-passport', () => {
     });
 
     describe('scopes', () => {
-        it('no scope required', async () => {
+        let adminUserId: number;
+        let noScopeUserId: number;
+        let publicUserId: number;
+        beforeEach(async () => {
+            const admin = await th.auth2.setupAuth2User({
+                username: 'admin',
+                scopes: ['admin'],
+                password: 'foo'
+            });
+            adminUserId = admin.userId;
+
+            const noScopeUser = await th.auth2.setupAuth2User({
+                username: 'user-no-scope',
+                scopes: [],
+                password: 'foo'
+            });
+            noScopeUserId = noScopeUser.userId;
+
+            const publicUser = await th.auth2.setupAuth2User({
+                username: 'user-public',
+                scopes: ['public'],
+                password: 'foo'
+            });
+            publicUserId = publicUser.userId;
+        });
+
+        it('Invalid scope should generate error', async () => {
             await request(app)
-                .post('/post/noscope')
+                .post('/post/scope-invalid')
                 .send({})
-                .set('Cookie', th.auth2.getPassportSessionCookie())
-                .expect(200);
+                .set('Cookie', th.auth2.getPassportSessionCookie('admin'))
+                .expect(500);
 
-            th.slog.checkLog('auth', 'Endpoint doesnt require a scope', { url: '/post/noscope' });
-        });
-
-        it('user is admin', async () => {
-            await request(app)
-                .post('/post/onescope')
-                .send({})
-                .set('Cookie', th.auth2.getPassportSessionCookie())
-                .expect(200);
-
-            th.slog.checkLog('auth', 'User is admin', { userId: 1, url: '/post/onescope' });
-        });
-
-        it('user doesnt have the right scope', async () => {
-            const { cookie, userId } = await th.auth2.setupAuth2User({
-                username: 'foo',
-                password: 'bar',
-                scopes: ['invalid']
-            });
-
-            await request(app).post('/post/onescope').send({}).set('Cookie', cookie).expect(401);
-
-            th.slog.checkLog('auth', 'User has no allowed scope', {
-                userId,
-                url: '/post/onescope',
-                userScopes: ['invalid'],
-                requiredScope: 'scope1'
+            th.slog.checkLog('auth', 'Endpoint doesnt require a scope', {
+                url: '/post/scope-invalid'
             });
         });
 
-        it('user has the right scope', async () => {
-            const { cookie, userId } = await th.auth2.setupAuth2User({
-                username: 'foo',
-                password: 'bar',
-                scopes: ['scope1']
+        describe('Public scope', () => {
+            it('Allow admin user', async () => {
+                await request(app)
+                    .post('/post/scope-public')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('admin'))
+                    .expect(200);
+
+                th.slog.checkLog('auth', 'User is admin', {
+                    userId: adminUserId,
+                    url: '/post/scope-public'
+                });
             });
 
-            await request(app).post('/post/onescope').send({}).set('Cookie', cookie).expect(200);
+            it('Allow user with public scope', async () => {
+                await request(app)
+                    .post('/post/scope-public')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('user-public'))
+                    .expect(200);
 
-            th.slog.checkLog('auth', 'User has allowed scope', {
-                userId,
-                url: '/post/onescope',
-                userScopes: ['scope1'],
-                requiredScope: 'scope1'
+                th.slog.checkLog('auth', 'User has allowed scope', {
+                    userId: publicUserId,
+                    url: '/post/scope-public'
+                });
+            });
+
+            it('Reject user with no scope', async () => {
+                await request(app)
+                    .post('/post/scope-public')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('user-no-scope'))
+                    .expect(401);
+
+                th.slog.checkLog('auth', 'User has no allowed scope', {
+                    userId: noScopeUserId,
+                    url: '/post/scope-public'
+                });
+            });
+        });
+
+        describe('Admin scope', () => {
+            it('Allow admin user', async () => {
+                await request(app)
+                    .post('/post/scope-admin')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('admin'))
+                    .expect(200);
+
+                th.slog.checkLog('auth', 'User is admin', {
+                    userId: adminUserId,
+                    url: '/post/scope-admin'
+                });
+            });
+
+            it('Reject user with public scope', async () => {
+                await request(app)
+                    .post('/post/scope-admin')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('user-public'))
+                    .expect(401);
+
+                th.slog.checkLog('auth', 'User has no allowed scope', {
+                    userId: publicUserId,
+                    url: '/post/scope-admin'
+                });
+            });
+
+            it('Reject user with no scope', async () => {
+                await request(app)
+                    .post('/post/scope-admin')
+                    .send({})
+                    .set('Cookie', th.auth2.getPassportSessionCookie('user-no-scope'))
+                    .expect(401);
+
+                th.slog.checkLog('auth', 'User has no allowed scope', {
+                    userId: noScopeUserId,
+                    url: '/post/scope-admin'
+                });
             });
         });
     });

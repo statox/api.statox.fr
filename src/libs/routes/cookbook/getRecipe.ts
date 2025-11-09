@@ -72,5 +72,6 @@ export const route: PostRoute<Input, FromSchema<typeof outputSchema>> = {
     inputSchema,
     handler,
     authentication: 'user2',
+    scope: 'admin',
     outputSchema
 };

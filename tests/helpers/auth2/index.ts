@@ -5,6 +5,7 @@ import session from 'express-session';
 import signature from 'cookie-signature';
 import { config } from '../../../src/packages/config/index.js';
 import { sessionStore } from '../../../src/libs/middleware/auth_passport.middleware.js';
+import { Scope } from '../../../src/libs/routes/types.js';
 
 /**
  * Creates a creates a session for a given userId, store it in the session store and returns
@@ -34,7 +35,7 @@ const makeSessionCookie = async (sessionStore: session.Store, userId: number) =>
 
 const passportSessionCookies = {} as { [username: string]: string };
 
-const setupAuth2User = async (user: { username: string; password: string; scopes: string[] }) => {
+const setupAuth2User = async (user: { username: string; password: string; scopes: Scope[] }) => {
     const { username, password, scopes } = user;
     // We rely on the mysql test helper to clean the table before this hook to recreate the user
     // without violating the uniq username constraint

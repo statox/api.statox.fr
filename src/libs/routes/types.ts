@@ -16,15 +16,32 @@ export type ApiJsonSchema = JSONSchema;
 export type EmptyInput = FromSchema<typeof emptyObjectSchema>;
 export type EmptyOutput = FromSchema<typeof emptyObjectSchema>;
 
-type BaseRoute<Input, Output> = {
+// List of possible scopes
+export type Scope = 'public' | 'admin' | 'homeTracker';
+
+type BaseRouteCommon<Input, Output> = {
     path: string;
     handler: RouteHandler<Input>;
-    authentication: 'none' | 'user' | 'user2' | 'apikey-iot';
     outputSchema: ApiJsonSchema;
-    scope?: string;
     // TODO at one point we might want to wrap the response in a custom object
     customResponseHandler?: (output: Output, res: Response) => void;
 };
+
+type BaseRouteUser2<Input, Output> = BaseRouteCommon<Input, Output> & {
+    // Routes with authentication type user2 must have a scope
+    authentication: 'user2';
+    scope: Scope;
+};
+
+type BaseRouteNotUser2<Input, Output> = BaseRouteCommon<Input, Output> & {
+    // Routes with authentication type different than user2 must not have a scope
+    authentication: 'none' | 'user' | 'apikey-iot';
+    scope?: never;
+};
+
+export type BaseRoute<Input, Output> =
+    | BaseRouteUser2<Input, Output>
+    | BaseRouteNotUser2<Input, Output>;
 
 export type GetRoute<Input, Output> = BaseRoute<Input, Output> & {
     method: 'get';

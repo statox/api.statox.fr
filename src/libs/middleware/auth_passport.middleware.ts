@@ -144,7 +144,7 @@ export class AuthUnauthorizedError extends Error {
     }
 }
 
-export class AuthInvalidScoeError extends Error {
+export class AuthInvalidScopeError extends Error {
     constructor() {
         super('INVALID_SCOPE');
     }
@@ -214,12 +214,12 @@ export const validatePassportSession = async (req: Request, res: Response, next:
     });
 
 export const validateEndpointScope = (endpointRequiredScope?: string) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, _res: Response, next: NextFunction) => {
         if (!endpointRequiredScope) {
             slog.log('auth', 'Endpoint doesnt require a scope', { url: req.url });
-            return next();
+            return next(new Error('auth2_endpoint_without_scope'));
         }
-        console.log('In validateEndpointScope', req.user);
+
         const user = req.user as User;
         if (!user) {
             slog.log('auth', 'Trying to get scopes on mising user - error', { url: req.url });
@@ -228,7 +228,7 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
 
         if (!user.scopes) {
             slog.log('auth', 'User has no scopes', { userId: user.id, url: req.url });
-            return next(new AuthInvalidScoeError());
+            return next(new AuthInvalidScopeError());
         }
 
         if (user.scopes.includes('admin')) {
@@ -256,6 +256,6 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
             userScopes: user.scopes,
             requiredScope: endpointRequiredScope
         });
-        return next(new AuthInvalidScoeError());
+        return next(new AuthInvalidScopeError());
     };
 };

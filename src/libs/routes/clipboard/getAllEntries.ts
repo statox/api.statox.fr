@@ -31,5 +31,6 @@ export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
     path: '/clipboard/getAllEntries',
     handler,
     authentication: 'user2',
+    scope: 'admin',
     outputSchema
 };

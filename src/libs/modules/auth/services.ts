@@ -3,6 +3,7 @@ import { db } from '../../databases/db.js';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import crypto from 'node:crypto';
 import { User, UserWithAuth } from './types.js';
+import { Scope } from '../../routes/types.js';
 
 /**
  * Creates a user in the DB which can be authentified with passport.
@@ -11,7 +12,7 @@ import { User, UserWithAuth } from './types.js';
  *
  * Returns the id of the created user
  */
-export const createUser = async (username: string, password: string, scopes: string[]) => {
+export const createUser = async (username: string, password: string, scopes: Scope[]) => {
     if (!username || !username.length) {
         throw new Error('Username must be defined');
     }

@@ -16,7 +16,7 @@ import {
 import { OutputValidationError } from './apiPipeline.middleware.js';
 import { DuplicateIngredientError, RecipeNotFoundError } from '../modules/cookbook/index.js';
 import { SensorDoesNotExistError } from '../modules/homeTracker/services/sensorMetaData.js';
-import { AuthInvalidScoeError, AuthUnauthorizedError } from './auth_passport.middleware.js';
+import { AuthInvalidScopeError, AuthUnauthorizedError } from './auth_passport.middleware.js';
 
 export const errorHandler = async (
     error: Error,
@@ -45,7 +45,7 @@ export const errorHandler = async (
         return next();
     }
 
-    if (error instanceof AuthUnauthorizedError || error instanceof AuthInvalidScoeError) {
+    if (error instanceof AuthUnauthorizedError || error instanceof AuthInvalidScopeError) {
         response.status(401).json({ message: error.message });
         return next();
     }

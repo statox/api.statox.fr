@@ -43,5 +43,6 @@ export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
     path: '/cookbook/listRecipes',
     handler,
     authentication: 'user2',
+    scope: 'admin',
     outputSchema
 };

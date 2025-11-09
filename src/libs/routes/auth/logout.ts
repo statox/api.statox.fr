@@ -32,6 +32,7 @@ export const route: PostRoute<Input, Output> = {
     path: '/auth/logout',
     handler,
     authentication: 'user2',
+    scope: 'public',
     outputSchema,
     inputSchema
 };

@@ -66,5 +66,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     inputSchema,
     handler,
     authentication: 'user2',
+    scope: 'admin',
     outputSchema: emptyObjectSchema
 };

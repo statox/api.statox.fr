@@ -12,6 +12,8 @@ import { createUser } from '../../libs/modules/auth/index.js';
 
 await initDb();
 console.log('initDb done');
-await createUser('foo', 'bar', ['admin']);
+await createUser('admin', 'foo', ['admin']);
+await createUser('user', 'foo', ['homeTracker']);
+await createUser('nottuser', 'foo', []);
 console.log('createUser done');
 process.exit(0);

@@ -132,20 +132,32 @@ const postRoute: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput>
     outputSchema: emptyObjectSchema
 };
 
-const postRouteNoScope: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
+const postRouteScopePublic: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
     method: 'post',
     authentication: 'user2',
-    path: '/post/noscope',
+    path: '/post/scope-public',
+    scope: 'public',
     inputSchema: emptyObjectSchema,
     handler: async () => {},
     outputSchema: emptyObjectSchema
 };
 
-const postRouteOneScope: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
+const postRouteInvalidNoScope: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
     method: 'post',
     authentication: 'user2',
-    path: '/post/onescope',
-    scope: 'scope1',
+    path: '/post/scope-invalid',
+    // @ts-expect-error We are creating an invalid scope on purpose
+    scope: '',
+    inputSchema: emptyObjectSchema,
+    handler: async () => {},
+    outputSchema: emptyObjectSchema
+};
+
+const postRouteScopeAdmin: PostRoute<FromSchema<typeof postRouteInputSchema>, EmptyOutput> = {
+    method: 'post',
+    authentication: 'user2',
+    path: '/post/scope-admin',
+    scope: 'homeTracker',
     inputSchema: emptyObjectSchema,
     handler: async () => {},
     outputSchema: emptyObjectSchema
@@ -153,17 +165,18 @@ const postRouteOneScope: PostRoute<FromSchema<typeof postRouteInputSchema>, Empt
 
 const testRoutes = [
     ...routesAuth.list,
+    apiiotAuthenticatedGetRoute,
     getRoute,
-    getRouteWithResult,
-    getRouteWithCustomOutputHandler,
-    getRouteWithLoggedContext,
     getRouteThatThrows,
+    getRouteWithCustomOutputHandler,
     getRouteWithInvalidOutput,
+    getRouteWithLoggedContext,
+    getRouteWithResult,
     postRoute,
-    postRouteNoScope,
-    postRouteOneScope,
-    userAuthenticatedGetRoute,
-    apiiotAuthenticatedGetRoute
+    postRouteInvalidNoScope,
+    postRouteScopeAdmin,
+    postRouteScopePublic,
+    userAuthenticatedGetRoute
 ];
 
 let routesStub: sinon.SinonStub;

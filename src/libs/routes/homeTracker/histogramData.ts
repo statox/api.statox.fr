@@ -58,6 +58,7 @@ export const route: PostRoute<Input, FromSchema<typeof outputSchema>> = {
     method: 'post',
     path: '/homeTracker/histogramData',
     inputSchema,
+    scope: 'homeTracker',
     handler,
     authentication: 'user2',
     outputSchema

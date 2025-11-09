@@ -60,6 +60,7 @@ export const route: PostRoute<Input, Output> = {
     path: '/auth/me',
     handler,
     authentication: 'user2',
+    scope: 'public',
     outputSchema,
     inputSchema
 };
