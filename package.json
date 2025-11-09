@@ -29,7 +29,9 @@
         "tests:all": "npm run tests:packages && npm run tests:framework && npm run tests",
         "tests:ci": "npm run tests:packages -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=packages.json' && npm run tests:framework -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=framework.json' && npm run tests -- --reporter mocha-ctrf-json-reporter --reporter-options 'outputFile=tests.json'",
         "tests:framework": "src/tools/init-db.sh --tests && TZ=UTC PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json",
-        "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json"
+        "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json",
+        "user:create": "node dist/src/tools/auth/createUser.js",
+        "user:create:prod": "npx heroku run node dist/src/tools/auth/createUser.js"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.922.0",

@@ -17,7 +17,9 @@ export type EmptyInput = FromSchema<typeof emptyObjectSchema>;
 export type EmptyOutput = FromSchema<typeof emptyObjectSchema>;
 
 // List of possible scopes
-export type Scope = 'public' | 'admin' | 'homeTracker';
+export const SCOPES = ['public', 'admin', 'homeTracker'] as const;
+type ScopesType = typeof SCOPES;
+export type Scope = ScopesType[number];
 
 type BaseRouteCommon<Input, Output> = {
     path: string;

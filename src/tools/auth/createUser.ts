@@ -5,15 +5,80 @@
  *      node dist/src/tools/auth/createUser.js
  *
  * TODO: Test it on the prod db
- * TODO: Make it take the username and password as input
+ * TODO: Largely vibe-coded, I need to better understand the input handling code
  */
 import { initDb } from '../../libs/databases/db.js';
 import { createUser } from '../../libs/modules/auth/index.js';
 
+import readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+import { SCOPES, Scope } from '../../libs/routes/types.js';
+
+const rl = readline.createInterface({ input, output });
+
+const username = await rl.question('username: ');
+const password = await rl.question('password: ');
+
+const scopes: Set<Scope> = new Set();
+
+let index = 0;
+
+function render() {
+    output.write('\x1Bc');
+    output.write('select scopes (space = toggle, enter = confirm)');
+
+    SCOPES.forEach((s, i) => {
+        const cursor = i === index ? '>' : ' ';
+        const mark = scopes.has(s) ? '[x]' : '[ ]';
+        output.write(`${cursor} ${mark} ${s}\n`);
+    });
+}
+
+render();
+
+input.setRawMode(true);
+input.resume();
+input.setEncoding('utf8');
+
+const done = new Promise<void>((resolve) => {
+    input.on('data', (key) => {
+        // @ts-expect-error TODO Find a proper typing
+        if (key === '\u0003') process.exit(1);
+        // @ts-expect-error TODO Find a proper typing
+        if (key === '\r') return resolve();
+        // @ts-expect-error TODO Find a proper typing
+        if (key === '\u001b[A') {
+            index = Math.max(0, index - 1);
+            render();
+        }
+        // @ts-expect-error TODO Find a proper typing
+        if (key === '\u001b[B') {
+            index = Math.min(SCOPES.length - 1, index + 1);
+            render();
+        }
+        // @ts-expect-error TODO Find a proper typing
+        if (key === ' ') {
+            const s = SCOPES[index];
+            if (scopes.has(s)) scopes.delete(s);
+            else scopes.add(s);
+            render();
+        }
+    });
+});
+
+await done;
+
+input.setRawMode(false);
+console.log('About to create user:');
+console.log(username, password.replaceAll(/./g, '*'), Array.from(scopes));
+
+const confirm = await rl.question('confirm create? [y/N] ');
+if (confirm.toLowerCase() !== 'y') {
+    console.log('aborted');
+    process.exit(0);
+}
+
 await initDb();
-console.log('initDb done');
-await createUser('admin', 'foo', ['admin']);
-await createUser('user', 'foo', ['homeTracker']);
-await createUser('nottuser', 'foo', []);
+await createUser(username, password, Array.from(scopes));
 console.log('createUser done');
 process.exit(0);
