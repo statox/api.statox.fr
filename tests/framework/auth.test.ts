@@ -1,25 +1,11 @@
 import request from 'supertest';
-import sinon from 'sinon';
 import { app } from '../../src/app.js';
-import {
-    fakeCheckRequiredPermissionsHandler,
-    fakeValidateAccessToken
-} from '../helpers/auth/index.js';
 import { th } from '../helpers/index.js';
 
 describe('authentication middlewares', () => {
     describe('auth none', () => {
         it('should not call authentication functions', async () => {
-            await request(app).get('/getRoute');
-            sinon.assert.notCalled(fakeValidateAccessToken);
-            sinon.assert.notCalled(fakeCheckRequiredPermissionsHandler);
-        });
-    });
-    describe('auth user', () => {
-        it('should call the auth0 authentication functions', async () => {
-            await request(app).get('/userAuthenticatedGetRoute');
-            sinon.assert.calledOnce(fakeValidateAccessToken);
-            sinon.assert.calledOnce(fakeCheckRequiredPermissionsHandler);
+            await request(app).get('/getRoute').expect(200);
         });
     });
     describe('auth apikey for iot', () => {

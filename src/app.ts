@@ -4,7 +4,6 @@ import mustacheExpress from 'mustache-express';
 import { DateTime } from 'luxon';
 import { Server } from 'http';
 import { AllowedSchema, Validator } from 'express-json-validator-middleware';
-import { auth0middleware } from './libs/middleware/auth0.middleware.js';
 import { errorHandler } from './libs/middleware/errors.middleware.js';
 // import { goatCounterHandler } from './libs/middleware/goatcounter.middleware';
 import { config } from './packages/config/index.js';
@@ -72,10 +71,7 @@ export const initApp = () => {
     for (const route of routes.list) {
         const pipeline = [];
 
-        if (route.authentication === 'user') {
-            pipeline.push(auth0middleware.validateAccessToken);
-            pipeline.push(auth0middleware.checkRequiredPermissions(['author']));
-        } else if (route.authentication === 'apikey-iot') {
+        if (route.authentication === 'apikey-iot') {
             pipeline.push(validateAPIKeyHeader);
         } else if (route.authentication === 'user2') {
             pipeline.push(setPassportHeaders);

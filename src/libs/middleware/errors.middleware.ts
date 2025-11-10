@@ -1,10 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { ValidationError } from 'express-json-validator-middleware';
-import {
-    InvalidTokenError,
-    UnauthorizedError,
-    InsufficientScopeError
-} from 'express-oauth2-jwt-bearer';
 import { slackNotifier } from '../modules/notifier/slack.js';
 import { EntryAlreadyExistsError } from '../modules/webWatcher/index.js';
 import { ApiKeyError } from './authIOT.middleware.js';
@@ -52,24 +47,6 @@ export const errorHandler = async (
 
     if (error instanceof ApiKeyError) {
         response.status(error.status).json({ message: error.message });
-        return next();
-    }
-
-    if (error instanceof InsufficientScopeError) {
-        const message = 'Permission denied';
-        response.status(error.status).json({ message });
-        return next();
-    }
-
-    if (error instanceof InvalidTokenError) {
-        const message = 'Bad credentials';
-        response.status(error.status).json({ message });
-        return next();
-    }
-
-    if (error instanceof UnauthorizedError) {
-        const message = 'Requires authentication';
-        response.status(error.status).json({ message });
         return next();
     }
 
