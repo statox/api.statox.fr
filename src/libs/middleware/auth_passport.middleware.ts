@@ -1,7 +1,14 @@
 import { CookieOptions, NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import { getUserById, User, validateUserPassword } from '../modules/auth/index.js';
+import {
+    Auth_ForbiddenForUserError,
+    Auth_InvalidScopeError,
+    Auth_UnauthorizedError,
+    getUserById,
+    User,
+    validateUserPassword
+} from '../modules/auth/index.js';
 
 import session from 'express-session';
 import connectMysql from 'express-mysql-session';
@@ -136,25 +143,13 @@ export const doPassportSession = session({
     cookie: cookieOptions
 });
 
-export class AuthUnauthorizedError extends Error {
-    constructor() {
-        super('UNAUTHORIZED');
-    }
-}
-
-export class AuthInvalidScopeError extends Error {
-    constructor() {
-        super('INVALID_SCOPE');
-    }
-}
-
 export const logoutPassportRequest = async (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate('session')(req, res, () => {
         // passport.authenticate('session') populates req.isUnauthenticated and req.user
         if (req.isUnauthenticated()) {
             // If the user didn't call login to trigger validatePassportAuth and initialize a session before
             // or if the session expired then we reject the auth
-            return next(new AuthUnauthorizedError());
+            return next(new Auth_UnauthorizedError());
         }
 
         return req.logout(() => {
@@ -173,7 +168,7 @@ export const validatePassportAuth = async (req: Request, res: Response, next: Ne
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         (err: Error, user?: Express.User | false | null, _info?: { message: string }) => {
             if (err) {
-                slog.log('auth', 'Authenticate local - error', {
+                slog.log('auth', 'Authenticate local - Unexpected error', {
                     error: err,
                     dataStr: JSON.stringify(user)
                 });
@@ -183,7 +178,7 @@ export const validatePassportAuth = async (req: Request, res: Response, next: Ne
                 slog.log('auth', 'Authenticate local - rejected', {
                     dataStr: JSON.stringify(user)
                 });
-                return next(new AuthUnauthorizedError());
+                return next(new Auth_ForbiddenForUserError());
             }
             slog.log('auth', 'Authenticate local - login', {
                 dataStr: JSON.stringify(user)
@@ -197,7 +192,7 @@ export const validatePassportSession = async (req: Request, res: Response, next:
     res.locals.loggableContext.addData('authType', 'passport-session');
     return passport.authenticate('session')(req, res, (error: Error) => {
         if (error) {
-            slog.log('auth', 'Authenticate session - error', {
+            slog.log('auth', 'Authenticate session - Unexpected error', {
                 requestId: res.locals.requestId,
                 error
             });
@@ -210,7 +205,7 @@ export const validatePassportSession = async (req: Request, res: Response, next:
             });
             // If the user didn't call login to trigger validatePassportAuth and initialize a session before
             // or if the session expired then we reject the auth
-            return next(new AuthUnauthorizedError());
+            return next(new Auth_UnauthorizedError());
         }
 
         res.locals.loggableContext.addData('authValidatedSession', true);
@@ -233,14 +228,14 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
             slog.log('auth', 'Trying to get scopes on mising user - error', {
                 requestId: res.locals.requestId
             });
-            return next(new AuthUnauthorizedError());
+            return next(new Auth_UnauthorizedError());
         }
 
         if (!user.scopes) {
             slog.log('auth', 'User has no scopes', {
                 requestId: res.locals.requestId
             });
-            return next(new AuthInvalidScopeError());
+            return next(new Auth_InvalidScopeError());
         }
 
         if (user.scopes.includes('admin')) {
@@ -266,6 +261,6 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
             requiredScope: endpointRequiredScope
         });
         res.locals.loggableContext.addData('authValidatedScope', false);
-        return next(new AuthInvalidScopeError());
+        return next(new Auth_ForbiddenForUserError());
     };
 };

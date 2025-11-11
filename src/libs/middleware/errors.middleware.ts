@@ -11,7 +11,11 @@ import {
 import { OutputValidationError } from './apiPipeline.middleware.js';
 import { DuplicateIngredientError, RecipeNotFoundError } from '../modules/cookbook/index.js';
 import { SensorDoesNotExistError } from '../modules/homeTracker/services/sensorMetaData.js';
-import { AuthInvalidScopeError, AuthUnauthorizedError } from './auth_passport.middleware.js';
+import {
+    Auth_ForbiddenForUserError,
+    Auth_InvalidScopeError,
+    Auth_UnauthorizedError
+} from '../modules/auth/index.js';
 
 export const errorHandler = async (
     error: Error,
@@ -40,7 +44,11 @@ export const errorHandler = async (
         return next();
     }
 
-    if (error instanceof AuthUnauthorizedError || error instanceof AuthInvalidScopeError) {
+    if (
+        error instanceof Auth_UnauthorizedError ||
+        error instanceof Auth_ForbiddenForUserError ||
+        error instanceof Auth_InvalidScopeError
+    ) {
         response.status(401).json({ message: error.message });
         return next();
     }
