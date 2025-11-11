@@ -165,8 +165,9 @@ export const logoutPassportRequest = async (req: Request, res: Response, next: N
         });
     });
 
-export const validatePassportAuth = async (req: Request, res: Response, next: NextFunction) =>
-    passport.authenticate(
+export const validatePassportAuth = async (req: Request, res: Response, next: NextFunction) => {
+    res.locals.loggableContext.addData('authType', 'passport-local');
+    return passport.authenticate(
         'local',
         // TODO: Log attempts and details with currently unused _info param
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -190,42 +191,55 @@ export const validatePassportAuth = async (req: Request, res: Response, next: Ne
             req.logIn(user, (err) => (err ? next(err) : next()));
         }
     )(req, res, next);
+};
 
-export const validatePassportSession = async (req: Request, res: Response, next: NextFunction) =>
-    passport.authenticate('session')(req, res, (error: Error) => {
+export const validatePassportSession = async (req: Request, res: Response, next: NextFunction) => {
+    res.locals.loggableContext.addData('authType', 'passport-session');
+    return passport.authenticate('session')(req, res, (error: Error) => {
         if (error) {
             slog.log('auth', 'Authenticate session - error', {
+                requestId: res.locals.requestId,
                 error
             });
             return next(error);
         }
         // passport.authenticate('session') populates req.isUnauthenticated and req.user
         if (req.isUnauthenticated()) {
-            slog.log('auth', 'Authenticate session - rejected', {});
+            slog.log('auth', 'Authenticate session - rejected', {
+                requestId: res.locals.requestId
+            });
             // If the user didn't call login to trigger validatePassportAuth and initialize a session before
             // or if the session expired then we reject the auth
             return next(new AuthUnauthorizedError());
         }
 
-        slog.log('auth', 'Authenticate session - accepted', {});
+        res.locals.loggableContext.addData('authValidatedSession', true);
         return next();
     });
+};
 
 export const validateEndpointScope = (endpointRequiredScope?: string) => {
-    return async (req: Request, _res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
         if (!endpointRequiredScope) {
-            slog.log('auth', 'Endpoint doesnt require a scope', { url: req.url });
+            slog.log('auth', 'Error endpoint doesnt require a scope', {
+                requestId: res.locals.requestId
+            });
             return next(new Error('auth2_endpoint_without_scope'));
         }
 
         const user = req.user as User;
+        res.locals.loggableContext.addData('authUserScopes', user.scopes);
         if (!user) {
-            slog.log('auth', 'Trying to get scopes on mising user - error', { url: req.url });
+            slog.log('auth', 'Trying to get scopes on mising user - error', {
+                requestId: res.locals.requestId
+            });
             return next(new AuthUnauthorizedError());
         }
 
         if (!user.scopes) {
-            slog.log('auth', 'User has no scopes', { userId: user.id, url: req.url });
+            slog.log('auth', 'User has no scopes', {
+                requestId: res.locals.requestId
+            });
             return next(new AuthInvalidScopeError());
         }
 
@@ -233,18 +247,15 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
             slog.log('auth', 'User is admin', {
                 userId: user.id,
                 url: req.url,
-                userScopes: user.scopes
+                userScopes: user.scopes,
+                requestId: res.locals.requestId
             });
+            res.locals.loggableContext.addData('authValidatedScope', true);
             return next();
         }
 
         if (user.scopes.includes(endpointRequiredScope)) {
-            slog.log('auth', 'User has allowed scope', {
-                userId: user.id,
-                url: req.url,
-                userScopes: user.scopes,
-                requiredScope: endpointRequiredScope
-            });
+            res.locals.loggableContext.addData('authValidatedScope', true);
             return next();
         }
 
@@ -254,6 +265,7 @@ export const validateEndpointScope = (endpointRequiredScope?: string) => {
             userScopes: user.scopes,
             requiredScope: endpointRequiredScope
         });
+        res.locals.loggableContext.addData('authValidatedScope', false);
         return next(new AuthInvalidScopeError());
     };
 };

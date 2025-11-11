@@ -184,8 +184,8 @@ describe('auth-passport', () => {
                 .set('Cookie', th.auth2.getPassportSessionCookie('admin'))
                 .expect(500);
 
-            th.slog.checkLog('auth', 'Endpoint doesnt require a scope', {
-                url: '/post/scope-invalid'
+            th.slog.checkLog('auth', 'Error endpoint doesnt require a scope', {
+                requestId: '00000000-0000-0000-0000-000000000001'
             });
         });
 
@@ -201,6 +201,12 @@ describe('auth-passport', () => {
                     userId: adminUserId,
                     url: '/post/scope-public'
                 });
+
+                th.slog.checkLog('app', 'access-log', {
+                    context: {
+                        authValidatedScope: true
+                    }
+                });
             });
 
             it('Allow user with public scope', async () => {
@@ -210,9 +216,10 @@ describe('auth-passport', () => {
                     .set('Cookie', th.auth2.getPassportSessionCookie('user-public'))
                     .expect(200);
 
-                th.slog.checkLog('auth', 'User has allowed scope', {
-                    userId: publicUserId,
-                    url: '/post/scope-public'
+                th.slog.checkLog('app', 'access-log', {
+                    context: {
+                        authValidatedScope: true
+                    }
                 });
             });
 
@@ -242,6 +249,11 @@ describe('auth-passport', () => {
                     userId: adminUserId,
                     url: '/post/scope-admin'
                 });
+                th.slog.checkLog('app', 'access-log', {
+                    context: {
+                        authValidatedScope: true
+                    }
+                });
             });
 
             it('Reject user with public scope', async () => {
@@ -255,6 +267,11 @@ describe('auth-passport', () => {
                     userId: publicUserId,
                     url: '/post/scope-admin'
                 });
+                th.slog.checkLog('app', 'access-log', {
+                    context: {
+                        authValidatedScope: false
+                    }
+                });
             });
 
             it('Reject user with no scope', async () => {
@@ -267,6 +284,12 @@ describe('auth-passport', () => {
                 th.slog.checkLog('auth', 'User has no allowed scope', {
                     userId: noScopeUserId,
                     url: '/post/scope-admin'
+                });
+
+                th.slog.checkLog('app', 'access-log', {
+                    context: {
+                        authValidatedScope: false
+                    }
                 });
             });
         });

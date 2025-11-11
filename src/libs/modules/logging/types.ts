@@ -16,6 +16,11 @@ type xRequestInfo = {
 export type LoggableProperties = {
     context?: LoggableProperties;
 
+    authError?: Error;
+    authType?: string;
+    authUserScopes?: string[];
+    authValidatedSession?: boolean;
+    authValidatedScope?: boolean;
     bucket?: string;
     cfGeoInfo?: CloudflareGeoInfo;
     cfRay?: string;
