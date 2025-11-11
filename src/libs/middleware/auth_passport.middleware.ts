@@ -113,8 +113,6 @@ export const setPassportHeaders = (req: Request, res: Response, next: NextFuncti
     if (typeof origin === 'string' && allowedOrigins.includes(origin) && origin !== 'null') {
         res.header('Access-Control-Allow-Origin', origin);
     }
-
-    slog.log('auth', 'setPassportHeaders');
     next();
 };
 
