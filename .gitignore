@@ -10,6 +10,9 @@ ctrf
 *.dev
 .DS_Store
 
+# This file is regenerated at each app restart
+src/views/openapi_json.mustache
+
 index-test.ts
 chords_check_results.json
 src/tools/tmp.sql

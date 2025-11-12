@@ -25,6 +25,7 @@ import { route as HomeTracker_histogramData } from './homeTracker/histogramData.
 import { route as HomeTracker_histogramDataPublic } from './homeTracker/histogramDataPublic.js';
 import { route as HomeTracker_updateSensorMetadata } from './homeTracker/updateSensorMetadata.js';
 import { route as HomeTracker_upload } from './homeTracker/upload.js';
+import { route as Openapi_Definition } from './openapi/definition.js';
 import { route as PersonalTracker_GetAll } from './personalTracker/getAll.js';
 import { route as PersonalTracker_Upload } from './personalTracker/upload.js';
 import { route as Reactor_addEntry } from './reactor/addEntry.js';
@@ -80,6 +81,7 @@ export const routes: {
         HomeTracker_histogramDataPublic,
         HomeTracker_updateSensorMetadata,
         HomeTracker_upload,
+        Openapi_Definition,
         PersonalTracker_GetAll,
         PersonalTracker_Upload,
         Reactor_addEntry,

@@ -24,6 +24,7 @@ import {
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
+import { initOpenapi } from './libs/modules/openai/index.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
@@ -114,6 +115,7 @@ export const initApp = () => {
     // Attach WebSocket server to the same HTTP server so that ws listen on the same port
     wss = new WebSocketServer({ server });
     initWsServer(wss);
+    initOpenapi(routes.list);
 
     if (config.env.isProd) {
         startPeriodicTasks();
