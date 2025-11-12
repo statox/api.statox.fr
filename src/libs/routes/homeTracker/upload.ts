@@ -1,5 +1,5 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyOutput, PostRoute, RouteHandler } from '../types.js';
+import { PostRoute, RouteHandler } from '../types.js';
 import {
     getSensorSleepTimeSec,
     ingestSensorData,
@@ -21,23 +21,25 @@ const handler: RouteHandler<Input> = async (params) => {
     return { instructSleepSec };
 };
 
+const outputSchema = {
+    type: 'object',
+    required: ['instructSleepSec'],
+    additionalProperties: false,
+    properties: {
+        instructSleepSec: {
+            description: 'The recommended sleeping time of the sensor in seconds',
+            type: 'number'
+        }
+    }
+} as const;
 type Input = FromSchema<typeof sensorRawDataInputSchema>;
+type Output = FromSchema<typeof outputSchema>;
 
-export const route: PostRoute<Input, EmptyOutput> = {
+export const route: PostRoute<Input, Output> = {
     method: 'post',
     path: '/homeTracker/upload',
     inputSchema: sensorRawDataInputSchema,
     handler,
     authentication: 'apikey-iot',
-    outputSchema: {
-        type: 'object',
-        required: ['instructSleepSec'],
-        additionalProperties: false,
-        properties: {
-            instructSleepSec: {
-                description: 'The recommended sleeping time of the sensor in seconds',
-                type: 'number'
-            }
-        }
-    }
+    outputSchema
 };
