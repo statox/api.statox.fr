@@ -73,8 +73,6 @@ export class UnkownApiKeyError extends ApiKeyError {
     }
 }
 
-// this livemode control whether or not we enforce the API keys validation
-const livemode = true;
 export const validateAPIKeyHeader = async (req: Request, _res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
@@ -95,13 +93,7 @@ export const validateAPIKeyHeader = async (req: Request, _res: Response, next: N
     }
 
     if (error) {
-        slog.log('auth', 'authIOT rejected', { livemode, error });
-    }
-
-    // If livemode is disabled don't enforce api key validation
-    // (THIS SHOULD NOT BE TRUE ANYMORE. All clients are up to date now)
-    if (!livemode) {
-        return next();
+        slog.log('auth', 'authIOT rejected', { error });
     }
 
     return next(error);

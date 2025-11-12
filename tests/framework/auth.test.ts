@@ -12,7 +12,6 @@ describe('authentication middlewares', () => {
         it('should reject missing Authorization header', async () => {
             await request(app).get('/apiiotAuthenticatedGetRoute').expect(401);
             th.slog.checkLog('auth', 'authIOT rejected', {
-                livemode: true,
                 error: {
                     statusCode: 401,
                     status: 401,
@@ -28,7 +27,6 @@ describe('authentication middlewares', () => {
                 .expect(401);
 
             th.slog.checkLog('auth', 'authIOT rejected', {
-                livemode: true,
                 error: {
                     statusCode: 401,
                     status: 401,
@@ -44,7 +42,6 @@ describe('authentication middlewares', () => {
                 .expect(403);
 
             th.slog.checkLog('auth', 'authIOT rejected', {
-                livemode: true,
                 error: {
                     statusCode: 403,
                     status: 403,
