@@ -16,9 +16,9 @@ const outputSchema = {
             content: { type: 'string' },
             creationDateUnix: { type: 'number' },
             ttl: { type: 'number' },
-            isPublic: { type: 'number' },
+            isPublic: { type: 'boolean' },
             linkId: { type: 'string' },
-            s3Key: { type: ['string', 'null'] },
+            s3Key: { type: 'string' },
             s3PresignedUrl: { type: 'string' }
         },
         required: ['id', 'name', 'content', 'creationDateUnix', 'ttl', 'isPublic', 'linkId'],

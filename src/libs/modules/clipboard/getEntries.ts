@@ -14,8 +14,20 @@ type ClipboardEntry = {
     s3PresignedUrl?: string;
 };
 
+type ClipboardEntryDB = {
+    id: number;
+    name: string;
+    content: string;
+    creationDateUnix: number;
+    ttl: number;
+    isPublic: number;
+    linkId: string;
+    s3Key?: string;
+    s3PresignedUrl?: string;
+};
+
 export const getPublicEntries = async () => {
-    const [entries] = await db.query<(ClipboardEntry & RowDataPacket)[]>(
+    const [entries] = await db.query<(ClipboardEntryDB & RowDataPacket)[]>(
         `SELECT
             id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
         FROM Clipboard
@@ -27,7 +39,7 @@ export const getPublicEntries = async () => {
 };
 
 export const getAllEntries = async () => {
-    const [entries] = await db.query<(ClipboardEntry & RowDataPacket)[]>(
+    const [entries] = await db.query<(ClipboardEntryDB & RowDataPacket)[]>(
         `SELECT
             id, name, content, creationDateUnix, ttl, isPublic, linkId, s3Key
         FROM Clipboard`
@@ -35,16 +47,31 @@ export const getAllEntries = async () => {
     return await enrichEntries(entries);
 };
 
-const enrichEntries = async (entries: ClipboardEntry[]) => {
+const enrichEntries = async (entries: ClipboardEntryDB[]) => {
+    const enriched: ClipboardEntry[] = [];
+
     for (const entry of entries) {
+        const enrichedEntry: ClipboardEntry = {
+            id: entry.id,
+            name: entry.name,
+            content: entry.content,
+            creationDateUnix: entry.creationDateUnix,
+            ttl: entry.ttl,
+            isPublic: Boolean(entry.isPublic),
+            linkId: entry.linkId
+        };
         if (entry.s3Key) {
-            entry.s3PresignedUrl = await getPresignedURLForKey({
+            enrichedEntry.s3Key = entry.s3Key;
+            enrichedEntry.s3PresignedUrl = await getPresignedURLForKey({
                 bucket: 'clipboard',
                 s3Key: entry.s3Key
             });
         }
+
+        enriched.push(enrichedEntry);
     }
-    return entries;
+
+    return enriched;
 };
 
 type ClipboardEntryForStaticView = ClipboardEntry & {

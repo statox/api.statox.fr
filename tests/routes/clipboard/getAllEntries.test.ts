@@ -13,7 +13,7 @@ describe('clipboard/getAllEntries', () => {
                 creationDateUnix: th.mysql.nowSec(),
                 ttl: 60,
                 linkId: 'd',
-                isPublic: 1,
+                isPublic: true,
                 s3Key: 'foo'
             };
             await th.mysql.fixture({
@@ -38,7 +38,7 @@ describe('clipboard/getAllEntries', () => {
                 creationDateUnix: th.mysql.nowSec(),
                 ttl: 60,
                 linkId: 'd',
-                isPublic: 1,
+                isPublic: true,
                 s3Key: 'foo'
             };
             await th.mysql.fixture({
@@ -64,7 +64,7 @@ describe('clipboard/getAllEntries', () => {
         });
     });
 
-    it('should retieve all entries', async () => {
+    it('should retrieve all entries', async () => {
         const publicEntry = {
             id: 1,
             name: 'public entry',
@@ -72,8 +72,7 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1,
-            s3Key: null
+            isPublic: true
         };
         const privateEntry = {
             id: 2,
@@ -82,8 +81,7 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0,
-            s3Key: null
+            isPublic: false
         };
         const expiredTTL = {
             id: 3,
@@ -92,8 +90,7 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: th.mysql.nowSec() - 120,
             ttl: 60,
             linkId: 'cccccccc',
-            isPublic: 1,
-            s3Key: null
+            isPublic: true
         };
         const publicEntryWithS3 = {
             id: 4,
@@ -102,7 +99,7 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'd',
-            isPublic: 1,
+            isPublic: true,
             s3Key: 'foo'
         };
         const privateEntryWithS3 = {
@@ -112,7 +109,7 @@ describe('clipboard/getAllEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'e',
-            isPublic: 1,
+            isPublic: true,
             s3Key: 'bar'
         };
         const allEntries = [

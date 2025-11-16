@@ -12,8 +12,7 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1,
-            s3Key: null
+            isPublic: true
         };
         const privateEntry = {
             id: 2,
@@ -22,8 +21,7 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0,
-            s3Key: null
+            isPublic: false
         };
         await th.mysql.fixture({
             Clipboard: [publicEntry, privateEntry]
@@ -46,7 +44,7 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1,
+            isPublic: true,
             s3Key: 'foo'
         };
         await th.mysql.fixture({
@@ -78,8 +76,7 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: th.mysql.nowSec(),
             ttl: 60,
             linkId: 'aaaaaaaa',
-            isPublic: 1,
-            s3Key: null
+            isPublic: true
         };
         const ttlOver = {
             id: 2,
@@ -88,8 +85,7 @@ describe('clipboard/getPublicEntries', () => {
             creationDateUnix: th.mysql.nowSec() - 120,
             ttl: 60,
             linkId: 'bbbbbbbb',
-            isPublic: 0,
-            s3Key: null
+            isPublic: false
         };
         await th.mysql.fixture({
             Clipboard: [ttlOk, ttlOver]
