@@ -14,6 +14,8 @@ export class OutputValidationError extends Error {
 
 export const apiPipeline = (route: Route<unknown, unknown>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
+        // Extracted here so that it can be logged in the catch clause in debug mode
+        let routeResult: unknown;
         try {
             let input = null;
             if (route.method === 'post') {
@@ -26,7 +28,7 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 input = req.params || {};
             }
 
-            const routeResult =
+            routeResult =
                 (await route.handler({
                     input,
                     loggableContext: res.locals.loggableContext,
@@ -54,7 +56,7 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 slog.log('middleware', 'Failed output validation', { error });
                 if (!isProd || isDebug) {
                     slog.log('middleware', 'Failed output validation details', {
-                        dataStr: JSON.stringify(error)
+                        dataStr: JSON.stringify({ error, routeResult })
                     });
                 }
                 return next(new OutputValidationError());
