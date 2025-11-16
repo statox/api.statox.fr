@@ -17,7 +17,7 @@ const outputSchema = {
         forecast: {
             type: 'object',
             properties: {
-                pressureTrend: { type: 'string' },
+                pressureTrend: { type: 'string', enum: ['falling', 'rising', 'steady', 'unknown'] },
                 forecast: { type: 'string' },
                 dataPoints: {
                     type: 'object',
