@@ -4,6 +4,7 @@ import { initELK } from './src/libs/databases/elk.js';
 import { initLocalStackS3 } from './src/libs/databases/s3.js';
 import { slog } from './src/libs/modules/logging/index.js';
 import { slackNotifier } from './src/libs/modules/notifier/slack.js';
+import { isProd } from './src/packages/config/sources/env.js';
 
 const start = async () => {
     await initLocalStackS3();
@@ -24,9 +25,10 @@ const shutdown = (signal: NodeJS.Signals | NodeJS.UncaughtExceptionOrigin) => {
             slackNotifier.notifySlack({ message: 'Shutdown because of error', error });
         }
 
+        const timeoutSec = isProd ? 5 : 0;
         setTimeout(() => {
             process.exit(error ? 1 : 0);
-        }, 5000).unref();
+        }, timeoutSec * 1000).unref();
     };
 };
 
