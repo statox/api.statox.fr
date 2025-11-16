@@ -56,7 +56,7 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 slog.log('middleware', 'Failed output validation', { error });
                 if (!isProd || isDebug) {
                     slog.log('middleware', 'Failed output validation details', {
-                        dataStr: JSON.stringify({ error, routeResult })
+                        dataStr: JSON.stringify({ error, routeResult }, null, 2)
                     });
                 }
                 return next(new OutputValidationError());
