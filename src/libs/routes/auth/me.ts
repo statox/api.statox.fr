@@ -31,26 +31,50 @@ const inputSchema = {
 type Input = FromSchema<typeof inputSchema>;
 
 const outputSchema = {
-    type: 'object',
-    properties: {
-        status: {
-            type: 'string',
-            enum: ['logged_out', 'logged_in']
-        },
-        user: {
+    oneOf: [
+        {
             type: 'object',
             properties: {
-                id: {
-                    type: 'number'
-                },
-                username: {
-                    type: 'string'
+                status: {
+                    type: 'string',
+                    enum: ['logged_out']
                 }
-            }
+            },
+            required: ['status'],
+            additionalProperties: false
+        },
+        {
+            type: 'object',
+            properties: {
+                status: {
+                    type: 'string',
+                    enum: ['logged_in']
+                },
+                user: {
+                    type: 'object',
+                    properties: {
+                        id: {
+                            type: 'number'
+                        },
+                        username: {
+                            type: 'string'
+                        },
+                        scopes: {
+                            type: 'array',
+                            items: {
+                                type: 'string',
+                                enum: ['admin', 'public', 'homeTracker']
+                            }
+                        }
+                    },
+                    required: ['id', 'username', 'scopes'],
+                    additionalProperties: false
+                }
+            },
+            required: ['status', 'user'],
+            additionalProperties: false
         }
-    },
-    required: ['status'],
-    additionalProperties: false
+    ]
 } as const;
 
 type Output = FromSchema<typeof outputSchema>;
