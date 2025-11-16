@@ -31,13 +31,35 @@ const outputSchema = {
                         type: 'string'
                     },
                     chord: {
-                        type: 'object'
+                        type: 'object',
+                        properties: {
+                            artist: {
+                                type: 'string'
+                            },
+                            title: {
+                                type: 'string'
+                            },
+                            url: {
+                                type: 'string'
+                            },
+                            creationDate: {
+                                type: 'number'
+                            },
+                            tags: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                }
+                            }
+                        },
+                        required: ['artist', 'title', 'url', 'creationDate', 'tags'],
+                        additionalProperties: false
                     },
                     error: {
                         type: 'object'
                     }
                 },
-                required: ['status'],
+                required: ['status', 'chord'],
                 additionalProperties: false
             }
         }
