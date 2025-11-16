@@ -9,6 +9,7 @@
     "type": "module",
     "scripts": {
         "setup-githooks": "./githooks/setup.sh",
+        "generate:sdk": "npx tsx scripts/generateSDK.ts",
         "check": "npm run lint && npm run prettier",
         "prettier": "prettier --check --cache '*.json' 'src/**/*.ts' 'tests/**/*.ts'",
         "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts' 'tests/**/*.ts'",
