@@ -15,7 +15,7 @@ const outputSchema = {
             name: { type: 'string' },
             notificationMessage: { type: 'string' },
             url: { type: 'string' },
-            watchType: { type: 'string' },
+            watchType: { type: 'string', enum: ['CSS', 'HASH'] },
             cssSelector: { type: 'string' },
             lastContent: { type: 'string' },
             lastCheckDateUnix: { type: ['number', 'null'] },
@@ -34,6 +34,7 @@ const outputSchema = {
             'lastContent',
             'lastCheckDateUnix',
             'lastUpdateDateUnix',
+            'archivalDateUnix',
             'checkIntervalSeconds',
             'lastErrorDateUnix',
             'lastErrorMessage'
