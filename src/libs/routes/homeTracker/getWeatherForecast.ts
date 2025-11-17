@@ -53,7 +53,7 @@ const outputSchema = {
             items: {
                 type: 'object',
                 properties: {
-                    timestamp: { type: 'string' },
+                    timestamp: { type: 'number' },
                     averagePressurehPa: { type: 'number' }
                 },
                 required: ['timestamp', 'averagePressurehPa'],

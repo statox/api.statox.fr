@@ -40,7 +40,7 @@ export const get24hoursOfPressure = async () => {
         const buckets = response.aggregations?.hourly_averages.buckets || [];
         // @ts-expect-error Not sure why the `.buckets` member is not in the typing
         const hourlyAverages = buckets.map((bucket) => ({
-            timestamp: bucket.key_as_string,
+            timestamp: Number(bucket.key_as_string),
             averagePressurehPa: Math.floor(bucket.avg_pressure.value)
         }));
 
