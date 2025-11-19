@@ -49,7 +49,14 @@ const outputSchema = {
                                 'The difference of day length compared to yesterday (in ms)'
                         }
                     },
-                    required: ['sunrise', 'sunset', 'solarNoon', 'goldenHour'],
+                    required: [
+                        'dayLengthDiffMs',
+                        'dayLengthMs',
+                        'sunrise',
+                        'sunset',
+                        'solarNoon',
+                        'goldenHour'
+                    ],
                     additionalProperties: false
                 },
                 upcomingLunarStates: {
