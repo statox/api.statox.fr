@@ -50,6 +50,17 @@ const outputSchema = {
                     sleepTimeSec: { type: 'number' },
                     tempOffset: { type: 'number' }
                 },
+                required: [
+                    'sensorName',
+                    'tempOffset',
+                    'sleepTimeSec',
+                    'hexColor',
+                    'lastSyncDateUnix',
+                    'lastAlertDateUnix',
+                    'lastLogData',
+                    'oneHourAgoLogData',
+                    'oneDayAgoLogData'
+                ],
                 additionalProperties: false
             }
         }
