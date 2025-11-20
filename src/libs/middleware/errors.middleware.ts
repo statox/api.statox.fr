@@ -28,10 +28,11 @@ export const errorHandler = async (
     // This slog shouldn't be needed since we are adding error to the loggable context
     // but it doesn't seem to work properly
     slog.log('app', 'Error caught by middleware', { error, url: request.url });
-    slackNotifier.notifySlack({
-        error,
-        message: `Error on url ${request.url}`
-    });
+
+    // This flag is here to avoid spamming slack with failed calls to /auth/me
+    // TODO: Rework this logic when reworking the error handling mechanism and
+    // add tests.
+    let logToSlack = true;
 
     let status = 500;
     let message = 'Internal Server Error';
@@ -58,12 +59,23 @@ export const errorHandler = async (
     ) {
         status = 401;
         message = error.message;
+
+        if (request.url === '/auth/me') {
+            logToSlack = false;
+        }
     } else if (error instanceof ApiKeyError) {
         status = error.status;
         message = error.message;
     } else if (error instanceof ValidationError) {
         status = 400;
         message = JSON.stringify(error.validationErrors);
+    }
+
+    if (logToSlack) {
+        slackNotifier.notifySlack({
+            error,
+            message: `Error on url ${request.url}`
+        });
     }
 
     response.status(status).json({ message });
