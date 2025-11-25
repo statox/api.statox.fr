@@ -124,7 +124,7 @@ export const setPassportHeaders = (req: Request, res: Response, next: NextFuncti
 };
 
 const cookieOptions: CookieOptions = {
-    // Secure: true = Require the frontend to be servers with https (even localhost for dev)
+    // Secure: true = Require the frontend to be served with https (even localhost for dev)
     secure: isProd,
     // httpOnly: true = JS can't access the session cookie on the client
     httpOnly: true,
@@ -132,7 +132,11 @@ const cookieOptions: CookieOptions = {
     // We use 'lax' locally because `sameSite: 'none'` requires `secure: true` which
     // we don't want to do with local dev frontend
     // TODO: Find a way to enforce samesite while allowing dev frontend to call the real API
-    sameSite: isProd ? 'none' : 'lax'
+    sameSite: isProd ? 'none' : 'lax',
+    // In prod the cookie is valid for 3 days, in dev no "expires" parameter is set
+    // so the cookie becomes a browser-session cookie. When the user closes the
+    // browser the cookie (and session) will be removed.
+    maxAge: isProd ? 3 * 24 * 3600 * 1000 : undefined
 };
 
 export const doPassportSession = session({
