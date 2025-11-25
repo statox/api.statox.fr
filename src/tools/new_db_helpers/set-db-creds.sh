@@ -22,14 +22,14 @@ fi
 if [ "$1" == '--prod' ]; then
     echo "Returning creds for prod"
     EXPECTED_USER="me@statox.fr"
-    CONNECTED_USER=$(npx heroku whoami)
+    CONNECTED_USER=$(npx heroku@latest whoami)
 
     if [ "$CONNECTED_USER" != "$EXPECTED_USER" ]; then
         echo "User not logged in. Use 'npm run heroku:login'"
         return 1
     fi
 
-    URL=$(npx heroku config:get APIDB_URL)
+    URL=$(npx heroku@latest config:get APIDB_URL)
 
     # mysql://[user]:[password]@[host]:[port]/[db]
     DATA_STR=$(echo "$URL" | sed -E 's;mysql://(.*):(.*)@(.*):(.*)/(.*);\1 \2 \3 \4 \5;')

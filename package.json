@@ -15,12 +15,12 @@
         "prettier:fix": "prettier -w --cache '*.json' 'src/**/*.ts' 'tests/**/*.ts'",
         "lint": "eslint",
         "lint:fix": "npm run lint --fix",
-        "heroku:login": "npx heroku login",
+        "heroku:login": "npx heroku@latest login",
         "heroku:deploy": "npm run check && npm run tests:all && git push heroku main",
         "heroku:deploy:skip-tests": "npm run check && git push heroku main",
         "heroku:force-deploy": "npm run check && npm run tests:all && git push -f heroku main",
         "heroku:force-deploy:skip-tests": "npm run check && git push -f heroku main",
-        "heroku:ssh": "npx heroku run bash",
+        "heroku:ssh": "npx heroku@latest run bash",
         "postinstall": "tsc",
         "env": "./src/tools/containers-env.sh up",
         "env:stop": "./src/tools/containers-env.sh down",
@@ -32,7 +32,7 @@
         "tests:framework": "src/tools/init-db.sh --tests && TZ=UTC PORT=3001 ENV=tests mocha --unhandled-rejections=strict --config .mocha/framework.json",
         "tests:packages": "mocha --unhandled-rejections=strict --config .mocha/packages.json",
         "user:create": "node dist/src/tools/auth/createUser.js",
-        "user:create:prod": "npx heroku run node dist/src/tools/auth/createUser.js"
+        "user:create:prod": "npx heroku@latest run node dist/src/tools/auth/createUser.js"
     },
     "dependencies": {
         "@aws-sdk/client-s3": "^3.937.0",
