@@ -7,7 +7,7 @@ ENVIRONMENT="$2"
 TMP_RESTORE_FILE='restore.sql'
 
 if [ -z "$FILE_TO_RESTORE" ]; then
-    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests|--new-prod]"
+    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests]"
     exit 1
 fi
 
@@ -23,8 +23,8 @@ if [ "$ENVIRONMENT" == '--prod' ]; then
     exit 1
 fi
 
-if [ -n "$ENVIRONMENT" ] && [ "$ENVIRONMENT" != '--tests' ] && [ "$ENVIRONMENT" != '--new-prod' ]; then
-    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests|--new-prod]"
+if [ -n "$ENVIRONMENT" ] && [ "$ENVIRONMENT" != '--tests' ]; then
+    echo "Usage ./restore-dump.sh path/to/dump.gz [--prod|--tests]"
     exit 1
 fi
 

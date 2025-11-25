@@ -43,31 +43,5 @@ if [ "$1" == '--prod' ]; then
     return 0
 fi
 
-if [ "$1" == '--old-prod' ]; then
-    # These are the creds for JAWSDB that I replaced with my own mysql
-    # To be deleted once I remove completely the JAWSDB plugin on heroku
-    echo "Returning creds for old prod"
-    EXPECTED_USER="me@statox.fr"
-    CONNECTED_USER=$(npx heroku whoami)
-
-    if [ "$CONNECTED_USER" != "$EXPECTED_USER" ]; then
-        echo "User not logged in. Use 'npm run heroku:login'"
-        return 1
-    fi
-
-    URL=$(npx heroku config:get JAWSDB_URL)
-
-    # mysql://[user]:[password]@[host]:[port]/[db]
-    DATA_STR=$(echo "$URL" | sed -E 's;mysql://(.*):(.*)@(.*):(.*)/(.*);\1 \2 \3 \4 \5;')
-
-    export user=$(echo "$DATA_STR" | cut -d ' ' -f1)
-    export password=$(echo "$DATA_STR" | cut -d ' ' -f2)
-    export host=$(echo "$DATA_STR" | cut -d ' ' -f3)
-    export port=$(echo "$DATA_STR" | cut -d ' ' -f4)
-    export db=$(echo "$DATA_STR" | cut -d ' ' -f5)
-
-    return 0
-fi
-
-echo 'Usage set-db-creds.sh [--prod | --new-prod | --tests]'
+echo 'Usage set-db-creds.sh [--prod | --tests]'
 return 1

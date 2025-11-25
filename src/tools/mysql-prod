@@ -8,7 +8,6 @@ if [ "$CONNECTED_USER" != "$EXPECTED_USER" ]; then
     exit 1
 fi
 
-# URL=$(npx heroku config:get JAWSDB_URL)
 URL=$(npx heroku@latest config:get APIDB_URL)
 
 # mysql://[user]:[password]@[host]:[port]/[db]
