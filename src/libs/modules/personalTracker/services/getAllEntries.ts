@@ -4,7 +4,7 @@ import { PersonalEvent } from '../types.js';
 
 export const getAllEntries = async (): Promise<PersonalEvent[]> => {
     const [rows] = await db.query<(PersonalEvent & RowDataPacket)[]>(
-        `SELECT eventDateUnix, type, value FROM PersonalTracker ORDER BY eventDateUnix DESC`
+        `SELECT eventDateUnix, type, value, data FROM PersonalTracker ORDER BY eventDateUnix DESC`
     );
     return rows;
 };

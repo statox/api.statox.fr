@@ -4,6 +4,7 @@ import { getAllEntries } from '../../modules/personalTracker/services/index.js';
 
 const handler = async () => {
     const events = await getAllEntries();
+    console.log({ events });
     return { events };
 };
 
@@ -17,7 +18,7 @@ const outputSchema = {
             minItems: 0,
             items: {
                 type: 'object',
-                required: ['eventDateUnix', 'type', 'value'],
+                required: ['eventDateUnix', 'type', 'value', 'data'],
                 additionalProperties: false,
                 properties: {
                     eventDateUnix: {
@@ -31,6 +32,10 @@ const outputSchema = {
                     value: {
                         description: 'The value associated with the event',
                         type: 'number'
+                    },
+                    data: {
+                        description: 'Free form data associated with the event',
+                        type: 'object'
                     }
                 }
             }

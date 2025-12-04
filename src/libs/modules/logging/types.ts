@@ -37,6 +37,7 @@ export type LoggableProperties = {
     eventTS?: number;
     eventType?: string;
     eventValue?: number;
+    eventDataStr?: string;
     executionTimeMs?: number;
     failedCalls?: number;
     forecast?: string;

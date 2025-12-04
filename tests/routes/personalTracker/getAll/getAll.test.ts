@@ -35,6 +35,20 @@ describe('personalTracker/getAll', () => {
                 }
             })
             .expect(200);
+        await request(app)
+            .post('/personalTracker/upload')
+            .set('Cookie', th.auth2.getPassportSessionCookie())
+            .set('Accept', 'application/json')
+            .send({
+                event: {
+                    timestampUTC: 1736189999,
+                    type: 'emotion',
+                    data: {
+                        emotions: ['foo']
+                    }
+                }
+            })
+            .expect(200);
 
         const response = await request(app)
             .get('/personalTracker/getAll')
@@ -44,9 +58,15 @@ describe('personalTracker/getAll', () => {
 
         assert.deepEqual(response.body, {
             events: [
-                { eventDateUnix: 1736190000, type: 'weight', value: 1000 },
-                { eventDateUnix: 1736189999, type: 'weight', value: 900 },
-                { eventDateUnix: 1736186137, type: 'weight', value: 800 }
+                { eventDateUnix: 1736190000, type: 'weight', data: {}, value: 1000 },
+                { eventDateUnix: 1736189999, type: 'weight', data: {}, value: 900 },
+                {
+                    eventDateUnix: 1736189999,
+                    type: 'emotion',
+                    data: { emotions: ['foo'] },
+                    value: -1
+                },
+                { eventDateUnix: 1736186137, type: 'weight', data: {}, value: 800 }
             ]
         });
     });

@@ -7,6 +7,7 @@ const handler: RouteHandler<Input> = async (params) => {
     params.loggableContext.addData('eventTS', params.input.event.timestampUTC);
     params.loggableContext.addData('eventType', params.input.event.type);
     params.loggableContext.addData('eventValue', params.input.event.value);
+    params.loggableContext.addData('eventDataStr', JSON.stringify(params.input.event.data));
 
     await addEntry(params.input.event);
 };
@@ -18,7 +19,7 @@ const inputSchema = {
     properties: {
         event: {
             type: 'object',
-            required: ['timestampUTC', 'type', 'value'],
+            required: ['timestampUTC', 'type'],
             additionalProperties: false,
             properties: {
                 timestampUTC: {
@@ -32,6 +33,10 @@ const inputSchema = {
                 value: {
                     description: 'The value associated with the event',
                     type: 'number'
+                },
+                data: {
+                    description: 'Free form data associated with the event',
+                    type: 'object'
                 }
             }
         }
