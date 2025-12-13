@@ -1,14 +1,27 @@
+import _sodium from 'libsodium-wrappers-sumo';
 import { db } from '../../../databases/db.js';
 import { PersonalEvent } from '../types.js';
 
 export const addEntry = async (event: PersonalEvent) => {
-    const { timestampUTC, type, value = -1, data = {} } = event;
-    const dataStr = JSON.stringify(data);
+    await _sodium.ready;
+    const sodium = _sodium;
+    if (!sodium) {
+        throw new Error("Sodium isn't ready");
+    }
+
+    const { timestampUTC, saltB64, nonceB64, ciphertextB64 } = event;
+
+    const salt = Buffer.from(sodium.from_base64(saltB64));
+    const nonce = Buffer.from(sodium.from_base64(nonceB64));
+    const ciphertext = Buffer.from(sodium.from_base64(ciphertextB64));
 
     await db.query(
-        `INSERT INTO PersonalTracker (type, value, data, eventDateUnix)
+        `INSERT INTO PersonalTracker (eventDateUnix, salt, nonce, ciphertext)
         VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE value = ?, data = ?`,
-        [type, value, dataStr, timestampUTC, value, dataStr]
+        ON DUPLICATE KEY UPDATE
+        salt = VALUES(salt),
+        nonce = VALUES(nonce),
+        ciphertext = VALUES(ciphertext)`,
+        [timestampUTC, salt, nonce, ciphertext]
     );
 };
