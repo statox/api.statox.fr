@@ -1,6 +1,6 @@
 export type PersonalEvent = {
     timestampUTC: number;
-    type: string;
-    value?: number;
-    data?: unknown;
+    saltB64: string;
+    nonceB64: string;
+    ciphertextB64: string;
 };
