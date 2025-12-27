@@ -9,7 +9,7 @@ export const addEntry = async (event: PersonalEvent) => {
         throw new Error("Sodium isn't ready");
     }
 
-    const { timestampUTC, saltB64, nonceB64, ciphertextB64 } = event;
+    const { eventDateUnix, saltB64, nonceB64, ciphertextB64 } = event;
 
     const salt = Buffer.from(sodium.from_base64(saltB64));
     const nonce = Buffer.from(sodium.from_base64(nonceB64));
@@ -22,6 +22,6 @@ export const addEntry = async (event: PersonalEvent) => {
         salt = VALUES(salt),
         nonce = VALUES(nonce),
         ciphertext = VALUES(ciphertext)`,
-        [timestampUTC, salt, nonce, ciphertext]
+        [eventDateUnix, salt, nonce, ciphertext]
     );
 };
