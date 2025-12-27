@@ -4,41 +4,31 @@ import { emptyObjectSchema } from '../helpers.js';
 import { addEntry } from '../../modules/personalTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
-    params.loggableContext.addData('eventTS', params.input.event.timestampUTC);
-    params.loggableContext.addData('eventType', params.input.event.type);
-    params.loggableContext.addData('eventValue', params.input.event.value);
-    params.loggableContext.addData('eventDataStr', JSON.stringify(params.input.event.data));
-
-    await addEntry(params.input.event);
+    const entry = params.input;
+    params.loggableContext.addData('eventTS', entry.eventDateUnix);
+    await addEntry(entry);
 };
 
 const inputSchema = {
     type: 'object',
-    required: ['event'],
+    required: ['eventDateUnix', 'saltB64', 'nonceB64', 'ciphertextB64'],
     additionalProperties: false,
     properties: {
-        event: {
-            type: 'object',
-            required: ['timestampUTC', 'type'],
-            additionalProperties: false,
-            properties: {
-                timestampUTC: {
-                    description: 'The date of the event in seconds in UTC',
-                    type: 'number'
-                },
-                type: {
-                    description: 'Event type',
-                    type: 'string'
-                },
-                value: {
-                    description: 'The value associated with the event',
-                    type: 'number'
-                },
-                data: {
-                    description: 'Free form data associated with the event',
-                    type: 'object'
-                }
-            }
+        eventDateUnix: {
+            description: 'The date of the event in seconds in UTC',
+            type: 'number'
+        },
+        saltB64: {
+            description: 'The salt used to cipher the event in base64',
+            type: 'string'
+        },
+        nonceB64: {
+            description: 'The salt used to cipher the event in base64',
+            type: 'string'
+        },
+        ciphertextB64: {
+            description: 'The event a stringified JSON object encrypted and encoded in base64',
+            type: 'string'
         }
     }
 } as const;
