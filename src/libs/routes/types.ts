@@ -3,11 +3,12 @@ import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { WebSocket } from 'ws';
 import { emptyObjectSchema } from './helpers.js';
 import { LoggableContext } from '../modules/logging/index.js';
+import { User } from '../modules/auth/types.js';
 
 export type RouteHandler<Input> = (params: {
     input: Input;
     loggableContext: LoggableContext;
-    authenticatedUser?: Express.User;
+    authenticatedUser?: User;
 }) => Promise<unknown>;
 
 export type ApiJsonSchema = JSONSchema;
@@ -17,7 +18,7 @@ export type EmptyInput = FromSchema<typeof emptyObjectSchema>;
 export type EmptyOutput = FromSchema<typeof emptyObjectSchema>;
 
 // List of possible scopes
-export const SCOPES = ['public', 'admin', 'homeTracker'] as const;
+export const SCOPES = ['public', 'admin', 'homeTracker', 'personalTracker'] as const;
 type ScopesType = typeof SCOPES;
 export type Scope = ScopesType[number];
 
