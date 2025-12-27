@@ -5,8 +5,14 @@ import { addEntry } from '../../modules/personalTracker/index.js';
 
 const handler: RouteHandler<Input> = async (params) => {
     const entry = params.input;
+    const { authenticatedUser } = params;
+
+    if (!authenticatedUser) {
+        throw new Error('User must be authenticated');
+    }
+
     params.loggableContext.addData('eventTS', entry.eventDateUnix);
-    await addEntry(entry);
+    await addEntry(entry, authenticatedUser.id);
 };
 
 const inputSchema = {
@@ -41,6 +47,6 @@ export const route: PostRoute<Input, EmptyOutput> = {
     inputSchema,
     handler,
     authentication: 'user2',
-    scope: 'admin',
+    scope: 'personalTracker',
     outputSchema: emptyObjectSchema
 };

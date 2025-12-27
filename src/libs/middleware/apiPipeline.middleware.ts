@@ -3,6 +3,7 @@ import { config } from '../../packages/config/index.js';
 import { Route } from '../routes/types.js';
 import { AllowedSchema, isAjvError, validateAgainstJsonSchema } from '../modules/ajv/index.js';
 import { slog } from '../modules/logging/index.js';
+import { User } from '../modules/auth/types.js';
 
 const { isDebug, isProd } = config.env;
 
@@ -32,7 +33,7 @@ export const apiPipeline = (route: Route<unknown, unknown>) => {
                 (await route.handler({
                     input,
                     loggableContext: res.locals.loggableContext,
-                    authenticatedUser: req.user // req.user is populated by the passport authentication middleware
+                    authenticatedUser: req.user as User // req.user is populated by the passport authentication middleware
                 })) || {};
 
             // Only do output validation if we are not in prod
