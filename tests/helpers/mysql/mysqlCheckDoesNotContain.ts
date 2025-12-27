@@ -10,7 +10,9 @@ const checkTableDoesNotContain = async (table: string, checks: TableCheck[]) => 
             const value = row[column];
 
             if (typeof value === 'object') {
-                if (value?.aroundTimestamp && value?.precision) {
+                if (Buffer.isBuffer(value)) {
+                    conditions.push(`${column} = ?`);
+                } else if (value?.aroundTimestamp && value?.precision) {
                     const condition = `${column} BETWEEN
 UNIX_TIMESTAMP(CAST(${value.aroundTimestamp} - INTERVAL ${value.precision} AS DATETIME))
 AND
