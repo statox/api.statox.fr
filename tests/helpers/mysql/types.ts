@@ -4,6 +4,7 @@ export type ColumnCheckFunction = (value: any) => boolean;
 
 export type TableCheck = {
     [column: string]:
+        | Buffer
         | string
         | number
         | boolean
@@ -17,5 +18,5 @@ export type MysqlCheckData = {
 };
 
 export type MysqlFixture = {
-    [table: string]: { [column: string]: string | number | boolean | null }[];
+    [table: string]: { [column: string]: Buffer | string | number | boolean | null }[];
 };
