@@ -63,7 +63,7 @@ const outputSchema = {
                             type: 'array',
                             items: {
                                 type: 'string',
-                                enum: ['admin', 'public', 'homeTracker']
+                                enum: ['admin', 'public', 'homeTracker', 'personalTracker']
                             }
                         }
                     },

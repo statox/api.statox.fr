@@ -2,7 +2,7 @@ import _sodium from 'libsodium-wrappers-sumo';
 import { db } from '../../../databases/db.js';
 import { PersonalEvent } from '../types.js';
 
-export const addEntry = async (event: PersonalEvent) => {
+export const addEntry = async (event: PersonalEvent, userId: number) => {
     await _sodium.ready;
     const sodium = _sodium;
     if (!sodium) {
@@ -16,12 +16,12 @@ export const addEntry = async (event: PersonalEvent) => {
     const ciphertext = Buffer.from(sodium.from_base64(ciphertextB64));
 
     await db.query(
-        `INSERT INTO PersonalTracker (eventDateUnix, salt, nonce, ciphertext)
-        VALUES (?, ?, ?, ?)
+        `INSERT INTO PersonalTracker (userId, eventDateUnix, salt, nonce, ciphertext)
+        VALUES (?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE
         salt = VALUES(salt),
         nonce = VALUES(nonce),
         ciphertext = VALUES(ciphertext)`,
-        [eventDateUnix, salt, nonce, ciphertext]
+        [userId, eventDateUnix, salt, nonce, ciphertext]
     );
 };

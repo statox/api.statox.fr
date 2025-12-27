@@ -1,9 +1,15 @@
 import { FromSchema } from 'json-schema-to-ts';
-import { EmptyInput, GetRoute } from '../types.js';
+import { EmptyInput, GetRoute, RouteHandler } from '../types.js';
 import { getAllEntries } from '../../modules/personalTracker/services/index.js';
 
-const handler = async () => {
-    const events = await getAllEntries();
+const handler: RouteHandler<EmptyInput> = async (params) => {
+    const { authenticatedUser } = params;
+
+    if (!authenticatedUser) {
+        throw new Error('User must be authenticated');
+    }
+
+    const events = await getAllEntries(authenticatedUser.id);
     return { events };
 };
 
@@ -48,6 +54,6 @@ export const route: GetRoute<EmptyInput, FromSchema<typeof outputSchema>> = {
     path: '/personalTracker/getAll',
     handler,
     authentication: 'user2',
-    scope: 'admin',
+    scope: 'personalTracker',
     outputSchema
 };
