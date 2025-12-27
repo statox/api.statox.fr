@@ -22,7 +22,7 @@ export const getAllEntries = async (): Promise<PersonalEvent[]> => {
     );
     return rows.map((row) => {
         return {
-            timestampUTC: row.eventDateUnix,
+            eventDateUnix: row.eventDateUnix,
             saltB64: sodium.to_base64(row.salt),
             nonceB64: sodium.to_base64(row.nonce),
             ciphertextB64: sodium.to_base64(row.ciphertext)

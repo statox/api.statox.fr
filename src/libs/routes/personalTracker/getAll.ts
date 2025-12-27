@@ -4,7 +4,6 @@ import { getAllEntries } from '../../modules/personalTracker/services/index.js';
 
 const handler = async () => {
     const events = await getAllEntries();
-    console.log({ events });
     return { events };
 };
 
@@ -18,24 +17,25 @@ const outputSchema = {
             minItems: 0,
             items: {
                 type: 'object',
-                required: ['eventDateUnix', 'type', 'value', 'data'],
+                required: ['eventDateUnix', 'saltB64', 'nonceB64', 'ciphertextB64'],
                 additionalProperties: false,
                 properties: {
                     eventDateUnix: {
                         description: 'The date of the event in seconds in UTC',
                         type: 'number'
                     },
-                    type: {
-                        description: 'Event type',
+                    saltB64: {
+                        description: 'The salt used to cipher the event in base64',
                         type: 'string'
                     },
-                    value: {
-                        description: 'The value associated with the event',
-                        type: 'number'
+                    nonceB64: {
+                        description: 'The salt used to cipher the event in base64',
+                        type: 'string'
                     },
-                    data: {
-                        description: 'Free form data associated with the event',
-                        type: 'object'
+                    ciphertextB64: {
+                        description:
+                            'The event a stringified JSON object encrypted and encoded in base64',
+                        type: 'string'
                     }
                 }
             }
