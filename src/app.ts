@@ -24,7 +24,7 @@ import {
     validatePassportAuth,
     validatePassportSession
 } from './libs/middleware/auth_passport.middleware.js';
-import { initOpenapi } from './libs/modules/openai/index.js';
+import { initOpenapi } from './libs/modules/openapi/index.js';
 
 const { validate } = new Validator({ allowUnionTypes: true });
 export let app: express.Express;
