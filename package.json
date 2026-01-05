@@ -94,7 +94,7 @@
         "eslint": "^9.39.2",
         "eslint-config-prettier": "^10.1.8",
         "github-actions-ctrf": "^0.0.58",
-        "globals": "^16.5.0",
+        "globals": "^17.0.0",
         "json-schema-to-ts": "^3.1.1",
         "mocha": "^11.7.5",
         "mocha-ctrf-json-reporter": "^0.0.10",
