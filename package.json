@@ -91,7 +91,7 @@
         "chai": "^6.2.2",
         "cookie-signature": "^1.2.2",
         "ctrf": "^0.1.0",
-        "eslint": "^9.39.2",
+        "eslint": "^10.0.1",
         "eslint-config-prettier": "^10.1.8",
         "github-actions-ctrf": "^0.0.58",
         "globals": "^17.3.0",
