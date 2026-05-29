@@ -62,7 +62,7 @@
         "mysql2": "^3.22.3",
         "passport": "^0.7.0",
         "passport-local": "^1.0.0",
-        "ws": "^8.20.0"
+        "ws": "^8.20.1"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.3.5",
